@@ -105,50 +105,51 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: const AppAppBar(
         title: 'Subscription',
       ),
       body: Column(
         children: [
-          // Header section
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.large),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.star_rounded,
-                  size: 48,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(height: AppSpacing.medium),
-                AppTitleText(
-                  'Unlock Premium Islamic Content',
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.small),
-                AppBodyText(
-                  'Choose the perfect plan for your spiritual journey',
-                  textAlign: TextAlign.center,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ),
-          ),
-          
-          // Plans list
+          // Plans list with header
           Expanded(
-            child: ListView.builder(
+            child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-              itemCount: _subscriptionPlans.length,
-              itemBuilder: (context, index) {
-                final plan = _subscriptionPlans[index];
-                return _PlanCard(
+              children: [
+                // Header section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(AppSpacing.large),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.star_rounded,
+                        size: 48,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(height: AppSpacing.medium),
+                      AppTitleText(
+                        'Unlock Premium Islamic Content',
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppSpacing.small),
+                      AppBodyText(
+                        'Choose the perfect plan for your spiritual journey',
+                        textAlign: TextAlign.center,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Plans list
+                ..._subscriptionPlans.map((plan) => _PlanCard(
                   plan: plan,
                   onTap: () => _selectPlan(plan),
-                );
-              },
+                )),
+                
+                // Bottom spacing for bottom action area
+                const SizedBox(height: AppSpacing.large),
+              ],
             ),
           ),
           
@@ -239,17 +240,10 @@ class _PlanCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.medium),
       child: Stack(
-        children: [
-          AppCard(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.surfaceContainer.withValues(alpha: 0.8),
-                colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            onTap: onTap,
+                  children: [
+            AppCard(
+              gradient: _getPlanGradient(context, plan),
+              onTap: onTap,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -394,7 +388,7 @@ class _PlanCard extends StatelessWidget {
           // Popular badge
           if (plan.isPopular)
             Positioned(
-              top: -1,
+              top: 8,
               right: AppSpacing.medium,
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -406,8 +400,8 @@ class _PlanCard extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(AppSpacing.radiusSmall),
                     bottomRight: Radius.circular(AppSpacing.radiusSmall),
-                    topLeft: Radius.circular(AppSpacing.radiusSmall),
-                    topRight: Radius.circular(AppSpacing.radiusSmall),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
                   ),
                 ),
                 child: Row(
@@ -445,6 +439,45 @@ class _PlanCard extends StatelessWidget {
       return Icons.school_rounded;
     } else {
       return Icons.subscriptions_rounded;
+    }
+  }
+
+  Gradient _getPlanGradient(BuildContext context, SubscriptionPlan plan) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    if (plan.name.contains('Glimpse')) {
+      // Free plan - subtle gradient
+      return LinearGradient(
+        colors: [
+          colorScheme.surfaceContainer.withValues(alpha: 0.6),
+          colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else if (plan.name.contains('Premium')) {
+      // Premium plan - vibrant gradient
+      return LinearGradient(
+        colors: [
+          const Color(0xFF4CAF50).withValues(alpha: 0.1),
+          const Color(0xFF4CAF50).withValues(alpha: 0.05),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else if (plan.name.contains('Scholar')) {
+      // Scholar plan - premium gradient
+      return LinearGradient(
+        colors: [
+          const Color(0xFF1976D2).withValues(alpha: 0.1),
+          const Color(0xFF42A5F5).withValues(alpha: 0.05),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else {
+      // Default gradient
+      return context.surfaceGradient;
     }
   }
 }

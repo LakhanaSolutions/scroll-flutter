@@ -5,6 +5,7 @@ import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/cards/app_card.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import 'playlist_screen.dart';
 
 /// Category view screen that displays books and podcasts for a specific category
@@ -52,47 +53,15 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Container(
-              width: AppSpacing.iconLarge,
-              height: AppSpacing.iconLarge,
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-              ),
-              child: Icon(
-                widget.category.icon,
-                color: colorScheme.onPrimaryContainer,
-                size: AppSpacing.iconMedium,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.small),
-            AppTitleText(widget.category.name),
-          ],
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: colorScheme.primary,
-          unselectedLabelColor: colorScheme.onSurfaceVariant,
-          indicatorColor: colorScheme.primary,
-          dividerColor: Colors.transparent,
-          tabs: [
-            Tab(text: 'All (${_allContent.length})'),
-            Tab(text: 'Books (${_books.length})'),
-            Tab(text: 'Podcasts (${_podcasts.length})'),
-          ],
-        ),
+      appBar: AppAppBarExtensions.withTabBar(
+        title: widget.category.name,
+        tabController: _tabController,
+        tabs: [
+          'All (${_allContent.length})',
+          'Books (${_books.length})',
+          'Podcasts (${_podcasts.length})',
+        ],
+        onBackPressed: () => Navigator.of(context).pop(),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +71,53 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
             width: double.infinity,
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: AppCard(
-              child: Text(
-                widget.category.description,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 13,
+              gradient: context.surfaceGradient,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Category icon
+                    Container(
+                      width: AppSpacing.iconLarge,
+                      height: AppSpacing.iconLarge,
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                      ),
+                      child: Icon(
+                        widget.category.icon,
+                        color: colorScheme.onPrimaryContainer,
+                        size: AppSpacing.iconMedium,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.medium),
+                    // Description text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'About ${widget.category.name}',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.small),
+                          Text(
+                            widget.category.description,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                              fontSize: 13,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

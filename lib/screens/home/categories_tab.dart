@@ -449,57 +449,75 @@ class _CategoryTile extends StatelessWidget {
       gradient: context.surfaceGradient,
       elevation: AppSpacing.elevationNone,
       onTap: onTap,
-      child: Row(
+      child: Stack(
         children: [
-          // Category icon/image
-          AppImage(
-            imageUrl: category.imageUrl,
-            fallbackIcon: category.icon,
-            width: AppSpacing.iconLarge + AppSpacing.medium,
-            height: AppSpacing.iconLarge + AppSpacing.medium,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-            backgroundColor: colorScheme.primaryContainer,
-            iconColor: colorScheme.onPrimaryContainer,
-            iconSize: AppSpacing.iconLarge,
+          // Background faded icon
+          Positioned(
+            right: 20,
+            top: -5,
+            child: Opacity(
+              opacity: 0.03,
+              child: Icon(
+                category.icon,
+                size: 60,
+                color: colorScheme.onSurface,
+              ),
+            ),
           ),
-          const SizedBox(width: AppSpacing.medium),
-          // Category info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppSubtitleText(
-                  category.name,
-                  color: colorScheme.onSurface,
-                ),
-                const SizedBox(height: AppSpacing.extraSmall),
-                Row(
+          // Main content
+          Row(
+            children: [
+              // Category icon/image
+              AppImage(
+                imageUrl: category.imageUrl,
+                fallbackIcon: category.icon,
+                width: AppSpacing.iconLarge + AppSpacing.medium,
+                height: AppSpacing.iconLarge + AppSpacing.medium,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
+                iconSize: AppSpacing.iconLarge,
+              ),
+              const SizedBox(width: AppSpacing.medium),
+              // Category info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppCaptionText(
-                      '${category.itemCount} items',
-                      color: colorScheme.onSurfaceVariant,
+                    AppSubtitleText(
+                      category.name,
+                      color: colorScheme.onSurface,
                     ),
-                    const SizedBox(width: AppSpacing.medium),
-                    Icon(
-                      Icons.access_time_rounded,
-                      size: AppSpacing.iconExtraSmall,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: AppSpacing.extraSmall),
-                    AppCaptionText(
-                      category.listeningHours,
-                      color: colorScheme.onSurfaceVariant,
+                    const SizedBox(height: AppSpacing.extraSmall),
+                    Row(
+                      children: [
+                        AppCaptionText(
+                          '${category.itemCount} items',
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: AppSpacing.medium),
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: AppSpacing.iconExtraSmall,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: AppSpacing.extraSmall),
+                        AppCaptionText(
+                          category.listeningHours,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          // Arrow icon
-          Icon(
-            Icons.chevron_right_rounded,
-            color: colorScheme.onSurfaceVariant,
-            size: AppSpacing.iconMedium,
+              ),
+              // Arrow icon
+              Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.onSurfaceVariant,
+                size: AppSpacing.iconMedium,
+              ),
+            ],
           ),
         ],
       ),

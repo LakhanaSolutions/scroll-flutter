@@ -42,9 +42,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppAppBar(
         title: widget.content.title,
+        backgroundColor: colorScheme.surface,
         actions: [
           IconButton(
             icon: Icon(
@@ -479,6 +479,18 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     ],
                   ),
                 ),
+                IconButton(
+                  icon: const Icon(Icons.info_outline_rounded),
+                  color: colorScheme.primary,
+                  tooltip: 'View Narrator',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => NarratorScreen(narrator: narrator),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           );
@@ -538,6 +550,18 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       color: colorScheme.onSurfaceVariant,
                       size: AppSpacing.iconSmall,
                     ),
+                  IconButton(
+                    icon: const Icon(Icons.info_outline_rounded),
+                    color: colorScheme.primary,
+                    tooltip: 'View Narrator',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NarratorScreen(narrator: narrator),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

@@ -25,6 +25,7 @@ class ContentTile extends StatelessWidget {
 
     return AppCard(
       margin: margin ?? const EdgeInsets.only(bottom: AppSpacing.small),
+      elevation: AppSpacing.elevationNone,
       onTap: onTap,
       child: Row(
         children: [

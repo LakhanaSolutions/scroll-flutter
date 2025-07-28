@@ -4,6 +4,7 @@ import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 
 enum BookmarkType { chapter, quote, moment }
 enum NoteType { personal, highlight, thought }
@@ -21,7 +22,7 @@ class BookmarkItem {
     required this.id,
     required this.title,
     required this.contentTitle,
-    required this.author,
+    required this.author, 
     required this.timestamp,
     required this.type,
     required this.snippet,
@@ -154,27 +155,14 @@ class _BookmarksNotesScreenState extends State<BookmarksNotesScreen> with Ticker
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.bookmark_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconMedium,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppTitleText('Bookmarks & Notes'),
-          ],
-        ),
+      appBar: AppAppBarExtensions.withTabBar(
+        title: 'Bookmarks & Notes',
+        tabController: _tabController,
+        tabs: const [
+          'Bookmarks',
+          'Notes',
+        ],
+        onBackPressed: () => Navigator.of(context).pop(),
         actions: [
           IconButton(
             icon: Icon(
@@ -184,23 +172,6 @@ class _BookmarksNotesScreenState extends State<BookmarksNotesScreen> with Ticker
             onPressed: () => debugPrint('Search tapped'),
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: colorScheme.primary,
-          unselectedLabelColor: colorScheme.onSurfaceVariant,
-          indicatorColor: colorScheme.primary,
-          dividerColor: Colors.transparent,
-          tabs: const [
-            Tab(
-              icon: Icon(Icons.bookmark_rounded),
-              text: 'Bookmarks',
-            ),
-            Tab(
-              icon: Icon(Icons.note_rounded),
-              text: 'Notes',
-            ),
-          ],
-        ),
       ),
       body: TabBarView(
         controller: _tabController,

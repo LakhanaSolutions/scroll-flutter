@@ -126,7 +126,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppAppBar(
         title: widget.chapter.title,
         actions: [

@@ -5,6 +5,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../widgets/inputs/app_text_field.dart';
 import 'subscription_screen.dart';
 
 /// Upgrade plan screen showing plan details, coupon field, and payment options
@@ -111,7 +112,6 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: const AppAppBar(
         title: 'Upgrade Plan',
       ),
@@ -140,7 +140,6 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
 
     return Container(
       width: double.infinity,
-      color: colorScheme.surface,
       padding: const EdgeInsets.all(AppSpacing.large),
       child: Column(
         children: [
@@ -231,14 +230,7 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.surfaceContainer.withValues(alpha: 0.8),
-            colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: context.surfaceGradient,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -294,14 +286,7 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.surfaceContainer.withValues(alpha: 0.8),
-            colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        elevation: AppSpacing.elevationNone,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -321,22 +306,18 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
             Row(
               children: [
                 Expanded(
-                  child: TextFormField(
+                  child: AppTextField(
                     controller: _couponController,
                     enabled: !_couponApplied,
-                    decoration: InputDecoration(
-                      hintText: 'Enter coupon code',
-                      prefixIcon: const Icon(Icons.confirmation_number_rounded),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-                      ),
-                      suffixIcon: _couponApplied 
-                          ? Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
-                            )
-                          : null,
-                    ),
+                    labelText: 'Coupon Code',
+                    hintText: 'Enter coupon code',
+                    prefixIcon: const Icon(Icons.confirmation_number_rounded),
+                    suffixIcon: _couponApplied 
+                        ? Icon(
+                            Icons.check_circle_rounded,
+                            color: Colors.green,
+                          )
+                        : null,
                     onChanged: (value) {
                       if (_couponApplied && value != _couponController.text) {
                         setState(() {
@@ -376,14 +357,7 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.surfaceContainer.withValues(alpha: 0.8),
-            colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        elevation: AppSpacing.elevationNone,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

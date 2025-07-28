@@ -8,6 +8,32 @@ import '../../widgets/cards/app_card.dart';
 import '../author_screen.dart';
 import '../narrator_screen.dart';
 
+enum NoteType { personal, highlight, thought }
+
+class NoteItem {
+  final String id;
+  final String title;
+  final String content;
+  final String contentTitle;
+  final String author;
+  final DateTime createdAt;
+  final DateTime? modifiedAt;
+  final NoteType type;
+  final String timestamp;
+
+  NoteItem({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.contentTitle,
+    required this.author,
+    required this.createdAt,
+    this.modifiedAt,
+    required this.type,
+    required this.timestamp,
+  });
+}
+
 /// Library tab content widget
 /// Shows user's personal library with recently played and downloaded books
 class LibraryTab extends StatefulWidget {
@@ -23,7 +49,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -31,6 +57,40 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
     _tabController.dispose();
     super.dispose();
   }
+
+  List<NoteItem> get _mockNotes => [
+    NoteItem(
+      id: '1',
+      title: 'Key Points on Fiqh',
+      content: 'Important rulings from today\'s lesson:\n• Purification before prayer is essential\n• The conditions for valid wudu\n• Different schools of thought perspectives',
+      contentTitle: 'Bahaar-e-Shariat',
+      author: 'Maulana Amjad Ali Azmi',
+      createdAt: DateTime.now().subtract(const Duration(days: 2)),
+      type: NoteType.personal,
+      timestamp: '23:15',
+    ),
+    NoteItem(
+      id: '2',
+      title: 'Beautiful Reflection',
+      content: 'This passage about the mercy of Allah really touched my heart. It reminds us that no matter how many sins we commit, Allah\'s mercy is always greater.',
+      contentTitle: 'Kanz ul Iman',
+      author: 'Imam Ahmed Raza Khan Barelvi',
+      createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+      modifiedAt: DateTime.now().subtract(const Duration(hours: 2)),
+      type: NoteType.thought,
+      timestamp: '15:30',
+    ),
+    NoteItem(
+      id: '3',
+      title: 'Highlighted Quote',
+      content: '"The best of people are those who benefit others" - This quote perfectly encapsulates the Islamic teaching of service to humanity.',
+      contentTitle: 'Jaa al-Haq',
+      author: 'Allama Kaukab Noorani Okarvi',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      type: NoteType.highlight,
+      timestamp: '42:18',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +138,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                   Tab(text: 'Recently Played'),
                   Tab(text: 'Downloaded'),
                   Tab(text: 'Following'),
+                  Tab(text: 'Notes'),
                 ],
               ),
             ],
@@ -92,6 +153,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
               _buildRecentlyPlayedTab(),
               _buildDownloadsTab(),
               _buildFollowingTab(),
+              _buildNotesTab(),
             ],
           ),
         ),
@@ -235,6 +297,88 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
               );
             }),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotesTab() {
+    return Column(
+      children: [
+        // Add note button
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.all(AppSpacing.medium),
+          child: AppPrimaryButton(
+            onPressed: () => _showAddNoteDialog(),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add_rounded),
+                SizedBox(width: AppSpacing.small),
+                Text('Add New Note'),
+              ],
+            ),
+          ),
+        ),
+        
+        // Notes list
+        Expanded(
+          child: _mockNotes.isEmpty 
+              ? _buildEmptyState(
+                  icon: Icons.note_add_rounded,
+                  title: 'No Notes Yet',
+                  description: 'Start taking notes while listening to remember key insights',
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+                  itemCount: _mockNotes.length,
+                  itemBuilder: (context, index) {
+                    final note = _mockNotes[index];
+                    return _NoteTile(note: note);
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  void _showAddNoteDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add New Note'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Note Title',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Note Content',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 4,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              debugPrint('Note added');
+            },
+            child: const Text('Add Note'),
+          ),
         ],
       ),
     );
@@ -733,6 +877,191 @@ class _FollowingTile extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Individual note tile widget
+class _NoteTile extends StatelessWidget {
+  final NoteItem note;
+
+  const _NoteTile({required this.note});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return AppCard(
+      margin: const EdgeInsets.only(bottom: AppSpacing.small),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Icon(
+                _getNoteIcon(note.type),
+                color: _getNoteColor(note.type),
+                size: AppSpacing.iconSmall,
+              ),
+              const SizedBox(width: AppSpacing.small),
+              Expanded(
+                child: AppSubtitleText(
+                  note.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text(
+                _formatDate(note.createdAt),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.small),
+          
+          // Content info
+          Row(
+            children: [
+              Icon(
+                Icons.book_rounded,
+                color: colorScheme.onSurfaceVariant,
+                size: AppSpacing.iconExtraSmall,
+              ),
+              const SizedBox(width: AppSpacing.extraSmall),
+              Expanded(
+                child: AppCaptionText(
+                  '${note.contentTitle} • ${note.author} • ${note.timestamp}',
+                  color: colorScheme.onSurfaceVariant,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.small),
+          
+          // Note content
+          AppCaptionText(
+            note.content,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          
+          if (note.modifiedAt != null) ...[
+            const SizedBox(height: AppSpacing.small),
+            AppCaptionText(
+              'Last modified: ${_formatDate(note.modifiedAt!)}',
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.small),
+          
+          // Actions
+          Row(
+            children: [
+              _ActionButton(
+                icon: Icons.edit_rounded,
+                label: 'Edit',
+                onTap: () => debugPrint('Edit note'),
+              ),
+              const SizedBox(width: AppSpacing.medium),
+              _ActionButton(
+                icon: Icons.share_rounded,
+                label: 'Share',
+                onTap: () => debugPrint('Share note'),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  color: colorScheme.onSurfaceVariant,
+                  size: AppSpacing.iconSmall,
+                ),
+                onPressed: () => debugPrint('More options'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getNoteIcon(NoteType type) {
+    switch (type) {
+      case NoteType.personal:
+        return Icons.person_rounded;
+      case NoteType.highlight:
+        return Icons.highlight_rounded;
+      case NoteType.thought:
+        return Icons.lightbulb_rounded;
+    }
+  }
+
+  Color _getNoteColor(NoteType type) {
+    switch (type) {
+      case NoteType.personal:
+        return Colors.green;
+      case NoteType.highlight:
+        return Colors.yellow.shade700;
+      case NoteType.thought:
+        return Colors.purple;
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) {
+      return 'Today';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+}
+
+/// Action button widget for tiles
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: colorScheme.primary,
+            size: AppSpacing.iconSmall,
+          ),
+          const SizedBox(width: AppSpacing.extraSmall),
+          AppCaptionText(
+            label,
+            color: colorScheme.primary,
           ),
         ],
       ),

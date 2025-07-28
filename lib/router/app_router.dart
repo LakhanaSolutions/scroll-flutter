@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/theme_demo_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -17,6 +18,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'settings',
           builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: 'theme-demo',
+          builder: (context, state) => const ThemeDemoScreen(),
         ),
       ],
     ),

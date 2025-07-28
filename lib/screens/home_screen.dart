@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
+import 'dart:io';
 import '../providers/theme_provider.dart';
+import 'home/home_tab.dart';
+import 'home/categories_tab.dart';
+import 'home/library_tab.dart';
+import 'home/settings_tab.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -31,25 +35,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(themeProvider);
 
+    // iOS-style background color for both platforms
+    final backgroundColor = isDarkMode 
+        ? const Color(0xFF000000)  // iOS dark mode background
+        : const Color(0xFFF2F2F7); // iOS light mode background
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Siraaj Demo'),
-        actions: [
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
-          ),
-        ],
-      ),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
-        children: [
-          _buildHomePage(),
-          _buildBookmarksPage(),
-          _buildFavoritesPage(),
-          _buildSettingsPage(),
-        ],
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          children: const [
+            HomeTab(),
+            CategoriesTab(),
+            LibraryTab(),
+            SettingsTab(),
+          ],
+        ),
       ),
       bottomNavigationBar: WaterDropNavBar(
         backgroundColor: isDarkMode ? Colors.grey[900]! : Colors.white,
@@ -65,18 +68,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         },
         selectedIndex: selectedIndex,
-        barItems: [
+        barItems: <BarItem>[
           BarItem(
             filledIcon: Icons.home_rounded,
             outlinedIcon: Icons.home_outlined,
           ),
           BarItem(
-            filledIcon: Icons.bookmark_rounded,
-            outlinedIcon: Icons.bookmark_border_rounded,
+            filledIcon: Icons.category_rounded,
+            outlinedIcon: Icons.category_outlined,
           ),
+          // BarItem(
+          //   filledIcon: Icons.search_rounded,
+          //   outlinedIcon: Icons.search_rounded,
+          // ),
           BarItem(
-            filledIcon: Icons.favorite_rounded,
-            outlinedIcon: Icons.favorite_border_rounded,
+            filledIcon: Icons.library_books_rounded,
+            outlinedIcon: Icons.library_books_outlined,
           ),
           BarItem(
             filledIcon: Icons.settings_rounded,
@@ -87,92 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildHomePage() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.home_rounded, size: 80, color: Colors.blue),
-          SizedBox(height: 20),
-          Text(
-            'Welcome to Siraaj!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Home Page',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildBookmarksPage() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.bookmark_rounded, size: 80, color: Colors.orange),
-          SizedBox(height: 20),
-          Text(
-            'Bookmarks',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Your saved bookmarks will appear here',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildFavoritesPage() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.favorite_rounded, size: 80, color: Colors.red),
-          SizedBox(height: 20),
-          Text(
-            'Favorites',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Your favorite items will appear here',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildSettingsPage() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.settings_rounded, size: 80, color: Colors.green),
-          const SizedBox(height: 20),
-          const Text(
-            'Settings',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Configure your app settings',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () => context.go('/settings'),
-            child: const Text('Go to Full Settings'),
-          ),
-        ],
-      ),
-    );
-  }
 }

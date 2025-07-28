@@ -4,6 +4,8 @@ import 'router/app_router.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'services/preferences_service.dart';
+import 'theme/app_theme.dart';
+import 'theme/theme_extensions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,19 +24,11 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Siraaj',
       locale: localeState.locale,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
+      theme: AppTheme.lightTheme.copyWith(
+        extensions: [AppThemeExtension.getForPlatform(isDark: false)],
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
+      darkTheme: AppTheme.darkTheme.copyWith(
+        extensions: [AppThemeExtension.getForPlatform(isDark: true)],
       ),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       routerConfig: appRouter,

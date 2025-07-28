@@ -81,7 +81,7 @@ class AppSpacing {
   static const double radiusMedium = baseUnit * 1.5;
   
   /// Large border radius - 16px
-  static const double radiusLarge = baseUnit * 2;
+  static const double radiusLarge = baseUnit * 3;
   
   /// Extra large border radius - 24px
   static const double radiusExtraLarge = baseUnit * 3;

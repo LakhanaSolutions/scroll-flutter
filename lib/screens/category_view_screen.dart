@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/cards/app_card.dart';
@@ -51,7 +52,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
+      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
@@ -85,6 +86,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
           labelColor: colorScheme.primary,
           unselectedLabelColor: colorScheme.onSurfaceVariant,
           indicatorColor: colorScheme.primary,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(text: 'All (${_allContent.length})'),
             Tab(text: 'Books (${_books.length})'),

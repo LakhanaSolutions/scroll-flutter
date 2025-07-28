@@ -37,7 +37,7 @@ class BookShelf extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.medium),
           SizedBox(
-            height: 200,
+            height: 245,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
@@ -73,7 +73,7 @@ class _BookShelfItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      width: 120,
+      width: 160,
       margin: const EdgeInsets.only(right: AppSpacing.medium),
       child: Material(
         color: Colors.transparent,
@@ -99,8 +99,8 @@ class _BookShelfItem extends StatelessWidget {
                   children: [
                     AppBookCover(
                       imageUrl: book.coverUrl,
-                      width: 120,
-                      height: 140,
+                      width: 160,
+                      height: 180,
                       backgroundColor: colorScheme.primaryContainer,
                     ),
                     // Premium badge
@@ -126,32 +126,36 @@ class _BookShelfItem extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.small),
               // Book title
-              AppCaptionText(
+              AppBodyText(
                 book.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: AppSpacing.extraSmall),
               // Author and rating
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: AppCaptionText(
-                      book.author,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.extraSmall),
-                  Icon(
-                    Icons.star_rounded,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconExtraSmall,
-                  ),
                   AppCaptionText(
-                    book.rating.toString(),
+                    book.author,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     color: colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: AppSpacing.extraSmall),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star_rounded,
+                        color: colorScheme.primary,
+                        size: AppSpacing.iconExtraSmall,
+                      ),
+                      const SizedBox(width: AppSpacing.extraSmall),
+                      AppCaptionText(
+                        book.rating.toString(),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ],
                   ),
                 ],
               ),

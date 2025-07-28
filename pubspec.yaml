@@ -53,6 +53,8 @@ dependencies:
   # HTML rendering
   flutter_widget_from_html: ^0.17.0
 
+  modal_bottom_sheet: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

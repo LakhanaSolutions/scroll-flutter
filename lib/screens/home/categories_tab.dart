@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siraaj/screens/narrators_list_screen.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/buttons/app_buttons.dart';
@@ -445,14 +446,8 @@ class _CategoryTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
-      gradient: const LinearGradient(
-        colors: [
-          Color(0xFFE3F2FD), // Light blue
-          Color(0xFFBBDEFB), // Slightly darker light blue
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      gradient: context.surfaceGradient,
+      elevation: AppSpacing.elevationNone,
       onTap: onTap,
       child: Row(
         children: [

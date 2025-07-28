@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/books/book_shelf.dart';
 
@@ -76,7 +77,7 @@ class _SearchTabState extends State<SearchTab> {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: const Color(0xFFF2F2F7), // iOS background
+            color: context.appTheme.iosSystemBackground, // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),

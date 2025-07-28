@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/images/app_image.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import 'author_screen.dart';
 
 /// Authors list screen with language tabs
@@ -55,39 +57,12 @@ class _AuthorsListScreenState extends State<AuthorsListScreen> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.edit_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconMedium,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppTitleText('Authors'),
-          ],
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          labelColor: colorScheme.primary,
-          unselectedLabelColor: colorScheme.onSurfaceVariant,
-          indicatorColor: colorScheme.primary,
-          tabs: _languages.map((language) => Tab(text: language)).toList(),
-        ),
+      appBar: AppAppBarExtensions.withTabBar(
+        title: 'Authors',
+        tabController: _tabController,
+        tabs: _languages,
+        onBackPressed: () => Navigator.of(context).pop(),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -172,14 +147,8 @@ class _AuthorTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
-      gradient: LinearGradient(
-        colors: [
-          colorScheme.surfaceContainer.withValues(alpha: 0.8),
-          colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      gradient: context.surfaceGradient,
+      elevation: AppSpacing.elevationNone,
       onTap: onTap,
       child: Row(
         children: [

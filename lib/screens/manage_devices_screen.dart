@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 
@@ -90,27 +92,9 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.devices_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconMedium,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppTitleText('Manage Devices'),
-          ],
-        ),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: const AppAppBar(
+        title: 'Manage Devices',
       ),
       body: Column(
         children: [

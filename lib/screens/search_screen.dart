@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/inputs/app_text_field.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/search/author_result_tile.dart';
@@ -73,18 +75,9 @@ class _SearchScreenState extends State<SearchScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const AppTitleText('Search'),
-        centerTitle: true,
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: const AppAppBar(
+        title: 'Search',
       ),
       body: Column(
         children: [

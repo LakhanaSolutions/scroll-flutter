@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 import 'dart:io';
 import '../providers/theme_provider.dart';
+import '../theme/theme_extensions.dart';
 import 'home/home_tab.dart';
 import 'home/categories_tab.dart';
 import 'home/library_tab.dart';
@@ -34,14 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(themeProvider);
-
-    // iOS-style background color for both platforms
-    final backgroundColor = isDarkMode 
-        ? const Color(0xFF000000)  // iOS dark mode background
-        : const Color(0xFFF2F2F7); // iOS light mode background
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: backgroundColor,
       body: SafeArea(
         child: PageView(
           physics: const NeverScrollableScrollPhysics(),
@@ -56,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       bottomNavigationBar: WaterDropNavBar(
         backgroundColor: isDarkMode ? Colors.grey[900]! : Colors.white,
-        waterDropColor: Theme.of(context).primaryColor,
+        waterDropColor: theme.colorScheme.primary,
         onItemSelected: (index) {
           setState(() {
             selectedIndex = index;

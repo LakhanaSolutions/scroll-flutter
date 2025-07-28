@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/images/app_image.dart';
@@ -48,40 +50,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const AppTitleText('Profile'),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: 'Profile',
         actions: [
-          if (_isEditing) ...[
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isEditing = false;
-                });
-              },
-              child: const Text('Cancel'),
+          IconButton(
+            icon: Icon(
+              Icons.edit_rounded,
+              color: colorScheme.onSurfaceVariant,
             ),
-            TextButton(
-              onPressed: _saveProfile,
-              child: const Text('Save'),
-            ),
-          ] else
-            IconButton(
-              icon: Icon(
-                Icons.edit_rounded,
-                color: colorScheme.primary,
-              ),
-              onPressed: _toggleEdit,
-              tooltip: 'Edit Profile',
-            ),
+            onPressed: () {
+              debugPrint('Edit profile tapped');
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

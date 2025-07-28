@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 
@@ -14,7 +15,7 @@ class AboutScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
+      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(

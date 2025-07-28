@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'chapter_screen.dart';
@@ -40,18 +42,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: AppTitleText(widget.content.title),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: widget.content.title,
         actions: [
           IconButton(
             icon: Icon(

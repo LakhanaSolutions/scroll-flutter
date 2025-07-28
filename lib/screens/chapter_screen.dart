@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'narrator_screen.dart';
 
@@ -124,19 +126,29 @@ class _ChapterScreenState extends State<ChapterScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: widget.chapter.title,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.bookmark_border_rounded,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            onPressed: () {
+              debugPrint('Bookmark chapter: ${widget.chapter.title}');
+            },
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: AppTitleText('Now Playing'),
-        centerTitle: true,
+          IconButton(
+            icon: Icon(
+              Icons.share_rounded,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            onPressed: () {
+              debugPrint('Share chapter: ${widget.chapter.title}');
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.large),

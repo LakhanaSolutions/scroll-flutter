@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 
 /// Privacy Policy screen that displays HTML content from API
@@ -106,7 +107,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
+      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(

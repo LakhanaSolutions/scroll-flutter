@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
@@ -60,45 +62,11 @@ class _NarratorScreenState extends State<NarratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            AppCircularImage(
-              imageUrl: widget.narrator.imageUrl,
-              fallbackIcon: Icons.mic_rounded,
-              size: 32,
-              backgroundColor: colorScheme.secondaryContainer,
-              iconColor: colorScheme.onSecondaryContainer,
-              iconSize: 18,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            AppTitleText(widget.narrator.name),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.share_rounded,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () {
-              debugPrint('Share narrator: ${widget.narrator.name}');
-            },
-          ),
-        ],
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: widget.narrator.name,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -129,7 +97,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
     return Container(
       width: double.infinity,
       color: colorScheme.surface,
-      padding: const EdgeInsets.all(AppSpacing.large),
+      padding: const EdgeInsets.all(AppSpacing.medium),
       child: Column(
         children: [
           // Narrator avatar
@@ -236,7 +204,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.large),
+          padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -361,7 +329,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.large),
+          padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -379,7 +347,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
               const SizedBox(height: AppSpacing.medium),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.large),
+                padding: const EdgeInsets.all(AppSpacing.medium),
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerHigh,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
@@ -430,7 +398,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.large),
+          padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -518,7 +486,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
             margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
             child: AppCard(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.large),
+                padding: const EdgeInsets.all(AppSpacing.medium),
                 child: Column(
                   children: [
                     Icon(

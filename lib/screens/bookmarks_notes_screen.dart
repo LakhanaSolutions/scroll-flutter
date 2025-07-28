@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
@@ -153,7 +154,7 @@ class _BookmarksNotesScreenState extends State<BookmarksNotesScreen> with Ticker
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
+      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
@@ -188,6 +189,7 @@ class _BookmarksNotesScreenState extends State<BookmarksNotesScreen> with Ticker
           labelColor: colorScheme.primary,
           unselectedLabelColor: colorScheme.onSurfaceVariant,
           indicatorColor: colorScheme.primary,
+          dividerColor: Colors.transparent,
           tabs: const [
             Tab(
               icon: Icon(Icons.bookmark_rounded),

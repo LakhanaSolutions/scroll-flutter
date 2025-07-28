@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
+import 'app_gradients.dart';
 
 /// Platform-specific theme extensions for the Siraaj app
 /// Provides iOS-specific design tokens and behaviors
@@ -30,6 +31,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     required this.dialogElevation,
     required this.bottomSheetElevation,
     required this.fabElevation,
+    required this.iosBackground,
+    required this.iosSystemBackground,
   });
 
   /// Success color
@@ -94,6 +97,12 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   
   /// Floating action button elevation
   final double fabElevation;
+  
+  /// iOS-inspired background color
+  final Color iosBackground;
+  
+  /// iOS-inspired system background color
+  final Color iosSystemBackground;
 
   /// Light theme extension
   static const AppThemeExtension light = AppThemeExtension(
@@ -118,6 +127,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     dialogElevation: AppSpacing.elevationExtraLarge,
     bottomSheetElevation: AppSpacing.elevationMedium,
     fabElevation: AppSpacing.elevationLarge,
+    iosBackground: AppColors.iosLightBackground,
+    iosSystemBackground: AppColors.iosLightSystemBackground,
   );
 
   /// Dark theme extension
@@ -143,6 +154,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     dialogElevation: AppSpacing.elevationExtraLarge,
     bottomSheetElevation: AppSpacing.elevationMedium,
     fabElevation: AppSpacing.elevationLarge,
+    iosBackground: AppColors.iosDarkBackground,
+    iosSystemBackground: AppColors.iosDarkSystemBackground,
   );
 
   /// iOS light theme extension with minimal elevations
@@ -168,6 +181,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     dialogElevation: AppSpacing.elevationNone,
     bottomSheetElevation: AppSpacing.elevationNone,
     fabElevation: AppSpacing.elevationSmall,
+    iosBackground: AppColors.iosLightBackground,
+    iosSystemBackground: AppColors.iosLightSystemBackground,
   );
 
   /// iOS dark theme extension with minimal elevations
@@ -193,6 +208,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     dialogElevation: AppSpacing.elevationNone,
     bottomSheetElevation: AppSpacing.elevationNone,
     fabElevation: AppSpacing.elevationSmall,
+    iosBackground: AppColors.iosDarkBackground,
+    iosSystemBackground: AppColors.iosDarkSystemBackground,
   );
 
   @override
@@ -218,6 +235,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     double? dialogElevation,
     double? bottomSheetElevation,
     double? fabElevation,
+    Color? iosBackground,
+    Color? iosSystemBackground,
   }) {
     return AppThemeExtension(
       success: success ?? this.success,
@@ -241,6 +260,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       dialogElevation: dialogElevation ?? this.dialogElevation,
       bottomSheetElevation: bottomSheetElevation ?? this.bottomSheetElevation,
       fabElevation: fabElevation ?? this.fabElevation,
+      iosBackground: iosBackground ?? this.iosBackground,
+      iosSystemBackground: iosSystemBackground ?? this.iosSystemBackground,
     );
   }
 
@@ -271,6 +292,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       dialogElevation: (1.0 - t) * dialogElevation + t * other.dialogElevation,
       bottomSheetElevation: (1.0 - t) * bottomSheetElevation + t * other.bottomSheetElevation,
       fabElevation: (1.0 - t) * fabElevation + t * other.fabElevation,
+      iosBackground: Color.lerp(iosBackground, other.iosBackground, t)!,
+      iosSystemBackground: Color.lerp(iosSystemBackground, other.iosSystemBackground, t)!,
     );
   }
 
@@ -287,6 +310,45 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
 extension AppThemeExtensionGetter on BuildContext {
   /// Get the app theme extension
   AppThemeExtension get appTheme => Theme.of(this).extension<AppThemeExtension>()!;
+
+  /// Get the color scheme
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+
+  /// Standard surface gradient from low to highest container
+  LinearGradient get surfaceGradient => AppGradients.surfaceGradient(colorScheme);
+
+  /// Subtle surface gradient with transparency
+  LinearGradient get subtleSurfaceGradient => AppGradients.subtleSurfaceGradient(colorScheme);
+
+  /// Primary gradient using primary colors
+  LinearGradient get primaryGradient => AppGradients.primaryGradient(colorScheme);
+
+  /// Secondary gradient using secondary colors
+  LinearGradient get secondaryGradient => AppGradients.secondaryGradient(colorScheme);
+
+  /// Tertiary gradient using tertiary colors
+  LinearGradient get tertiaryGradient => AppGradients.tertiaryGradient(colorScheme);
+
+  /// Error gradient using error colors
+  LinearGradient get errorGradient => AppGradients.errorGradient(colorScheme);
+
+  /// Success gradient using green tones
+  LinearGradient get successGradient => AppGradients.successGradient(colorScheme);
+
+  /// Warning gradient using orange tones
+  LinearGradient get warningGradient => AppGradients.warningGradient(colorScheme);
+
+  /// Premium gradient with gold tones
+  LinearGradient get premiumGradient => AppGradients.premiumGradient(colorScheme);
+
+  /// Glass morphism gradient with transparency
+  LinearGradient get glassGradient => AppGradients.glassGradient(colorScheme);
+
+  /// Radial gradient for spotlight effects
+  RadialGradient get spotlightGradient => AppGradients.spotlightGradient(colorScheme);
+
+  /// Sweep gradient for circular elements
+  SweepGradient get sweepGradient => AppGradients.sweepGradient(colorScheme);
 }
 
 /// Extension to easily access the theme extension from ThemeData

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
@@ -58,38 +60,17 @@ class _AuthorScreenState extends State<AuthorScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            AppCircularImage(
-              imageUrl: widget.author.imageUrl,
-              fallbackIcon: Icons.person_rounded,
-              size: 32,
-              backgroundColor: colorScheme.primaryContainer,
-              iconColor: colorScheme.onPrimaryContainer,
-              iconSize: 18,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            AppTitleText(widget.author.name),
-          ],
-        ),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: widget.author.name,
         actions: [
           IconButton(
             icon: Icon(
-              Icons.share_rounded,
-              color: colorScheme.onSurfaceVariant,
+              widget.author.isFollowing ? Icons.person_remove_rounded : Icons.person_add_rounded,
+              color: widget.author.isFollowing ? colorScheme.error : colorScheme.primary,
             ),
             onPressed: () {
-              debugPrint('Share author: ${widget.author.name}');
+              debugPrint('${widget.author.isFollowing ? "Unfollowed" : "Followed"} author: ${widget.author.name}');
             },
           ),
         ],

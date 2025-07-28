@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'subscription_history_screen.dart';
@@ -103,43 +105,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.subscriptions_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconMedium,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppTitleText('Subscription Plans'),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.history_rounded,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SubscriptionHistoryScreen(),
-                ),
-              );
-            },
-            tooltip: 'Subscription History',
-          ),
-        ],
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: const AppAppBar(
+        title: 'Subscription',
       ),
       body: Column(
         children: [

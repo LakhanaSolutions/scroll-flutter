@@ -18,6 +18,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: AppColors.lightColorScheme,
+      scaffoldBackgroundColor: AppColors.iosLightBackground,
       
       // Typography
       textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),
@@ -197,6 +198,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: AppColors.darkColorScheme,
+      scaffoldBackgroundColor: AppColors.iosDarkBackground,
       
       // Typography
       textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),

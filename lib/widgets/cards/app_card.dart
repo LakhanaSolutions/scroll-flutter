@@ -51,7 +51,7 @@ class AppCard extends StatelessWidget {
       child: Material(
         color: gradient != null ? Colors.transparent : (backgroundColor ?? Colors.white),
         borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
-        elevation: elevation ?? AppSpacing.elevationLarge,
+        elevation: elevation ?? AppSpacing.elevationMax,
         shadowColor: colorScheme.shadow.withValues(alpha: 0.2),
         child: Container(
           decoration: gradient != null ? BoxDecoration(

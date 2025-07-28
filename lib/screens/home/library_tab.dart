@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
@@ -42,7 +43,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: const Color(0xFFF2F2F7), // iOS background
+            color: context.appTheme.iosBackground, // Match scaffold background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),
@@ -72,6 +73,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 labelColor: colorScheme.primary,
                 unselectedLabelColor: colorScheme.onSurfaceVariant,
                 indicatorColor: colorScheme.primary,
+                dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(text: 'Recently Played'),
                   Tab(text: 'Downloaded'),

@@ -42,7 +42,7 @@ class PremiumContentSection extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-          color: colorScheme.surfaceContainerHigh,
+          color: colorScheme.surfaceContainer,
           border: Border.all(
             color: colorScheme.outline.withValues(alpha: 0.1),
             width: 1,

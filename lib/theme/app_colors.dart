@@ -65,7 +65,7 @@ class AppColors {
     brightness: Brightness.dark,
     
     // Primary colors
-    primary: Color(0xFFCFBCFF),
+    primary: Color(0xFF9A8CBF),
     onPrimary: Color(0xFF381E72),
     primaryContainer: Color(0xFF4F378A),
     onPrimaryContainer: Color(0xFFE9DDFF),
@@ -125,6 +125,10 @@ class AppColors {
   static const Color iosSeparator = Color(0xFF3C3C43);
   static const Color iosOpaqueSeparator = Color(0xFFC6C6C8);
   
+  /// iOS-inspired background colors for light mode
+  static const Color iosLightBackground = Color(0xFFF8F9FB);
+  static const Color iosLightSystemBackground = Color(0xFFF2F2F7);
+  
   /// iOS system colors for dark mode
   static const Color iosBackgroundDark = Color(0xFF000000);
   static const Color iosSystemBackgroundDark = Color(0xFF1C1C1E);
@@ -134,6 +138,10 @@ class AppColors {
   static const Color iosQuaternaryLabelDark = Color(0xFF484850);
   static const Color iosSeparatorDark = Color(0xFF545458);
   static const Color iosOpaqueSeparatorDark = Color(0xFF38383A);
+  
+  /// iOS-inspired background colors for dark mode
+  static const Color iosDarkBackground = Color(0xFF000000);
+  static const Color iosDarkSystemBackground = Color(0xFF1C1C1E);
 
   // ====== Semantic Color Tokens ======
   
@@ -301,4 +309,14 @@ extension AppColorScheme on ColorScheme {
   Color get onInfoContainer => brightness == Brightness.dark 
       ? AppColors.onInfoContainerDark 
       : AppColors.onInfoContainerLight;
+  
+  /// iOS-inspired background color
+  Color get iosBackground => brightness == Brightness.dark 
+      ? AppColors.iosDarkBackground 
+      : AppColors.iosLightBackground;
+  
+  /// iOS-inspired system background color
+  Color get iosSystemBackground => brightness == Brightness.dark 
+      ? AppColors.iosDarkSystemBackground 
+      : AppColors.iosLightSystemBackground;
 }

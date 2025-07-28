@@ -7,6 +7,7 @@ import '../widgets/inputs/app_text_field.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/dialogs/app_dialogs.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/bottom_sheets/app_modal_bottom_sheet.dart';
 
 /// Demo screen showcasing all themed components
 /// Demonstrates the comprehensive design system implementation
@@ -344,6 +345,18 @@ class _ThemeDemoScreenState extends ConsumerState<ThemeDemoScreen> {
               onPressed: _showLoadingDialog,
               child: const Text('Loading Dialog'),
             ),
+            AppSecondaryButton(
+              onPressed: _showModalBottomSheet,
+              child: const Text('Modal Bottom Sheet'),
+            ),
+            AppSecondaryButton(
+              onPressed: _showScrollableModal,
+              child: const Text('Scrollable Modal'),
+            ),
+            AppSecondaryButton(
+              onPressed: _showActionModal,
+              child: const Text('Action Modal'),
+            ),
           ],
         ),
       ],
@@ -427,6 +440,7 @@ class _ThemeDemoScreenState extends ConsumerState<ThemeDemoScreen> {
   }
 
   void _showBottomSheet() {
+    // Keep the original implementation for comparison
     AppBottomSheet.show(
       context,
       title: 'Bottom Sheet Example',
@@ -448,6 +462,131 @@ class _ThemeDemoScreenState extends ConsumerState<ThemeDemoScreen> {
         ],
       ),
     );
+  }
+
+  void _showModalBottomSheet() {
+    AppModalBottomSheet.show(
+      context: context,
+      title: 'Modal Bottom Sheet',
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(AppSpacing.large),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const AppBodyText(
+              'This is a platform-native modal bottom sheet using the modal_bottom_sheet package. It automatically adapts to iOS and Android styling.',
+            ),
+            const SizedBox(height: AppSpacing.large),
+            Row(
+              children: [
+                Expanded(
+                  child: AppSecondaryButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.medium),
+                Expanded(
+                  child: AppPrimaryButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _showSnackBar('Modal action completed');
+                    },
+                    child: const Text('Confirm'),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showScrollableModal() {
+    AppModalBottomSheet.showScrollable(
+      context: context,
+      title: 'Scrollable Content',
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.large),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppBodyText(
+              'This modal bottom sheet contains scrollable content. The scroll controller is properly synced with the modal\'s drag gestures.',
+            ),
+            const SizedBox(height: AppSpacing.large),
+            ...List.generate(20, (index) => Container(
+              margin: const EdgeInsets.only(bottom: AppSpacing.medium),
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text('${index + 1}'),
+                  ),
+                  const SizedBox(width: AppSpacing.medium),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppSubtitleText('Item ${index + 1}'),
+                        AppCaptionText('Description for item ${index + 1}'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showActionModal() async {
+    final result = await AppActionModalBottomSheet.showActions<String>(
+      context: context,
+      title: 'Choose Action',
+      subtitle: 'Select one of the following actions to perform',
+      actions: [
+        const AppModalAction(
+          title: 'Share Content',
+          subtitle: 'Share this content with others',
+          icon: Icons.share,
+          value: 'share',
+        ),
+        const AppModalAction(
+          title: 'Edit Content',
+          subtitle: 'Make changes to this content',
+          icon: Icons.edit,
+          value: 'edit',
+        ),
+        const AppModalAction(
+          title: 'Bookmark',
+          subtitle: 'Save this content for later',
+          icon: Icons.bookmark_add,
+          value: 'bookmark',
+        ),
+        const AppModalAction(
+          title: 'Delete Content',
+          subtitle: 'Permanently remove this content',
+          icon: Icons.delete,
+          value: 'delete',
+          isDestructive: true,
+        ),
+      ],
+    );
+
+    if (result != null && mounted) {
+      _showSnackBar('Selected action: $result');
+    }
   }
 
   void _showActionSheet() {

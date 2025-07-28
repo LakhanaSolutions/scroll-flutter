@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'subscription_screen.dart';
@@ -109,17 +111,9 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const AppTitleText('Upgrade Plan'),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: const AppAppBar(
+        title: 'Upgrade Plan',
       ),
       body: SingleChildScrollView(
         child: Column(

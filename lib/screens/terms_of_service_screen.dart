@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../theme/app_spacing.dart';
+import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
+import '../widgets/app_bar/app_app_bar.dart';
 
 /// Terms of Service screen that displays HTML content from API
 class TermsOfServiceScreen extends StatefulWidget {
@@ -145,27 +147,9 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7), // iOS background
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.description_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconMedium,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppTitleText('Terms of Service'),
-          ],
-        ),
+      backgroundColor: context.appTheme.iosSystemBackground,
+      appBar: AppAppBar(
+        title: 'Terms of Service',
         actions: [
           IconButton(
             icon: Icon(

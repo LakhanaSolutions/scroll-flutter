@@ -3,6 +3,7 @@ import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
+import '../widgets/images/app_image.dart';
 import 'narrator_screen.dart';
 
 /// Narrators list screen with voice type tabs
@@ -60,7 +61,6 @@ class _NarratorsListScreenState extends State<NarratorsListScreen> with TickerPr
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -175,22 +175,25 @@ class _NarratorTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
+      gradient: LinearGradient(
+        colors: [
+          colorScheme.surfaceContainer.withValues(alpha: 0.8),
+          colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
       onTap: onTap,
       child: Row(
         children: [
           // Narrator avatar
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.secondaryContainer,
-            ),
-            child: Icon(
-              Icons.mic_rounded,
-              color: colorScheme.onSecondaryContainer,
-              size: AppSpacing.iconLarge,
-            ),
+          AppCircularImage(
+            imageUrl: narrator.imageUrl,
+            fallbackIcon: Icons.mic_rounded,
+            size: 60,
+            backgroundColor: colorScheme.secondaryContainer,
+            iconColor: colorScheme.onSecondaryContainer,
+            iconSize: AppSpacing.iconLarge,
           ),
           const SizedBox(width: AppSpacing.medium),
           // Narrator info

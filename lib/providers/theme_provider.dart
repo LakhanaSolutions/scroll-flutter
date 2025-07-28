@@ -14,6 +14,16 @@ class ThemeNotifier extends StateNotifier<bool> {
     state = isDark;
     await PreferencesService.setDarkMode(isDark);
   }
+
+  Future<void> setLightTheme() async {
+    state = false;
+    await PreferencesService.setDarkMode(false);
+  }
+
+  Future<void> setDarkTheme() async {
+    state = true;
+    await PreferencesService.setDarkMode(true);
+  }
 }
 
 final themeProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {

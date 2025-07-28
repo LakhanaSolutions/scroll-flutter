@@ -67,6 +67,7 @@ class CategoryData {
   final String id;
   final String name;
   final IconData icon;
+  final String? imageUrl;
   final int itemCount;
   final String listeningHours;
   final String description;
@@ -75,6 +76,7 @@ class CategoryData {
     required this.id,
     required this.name,
     required this.icon,
+    this.imageUrl,
     required this.itemCount,
     required this.listeningHours,
     required this.description,

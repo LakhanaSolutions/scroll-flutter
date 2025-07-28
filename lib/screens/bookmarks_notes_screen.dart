@@ -155,7 +155,6 @@ class _BookmarksNotesScreenState extends State<BookmarksNotesScreen> with Ticker
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(

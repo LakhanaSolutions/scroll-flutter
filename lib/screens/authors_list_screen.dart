@@ -3,6 +3,7 @@ import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
+import '../widgets/images/app_image.dart';
 import 'author_screen.dart';
 
 /// Authors list screen with language tabs
@@ -60,7 +61,6 @@ class _AuthorsListScreenState extends State<AuthorsListScreen> with TickerProvid
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -172,22 +172,25 @@ class _AuthorTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
+      gradient: LinearGradient(
+        colors: [
+          colorScheme.surfaceContainer.withValues(alpha: 0.8),
+          colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
       onTap: onTap,
       child: Row(
         children: [
           // Author avatar
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.primaryContainer,
-            ),
-            child: Icon(
-              Icons.person_rounded,
-              color: colorScheme.onPrimaryContainer,
-              size: AppSpacing.iconLarge,
-            ),
+          AppCircularImage(
+            imageUrl: author.imageUrl,
+            fallbackIcon: Icons.person_rounded,
+            size: 60,
+            backgroundColor: colorScheme.primaryContainer,
+            iconColor: colorScheme.onPrimaryContainer,
+            iconSize: AppSpacing.iconLarge,
           ),
           const SizedBox(width: AppSpacing.medium),
           // Author info

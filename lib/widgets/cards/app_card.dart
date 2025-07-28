@@ -11,6 +11,7 @@ class AppCard extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.gradient,
     this.elevation,
     this.borderRadius,
     this.onTap,
@@ -27,6 +28,9 @@ class AppCard extends StatelessWidget {
   
   /// Background color override
   final Color? backgroundColor;
+  
+  /// Gradient background override
+  final Gradient? gradient;
   
   /// Shadow elevation override
   final double? elevation;
@@ -45,16 +49,22 @@ class AppCard extends StatelessWidget {
     return Container(
       margin: margin ?? const EdgeInsets.all(AppSpacing.small),
       child: Material(
-        color: backgroundColor ?? colorScheme.surface,
+        color: gradient != null ? Colors.transparent : (backgroundColor ?? Colors.white),
         borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
         elevation: elevation ?? AppSpacing.elevationLarge,
         shadowColor: colorScheme.shadow.withValues(alpha: 0.2),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
-          child: Padding(
-            padding: padding ?? const EdgeInsets.all(AppSpacing.medium),
-            child: child,
+        child: Container(
+          decoration: gradient != null ? BoxDecoration(
+            gradient: gradient,
+            borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
+          ) : null,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
+            child: Padding(
+              padding: padding ?? const EdgeInsets.all(AppSpacing.medium),
+              child: child,
+            ),
           ),
         ),
       ),
@@ -71,6 +81,7 @@ class AppCardCompact extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.gradient,
     this.onTap,
   });
 
@@ -86,6 +97,9 @@ class AppCardCompact extends StatelessWidget {
   /// Background color override
   final Color? backgroundColor;
   
+  /// Gradient background override
+  final Gradient? gradient;
+  
   /// Tap callback for the card
   final VoidCallback? onTap;
 
@@ -95,6 +109,7 @@ class AppCardCompact extends StatelessWidget {
       padding: padding ?? const EdgeInsets.all(AppSpacing.small),
       margin: margin ?? const EdgeInsets.all(AppSpacing.extraSmall),
       backgroundColor: backgroundColor,
+      gradient: gradient,
       elevation: AppSpacing.elevationMedium,
       borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       onTap: onTap,
@@ -112,6 +127,7 @@ class AppCardElevated extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.gradient,
     this.onTap,
   });
 
@@ -127,6 +143,9 @@ class AppCardElevated extends StatelessWidget {
   /// Background color override
   final Color? backgroundColor;
   
+  /// Gradient background override
+  final Gradient? gradient;
+  
   /// Tap callback for the card
   final VoidCallback? onTap;
 
@@ -136,6 +155,7 @@ class AppCardElevated extends StatelessWidget {
       padding: padding,
       margin: margin,
       backgroundColor: backgroundColor,
+      gradient: gradient,
       elevation: AppSpacing.elevationExtraLarge,
       onTap: onTap,
       child: child,
@@ -152,6 +172,7 @@ class AppCardFlat extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.gradient,
     this.onTap,
   });
 
@@ -167,6 +188,9 @@ class AppCardFlat extends StatelessWidget {
   /// Background color override
   final Color? backgroundColor;
   
+  /// Gradient background override
+  final Gradient? gradient;
+  
   /// Tap callback for the card
   final VoidCallback? onTap;
 
@@ -176,6 +200,7 @@ class AppCardFlat extends StatelessWidget {
       padding: padding,
       margin: margin,
       backgroundColor: backgroundColor,
+      gradient: gradient,
       elevation: AppSpacing.elevationSmall,
       onTap: onTap,
       child: child,

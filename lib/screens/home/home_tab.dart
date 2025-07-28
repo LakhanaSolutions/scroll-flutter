@@ -10,6 +10,7 @@ import '../../widgets/premium/premium_content_section.dart';
 import '../../widgets/banners/audiobook_of_week.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
+import '../../widgets/images/app_image.dart';
 import '../../providers/theme_provider.dart';
 import '../search_screen.dart';
 
@@ -73,24 +74,20 @@ class HomeTab extends ConsumerWidget {
                   debugPrint('Profile avatar tapped');
                 },
                 child: Container(
-                  width: 40,
-                  height: 40,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: colorScheme.outline.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      'U',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  child: AppCircularImage(
+                    imageUrl: null, // No user image in current data
+                    fallbackIcon: Icons.person_rounded,
+                    size: 40,
+                    backgroundColor: colorScheme.primary,
+                    iconColor: colorScheme.onPrimary,
+                    iconSize: 20,
                   ),
                 ),
               ),

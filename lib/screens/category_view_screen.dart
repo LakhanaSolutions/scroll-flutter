@@ -53,7 +53,6 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(

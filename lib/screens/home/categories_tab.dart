@@ -5,6 +5,7 @@ import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/buttons/app_buttons.dart';
+import '../../widgets/images/app_image.dart';
 import '../category_view_screen.dart';
 import '../authors_list_screen.dart';
 
@@ -36,7 +37,6 @@ class _CategoriesTabState extends State<CategoriesTab> {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: const Color(0xFFF2F2F7), // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),
@@ -72,10 +72,10 @@ class _CategoriesTabState extends State<CategoriesTab> {
                       title: 'Explore Authors',
                       subtitle: 'Discover amazing writers',
                       icon: Icons.edit_rounded,
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
-                          colorScheme.primary,
-                          colorScheme.primaryContainer,
+                          Color(0xFF2196F3), // Blue
+                          Color(0xFF1976D2), // Darker blue
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -95,10 +95,10 @@ class _CategoriesTabState extends State<CategoriesTab> {
                       title: 'Explore Narrators',
                       subtitle: 'Find amazing voices',
                       icon: Icons.mic_rounded,
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
-                          colorScheme.secondary,
-                          colorScheme.secondaryContainer,
+                          Color(0xFF00BCD4), // Cyan
+                          Color(0xFF0097A7), // Darker cyan
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -445,22 +445,27 @@ class _CategoryTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
+      gradient: const LinearGradient(
+        colors: [
+          Color(0xFFE3F2FD), // Light blue
+          Color(0xFFBBDEFB), // Slightly darker light blue
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
       onTap: onTap,
       child: Row(
         children: [
-          // Category icon
-          Container(
-            width: AppSpacing.iconLarge + AppSpacing.small,
-            height: AppSpacing.iconLarge + AppSpacing.small,
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-            ),
-            child: Icon(
-              category.icon,
-              color: colorScheme.onPrimaryContainer,
-              size: AppSpacing.iconMedium,
-            ),
+          // Category icon/image
+          AppImage(
+            imageUrl: category.imageUrl,
+            fallbackIcon: category.icon,
+            width: AppSpacing.iconLarge + AppSpacing.medium,
+            height: AppSpacing.iconLarge + AppSpacing.medium,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+            backgroundColor: colorScheme.primaryContainer,
+            iconColor: colorScheme.onPrimaryContainer,
+            iconSize: AppSpacing.iconLarge,
           ),
           const SizedBox(width: AppSpacing.medium),
           // Category info

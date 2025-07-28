@@ -5,6 +5,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
+import '../widgets/images/app_image.dart';
 
 /// Author profile screen showing detailed information about an author
 /// Displays bio, books, awards, and other relevant information
@@ -59,7 +60,6 @@ class _AuthorScreenState extends State<AuthorScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -68,7 +68,20 @@ class _AuthorScreenState extends State<AuthorScreen> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: AppTitleText('Author'),
+        title: Row(
+          children: [
+            AppCircularImage(
+              imageUrl: widget.author.imageUrl,
+              fallbackIcon: Icons.person_rounded,
+              size: 32,
+              backgroundColor: colorScheme.primaryContainer,
+              iconColor: colorScheme.onPrimaryContainer,
+              iconSize: 18,
+            ),
+            const SizedBox(width: AppSpacing.small),
+            AppTitleText(widget.author.name),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(

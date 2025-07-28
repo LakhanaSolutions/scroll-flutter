@@ -46,6 +46,12 @@ dependencies:
   
   # Navigation
   water_drop_nav_bar: ^2.2.2
+  
+  # Google Fonts
+  google_fonts: ^6.2.1
+  
+  # HTML rendering
+  flutter_widget_from_html: ^0.17.0
 
 dev_dependencies:
   flutter_test:

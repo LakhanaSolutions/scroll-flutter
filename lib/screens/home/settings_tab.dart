@@ -8,6 +8,13 @@ import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/bottom_sheets/settings_modals.dart';
+import '../privacy_policy_screen.dart';
+import '../terms_of_service_screen.dart';
+import '../help_support_screen.dart';
+import '../send_feedback_screen.dart';
+import '../notifications_screen.dart';
+import '../about_screen.dart';
 
 /// Settings tab content widget
 /// Provides access to app settings, account management, and preferences
@@ -83,31 +90,6 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   );
                 },
-                isFirst: true,
-              ),
-              _buildListTile(
-                context,
-                icon: Icons.download_rounded,
-                title: 'Downloads',
-                subtitle: 'Manage offline content',
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.extraSmall,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-                  ),
-                  child: Text(
-                    '12',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                onTap: () => debugPrint('Downloads tapped'),
               ),
               _buildListTile(
                 context,
@@ -148,35 +130,39 @@ class SettingsTab extends ConsumerWidget {
             context,
             title: 'App Settings',
             children: [
-              _buildSwitchTile(
+              _buildListTile(
                 context,
-                icon: isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                title: 'Dark Mode',
-                subtitle: 'Switch between light and dark themes',
-                value: isDarkMode,
-                onChanged: (value) => ref.read(themeProvider.notifier).toggleTheme(),
-                isFirst: true,
+                icon: isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                title: 'Theme',
+                subtitle: isDarkMode ? 'Dark Mode' : 'Light Mode',
+                onTap: () => showThemeModeBottomSheet(context, ref),
               ),
               _buildListTile(
                 context,
                 icon: Icons.text_fields_rounded,
                 title: 'Text Size',
-                subtitle: 'Adjust reading text size',
-                onTap: () => debugPrint('Text size tapped'),
+                subtitle: 'Default',
+                onTap: () => showTextSizeBottomSheet(context),
               ),
               _buildListTile(
                 context,
                 icon: Icons.language_rounded,
                 title: 'Language',
                 subtitle: 'English (US)',
-                onTap: () => debugPrint('Language tapped'),
+                onTap: () => showLanguageBottomSheet(context),
               ),
               _buildListTile(
                 context,
                 icon: Icons.notifications_rounded,
                 title: 'Notifications',
                 subtitle: 'Manage notification preferences',
-                onTap: () => debugPrint('Notifications tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen(),
+                    ),
+                  );
+                },
                 isLast: true,
               ),
             ],
@@ -193,14 +179,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Sync Settings',
                 subtitle: 'Sync across devices',
                 onTap: () => debugPrint('Sync settings tapped'),
-                isFirst: true,
-              ),
-              _buildListTile(
-                context,
-                icon: Icons.security_rounded,
-                title: 'Privacy & Security',
-                subtitle: 'Manage your account security',
-                onTap: () => debugPrint('Privacy tapped'),
               ),
               _buildListTile(
                 context,
@@ -222,28 +200,22 @@ class SettingsTab extends ConsumerWidget {
                 context,
                 icon: Icons.volume_up_rounded,
                 title: 'Audio Quality',
-                subtitle: 'High quality (Premium)',
-                trailing: Icon(
-                  Icons.lock_rounded,
-                  size: AppSpacing.iconSmall,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                onTap: () => debugPrint('Audio quality tapped'),
-                isFirst: true,
+                subtitle: 'High quality',
+                onTap: () => showAudioQualityBottomSheet(context),
               ),
               _buildListTile(
                 context,
                 icon: Icons.download_rounded,
                 title: 'Download Quality',
                 subtitle: 'Standard',
-                onTap: () => debugPrint('Download quality tapped'),
+                onTap: () => showDownloadQualityBottomSheet(context),
               ),
               _buildListTile(
                 context,
                 icon: Icons.speed_rounded,
                 title: 'Playback Speed',
                 subtitle: '1.0x',
-                onTap: () => debugPrint('Playback speed tapped'),
+                onTap: () => showPlaybackSpeedBottomSheet(context),
                 isLast: true,
               ),
             ],
@@ -259,15 +231,26 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.help_outline_rounded,
                 title: 'Help & Support',
                 subtitle: 'Get help and contact support',
-                onTap: () => debugPrint('Help tapped'),
-                isFirst: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const HelpSupportScreen(),
+                    ),
+                  );
+                },
               ),
               _buildListTile(
                 context,
                 icon: Icons.feedback_rounded,
                 title: 'Send Feedback',
                 subtitle: 'Share your thoughts with us',
-                onTap: () => debugPrint('Feedback tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SendFeedbackScreen(),
+                    ),
+                  );
+                },
               ),
               _buildListTile(
                 context,
@@ -289,21 +272,38 @@ class SettingsTab extends ConsumerWidget {
                 context,
                 icon: Icons.privacy_tip_rounded,
                 title: 'Privacy Policy',
-                onTap: () => debugPrint('Privacy policy tapped'),
-                isFirst: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacyPolicyScreen(),
+                    ),
+                  );
+                },
               ),
               _buildListTile(
                 context,
                 icon: Icons.description_rounded,
                 title: 'Terms of Service',
-                onTap: () => debugPrint('Terms tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TermsOfServiceScreen(),
+                    ),
+                  );
+                },
               ),
               _buildListTile(
                 context,
                 icon: Icons.info_outline_rounded,
                 title: 'About',
                 subtitle: 'Version 1.0.0',
-                onTap: () => debugPrint('About tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
+                },
                 isLast: true,
               ),
             ],
@@ -374,7 +374,6 @@ class SettingsTab extends ConsumerWidget {
     String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
-    bool isFirst = false,
     bool isLast = false,
   }) {
     final theme = Theme.of(context);
@@ -416,50 +415,6 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildSwitchTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    String? subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-    bool isFirst = false,
-    bool isLast = false,
-  }) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        border: !isLast ? Border(
-          bottom: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ) : null,
-      ),
-      child: SwitchListTile(
-        secondary: Icon(
-          icon,
-          color: colorScheme.onSurfaceVariant,
-          size: AppSpacing.iconMedium,
-        ),
-        title: AppBodyText(title),
-        subtitle: subtitle != null 
-            ? AppCaptionText(
-                subtitle,
-                color: colorScheme.onSurfaceVariant,
-              )
-            : null,
-        value: value,
-        onChanged: onChanged,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.medium,
-          vertical: AppSpacing.small,
-        ),
-      ),
-    );
-  }
 
   Widget _buildProfileTile(BuildContext context) {
     final theme = Theme.of(context);

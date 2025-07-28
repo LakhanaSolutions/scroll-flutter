@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'app_spacing.dart';
@@ -19,7 +20,7 @@ class AppTheme {
       colorScheme: AppColors.lightColorScheme,
       
       // Typography
-      textTheme: AppTextStyles.materialTextTheme,
+      textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),
       
       // App Bar Theme
       appBarTheme: AppBarTheme(
@@ -134,8 +135,8 @@ class AppTheme {
       
       // Dialog Theme
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.lightColorScheme.surface,
-        surfaceTintColor: AppColors.lightColorScheme.surfaceTint,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
@@ -198,7 +199,7 @@ class AppTheme {
       colorScheme: AppColors.darkColorScheme,
       
       // Typography
-      textTheme: AppTextStyles.materialTextTheme,
+      textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),
       
       // App Bar Theme
       appBarTheme: AppBarTheme(
@@ -313,8 +314,8 @@ class AppTheme {
       
       // Dialog Theme
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.darkColorScheme.surface,
-        surfaceTintColor: AppColors.darkColorScheme.surfaceTint,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),

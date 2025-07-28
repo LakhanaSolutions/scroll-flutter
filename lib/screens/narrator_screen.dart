@@ -5,6 +5,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
+import '../widgets/images/app_image.dart';
 
 /// Narrator/Speaker profile screen showing detailed information
 /// Displays bio, narrations, awards, voice samples, and other relevant information
@@ -65,7 +66,6 @@ class _NarratorScreenState extends State<NarratorScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7), // iOS background
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -74,7 +74,20 @@ class _NarratorScreenState extends State<NarratorScreen> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: AppTitleText('Narrator'),
+        title: Row(
+          children: [
+            AppCircularImage(
+              imageUrl: widget.narrator.imageUrl,
+              fallbackIcon: Icons.mic_rounded,
+              size: 32,
+              backgroundColor: colorScheme.secondaryContainer,
+              iconColor: colorScheme.onSecondaryContainer,
+              iconSize: 18,
+            ),
+            const SizedBox(width: AppSpacing.small),
+            AppTitleText(widget.narrator.name),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(

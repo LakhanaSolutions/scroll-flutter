@@ -4,6 +4,7 @@ import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
 import '../cards/app_card_home.dart';
+import '../images/app_image.dart';
 
 /// Audiobook of the week banner widget
 /// Full width banner showcasing the featured audiobook with cover, title, author and action button
@@ -34,12 +35,11 @@ class AudiobookOfWeekBanner extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
           gradient: LinearGradient(
             colors: [
-              colorScheme.surfaceContainer.withValues(alpha: 0.5),
-              colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+              colorScheme.surfaceContainer.withValues(alpha: 0.8),
+              colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -101,68 +101,49 @@ class AudiobookOfWeekBanner extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-        child: Stack(
-          children: [
-            // Placeholder cover with gradient
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.primary,
-                    colorScheme.primaryContainer,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      child: Stack(
+        children: [
+          AppBookCover(
+            imageUrl: book.coverUrl,
+            width: 100,
+            height: 140,
+            backgroundColor: colorScheme.primaryContainer,
+          ),
+          // Premium badge
+          if (book.isPremium)
+            Positioned(
+              top: AppSpacing.small,
+              right: AppSpacing.small,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.small,
+                  vertical: AppSpacing.extraSmall,
                 ),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.menu_book_rounded,
-                  color: colorScheme.onPrimary,
-                  size: AppSpacing.iconLarge,
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.star_rounded,
+                      color: colorScheme.onSecondary,
+                      size: AppSpacing.iconExtraSmall,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      'PRO',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSecondary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            // Premium badge
-            if (book.isPremium)
-              Positioned(
-                top: AppSpacing.small,
-                right: AppSpacing.small,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.extraSmall,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.secondary,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.star_rounded,
-                        color: colorScheme.onSecondary,
-                        size: AppSpacing.iconExtraSmall,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        'PRO',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSecondary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }

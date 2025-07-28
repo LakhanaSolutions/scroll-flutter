@@ -38,3 +38,6 @@
 - Verify theme consistency across all components
 - Ensure components are accessible and follow platform accessibility guidelines
 - Validate that no design tokens are hardcoded anywhere in the codebase
+- For any screen with text input:
+  - Allow tapping anywhere outside the input to close the keyboard
+  - When the keyboard is open, move the main content to the top to avoid being covered

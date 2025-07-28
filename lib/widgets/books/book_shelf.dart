@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
+import '../images/app_image.dart';
 
 /// Book shelf widget that displays books in a shelf-like UI
 /// Shows book covers with titles and authors in a horizontal scrollable layout
@@ -84,8 +85,6 @@ class _BookShelfItem extends StatelessWidget {
             children: [
               // Book cover
               Container(
-                width: 120,
-                height: 140,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                   boxShadow: [
@@ -96,52 +95,33 @@ class _BookShelfItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-                  child: Stack(
-                    children: [
-                      // Placeholder cover with gradient
-                      Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              colorScheme.primary,
-                              colorScheme.primary.withValues(alpha: 0.7),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                child: Stack(
+                  children: [
+                    AppBookCover(
+                      imageUrl: book.coverUrl,
+                      width: 120,
+                      height: 140,
+                      backgroundColor: colorScheme.primaryContainer,
+                    ),
+                    // Premium badge
+                    if (book.isPremium)
+                      Positioned(
+                        top: AppSpacing.small,
+                        right: AppSpacing.small,
+                        child: Container(
+                          padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                          decoration: BoxDecoration(
+                            color: colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                           ),
-                        ),
-                        child: Center(
                           child: Icon(
-                            Icons.menu_book_rounded,
-                            color: colorScheme.onPrimary,
-                            size: AppSpacing.iconLarge,
+                            Icons.star_rounded,
+                            color: colorScheme.onSecondary,
+                            size: AppSpacing.iconExtraSmall,
                           ),
                         ),
                       ),
-                      // Premium badge
-                      if (book.isPremium)
-                        Positioned(
-                          top: AppSpacing.small,
-                          right: AppSpacing.small,
-                          child: Container(
-                            padding: const EdgeInsets.all(AppSpacing.extraSmall),
-                            decoration: BoxDecoration(
-                              color: colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                            ),
-                            child: Icon(
-                              Icons.star_rounded,
-                              color: colorScheme.onSecondary,
-                              size: AppSpacing.iconExtraSmall,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: AppSpacing.small),

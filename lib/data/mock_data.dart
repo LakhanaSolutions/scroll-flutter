@@ -127,17 +127,63 @@ enum ContentType { book, podcast }
 enum AvailabilityType { free, premium, trial }
 enum ChapterStatus { notPlayed, playing, paused, completed }
 
+class AuthorData {
+  final String id;
+  final String name;
+  final String bio;
+  final String? imageUrl;
+  final String nationality;
+  final String birthYear;
+  final List<String> genres;
+  final List<String> awards;
+  final List<String> socialLinks;
+  final bool isFollowing;
+  final String quote;
+  final int totalBooks;
+
+  AuthorData({
+    required this.id,
+    required this.name,
+    required this.bio,
+    this.imageUrl,
+    required this.nationality,
+    required this.birthYear,
+    required this.genres,
+    required this.awards,
+    required this.socialLinks,
+    this.isFollowing = false,
+    required this.quote,
+    required this.totalBooks,
+  });
+}
+
 class NarratorData {
   final String id;
   final String name;
   final String bio;
   final String? imageUrl;
+  final List<String> languages;
+  final List<String> genres;
+  final List<String> awards;
+  final List<String> socialLinks;
+  final bool isFollowing;
+  final int experienceYears;
+  final String voiceDescription;
+  final int totalNarrations;
 
   NarratorData({
     required this.id,
     required this.name,
     required this.bio,
     this.imageUrl,
+    required this.languages,
+    required this.genres,
+    required this.awards,
+    required this.socialLinks,
+    this.isFollowing = false,
+    required this.experienceYears,
+    required this.voiceDescription,
+    required this.totalNarrations,
   });
 }
 
@@ -169,6 +215,7 @@ class ContentItemData {
   final String id;
   final String title;
   final String author;
+  final AuthorData authorData;
   final String coverUrl;
   final ContentType type;
   final AvailabilityType availability;
@@ -184,6 +231,7 @@ class ContentItemData {
     required this.id,
     required this.title,
     required this.author,
+    required this.authorData,
     required this.coverUrl,
     required this.type,
     required this.availability,
@@ -458,23 +506,86 @@ class MockData {
     ];
   }
 
+  // Mock authors
+  static List<AuthorData> getMockAuthors() {
+    return [
+      AuthorData(
+        id: 'author_1',
+        name: 'Safi-ur-Rahman al-Mubarakpuri',
+        bio: 'Safi-ur-Rahman al-Mubarakpuri was a renowned Islamic scholar and author, best known for his biographical work on Prophet Muhammad (PBUH). His meticulous research and scholarly approach have made his works essential reading for those seeking to understand Islamic history.',
+        nationality: 'Indian',
+        birthYear: '1943',
+        genres: ['Biography', 'Islamic History', 'Seerah'],
+        awards: ['King Faisal International Prize', 'Best Islamic Book Award'],
+        socialLinks: [],
+        quote: 'The best of people are those who benefit others.',
+        totalBooks: 15,
+      ),
+      AuthorData(
+        id: 'author_2',
+        name: 'Ibn Taymiyyah',
+        bio: 'Taqi ad-Din Ahmad ibn Taymiyyah was a medieval Islamic scholar and theologian. He is known for his devotion to the sources of Islam and his comprehensive scholarly works on Islamic jurisprudence and theology.',
+        nationality: 'Syrian',
+        birthYear: '1263',
+        genres: ['Fiqh', 'Theology', 'Philosophy'],
+        awards: ['Recognized as Shaykh al-Islam'],
+        socialLinks: [],
+        quote: 'Whoever seeks knowledge to compete with scholars or to argue with the ignorant has gone astray.',
+        totalBooks: 350,
+      ),
+      AuthorData(
+        id: 'author_3',
+        name: 'Ibn Kathir',
+        bio: 'Ismail ibn Umar ibn Kathir was a highly influential Islamic scholar during the Mamluk era in Syria. He was known for his profound knowledge of Quran, Hadith, and Islamic history.',
+        nationality: 'Syrian',
+        birthYear: '1300',
+        genres: ['Tafseer', 'Hadith', 'Islamic History'],
+        awards: ['Master of Quranic Commentary'],
+        socialLinks: [],
+        quote: 'Knowledge is light, and ignorance is darkness.',
+        totalBooks: 25,
+      ),
+    ];
+  }
+
   // Mock narrators
   static List<NarratorData> getMockNarrators() {
     return [
       NarratorData(
         id: 'narrator_1',
         name: 'Omar Suleiman',
-        bio: 'Islamic scholar and speaker',
+        bio: 'Dr. Omar Suleiman is a renowned Islamic scholar, author, and speaker. He serves as the founder and president of the Yaqeen Institute for Islamic Research and is a prolific voice in contemporary Islamic discourse.',
+        languages: ['English', 'Arabic'],
+        genres: ['Islamic Studies', 'Contemporary Issues', 'Spirituality'],
+        awards: ['Most Influential Muslim Personality', 'Excellence in Islamic Education'],
+        socialLinks: ['@omarsuleiman504'],
+        experienceYears: 15,
+        voiceDescription: 'Clear, authoritative, and engaging with excellent pronunciation',
+        totalNarrations: 45,
       ),
       NarratorData(
         id: 'narrator_2',
         name: 'Mufti Menk',
-        bio: 'Renowned Islamic scholar',
+        bio: 'Mufti Ismail ibn Musa Menk is a renowned Islamic scholar from Zimbabwe. Known for his motivational speeches and accessible teaching style, he has inspired millions around the world.',
+        languages: ['English', 'Arabic', 'Urdu'],
+        genres: ['Motivational', 'Fiqh', 'Character Development'],
+        awards: ['Global Islamic Personality Award', 'Excellence in Da\'wah'],
+        socialLinks: ['@muftimenk'],
+        experienceYears: 20,
+        voiceDescription: 'Warm, compassionate, and motivational with clear articulation',
+        totalNarrations: 65,
       ),
       NarratorData(
         id: 'narrator_3',
         name: 'Nouman Ali Khan',
-        bio: 'Quran teacher and speaker',
+        bio: 'Nouman Ali Khan is a Pakistani-American Islamic speaker and Arabic instructor. He is the founder of Bayyinah Institute and is known for his expertise in Arabic linguistics and Quranic studies.',
+        languages: ['English', 'Arabic', 'Urdu'],
+        genres: ['Quranic Studies', 'Arabic Language', 'Youth Education'],
+        awards: ['Outstanding Contribution to Islamic Education', 'Arabic Excellence Award'],
+        socialLinks: ['@noumanalikhan'],
+        experienceYears: 18,
+        voiceDescription: 'Dynamic, educational, and passionate with excellent Arabic pronunciation',
+        totalNarrations: 55,
       ),
     ];
   }
@@ -616,6 +727,7 @@ class MockData {
   // Mock category content (books and podcasts)
   static List<ContentItemData> getCategoryContent(String categoryId) {
     final narrators = getMockNarrators();
+    final authors = getMockAuthors();
     switch (categoryId) {
       case '1': // Fiqh
         return [
@@ -623,6 +735,7 @@ class MockData {
             id: 'fiqh_1',
             title: 'Fiqh Made Easy',
             author: 'Salih al-Munajjid',
+            authorData: authors[0], // Using first author as placeholder
             coverUrl: 'https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy',
             type: ContentType.book,
             availability: AvailabilityType.free,
@@ -637,6 +750,7 @@ class MockData {
             id: 'fiqh_2',
             title: 'Prayer Guidelines',
             author: 'Ahmad ibn Hanbal',
+            authorData: authors[0],
             coverUrl: 'https://via.placeholder.com/150x200/2196F3/white?text=Prayer',
             type: ContentType.podcast,
             availability: AvailabilityType.premium,
@@ -651,6 +765,7 @@ class MockData {
             id: 'fiqh_3',
             title: 'Hajj and Umrah Guide',
             author: 'Ibn Taymiyyah',
+            authorData: authors[1],
             coverUrl: 'https://via.placeholder.com/150x200/FF9800/white?text=Hajj',
             type: ContentType.book,
             availability: AvailabilityType.trial,
@@ -671,6 +786,7 @@ class MockData {
             id: 'aqeedah_1',
             title: 'The Six Pillars of Faith',
             author: 'Ibn Kathir',
+            authorData: authors[2],
             coverUrl: 'https://via.placeholder.com/150x200/9C27B0/white?text=Six+Pillars',
             type: ContentType.book,
             availability: AvailabilityType.free,
@@ -685,6 +801,7 @@ class MockData {
             id: 'aqeedah_2',
             title: 'Understanding Tawheed',
             author: 'Muhammad ibn Abd al-Wahhab',
+            authorData: authors[1],
             coverUrl: 'https://via.placeholder.com/150x200/F44336/white?text=Tawheed',
             type: ContentType.podcast,
             availability: AvailabilityType.premium,
@@ -702,6 +819,7 @@ class MockData {
             id: 'quran_1',
             title: 'Tafsir Ibn Kathir',
             author: 'Ibn Kathir',
+            authorData: authors[2],
             coverUrl: 'https://via.placeholder.com/150x200/607D8B/white?text=Tafsir',
             type: ContentType.book,
             availability: AvailabilityType.premium,
@@ -716,6 +834,7 @@ class MockData {
             id: 'quran_2',
             title: 'Beautiful Recitations',
             author: 'Various Qaris',
+            authorData: authors[2],
             coverUrl: 'https://via.placeholder.com/150x200/795548/white?text=Recitation',
             type: ContentType.podcast,
             availability: AvailabilityType.free,
@@ -733,6 +852,7 @@ class MockData {
             id: 'default_1',
             title: 'Islamic Knowledge',
             author: 'Various Scholars',
+            authorData: authors[0],
             coverUrl: 'https://via.placeholder.com/150x200/9E9E9E/white?text=Knowledge',
             type: ContentType.book,
             availability: AvailabilityType.free,

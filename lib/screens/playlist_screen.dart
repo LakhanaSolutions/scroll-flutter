@@ -4,6 +4,7 @@ import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
+import 'chapter_screen.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -583,7 +584,14 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     _ChapterTile(
                       chapter: chapter,
                       onTap: () {
-                        debugPrint('Chapter tapped: ${chapter.title}');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ChapterScreen(
+                              chapter: chapter,
+                              content: widget.content,
+                            ),
+                          ),
+                        );
                       },
                     ),
                     // Add divider between chapters (except after the last one)

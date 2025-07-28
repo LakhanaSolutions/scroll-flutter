@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
-import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
@@ -132,21 +131,10 @@ class _ChapterScreenState extends State<ChapterScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.bookmark_border_rounded,
+              Icons.more_vert_rounded,
               color: colorScheme.onSurfaceVariant,
             ),
-            onPressed: () {
-              debugPrint('Bookmark chapter: ${widget.chapter.title}');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.share_rounded,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () {
-              debugPrint('Share chapter: ${widget.chapter.title}');
-            },
+            onPressed: _showDetailsBottomSheet,
           ),
         ],
       ),
@@ -402,19 +390,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
             color: colorScheme.primary,
           ),
         ),
-        // Details button
-        TextButton.icon(
-          onPressed: _showDetailsBottomSheet,
-          icon: Icon(
-            Icons.info_outline_rounded,
-            color: colorScheme.onSurfaceVariant,
-            size: AppSpacing.iconSmall,
-          ),
-          label: AppBodyText(
-            'Details',
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
       ],
     );
   }
@@ -437,7 +412,6 @@ class _DetailsBottomSheet extends StatefulWidget {
 }
 
 class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
-  final TextEditingController _noteController = TextEditingController();
   final List<Map<String, String>> _timestamps = [
     {'index': '1', 'title': 'Introduction', 'duration': '5:30'},
     {'index': '2', 'title': 'Key Concepts', 'duration': '7:15'},
@@ -446,45 +420,16 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
     {'index': '5', 'title': 'Summary', 'duration': '4:50'},
   ];
 
-  @override
-  void dispose() {
-    _noteController.dispose();
-    super.dispose();
-  }
 
-  String _formatCurrentTime(double seconds) {
-    final minutes = (seconds / 60).floor();
-    final secs = (seconds % 60).floor();
-    return '${minutes.toString().padLeft(1, '0')}:${secs.toString().padLeft(2, '0')}';
-  }
+
+
 
   void _jumpToTimestamp(String timestamp, String title) {
     Navigator.of(context).pop();
     debugPrint('Jump to timestamp: $timestamp - $title');
   }
 
-  void _bookmarkCurrentPosition() {
-    debugPrint('Bookmarked at: ${_formatCurrentTime(widget.currentPosition)}');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Bookmarked at ${_formatCurrentTime(widget.currentPosition)}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
-  void _addNote() {
-    if (_noteController.text.isNotEmpty) {
-      debugPrint('Note added at ${_formatCurrentTime(widget.currentPosition)}: ${_noteController.text}');
-      _noteController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Note added successfully'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
 
   void _showNarratorInfo() {
     final narrator = widget.content.narrators.firstWhere(
@@ -557,10 +502,6 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
                   
                   // Timestamps section
                   _buildTimestampsSection(context),
-                  _buildSectionDivider(context),
-                  
-                  // Bookmark & Notes section (combined)
-                  _buildBookmarkNotesSection(context),
                   _buildSectionDivider(context),
                   
                   // Description section
@@ -690,79 +631,7 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
     );
   }
 
-  Widget _buildBookmarkNotesSection(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.bookmark_add_rounded,
-              color: colorScheme.primary,
-              size: AppSpacing.iconSmall,
-            ),
-            const SizedBox(width: AppSpacing.small),
-            const AppSubtitleText('Bookmark & Notes'),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.medium),
-        // Bookmark button
-        SizedBox(
-          width: double.infinity,
-          child: AppSecondaryButton(
-            onPressed: _bookmarkCurrentPosition,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.bookmark_rounded,
-                  size: AppSpacing.iconSmall,
-                ),
-                const SizedBox(width: AppSpacing.small),
-                Text('Bookmark at ${_formatCurrentTime(widget.currentPosition)}'),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.medium),
-        // Notes field
-        TextField(
-          controller: _noteController,
-          decoration: InputDecoration(
-            hintText: 'Add a note at ${_formatCurrentTime(widget.currentPosition)}...',
-            filled: true,
-            fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-              borderSide: BorderSide(
-                color: colorScheme.primary.withValues(alpha: 0.3),
-                width: 1,
-              ),
-            ),
-            suffixIcon: IconButton(
-              onPressed: _addNote,
-              icon: Icon(
-                Icons.send_rounded,
-                color: colorScheme.primary,
-              ),
-            ),
-          ),
-          maxLines: 3,
-        ),
-      ],
-    );
-  }
 
   Widget _buildDescriptionSection(BuildContext context) {
     final theme = Theme.of(context);

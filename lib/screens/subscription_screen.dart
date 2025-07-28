@@ -5,6 +5,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../widgets/dialogs/app_dialogs.dart';
 import 'subscription_history_screen.dart';
 import 'upgrade_plan_screen.dart';
 
@@ -205,18 +206,16 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   void _showCurrentPlanDialog(SubscriptionPlan plan) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Current Plan: ${plan.name}'),
-        content: const Text('This is your current active plan. You can upgrade to a higher plan anytime.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+    AppAlertDialog.show(
+      context,
+      title: 'Current Plan: ${plan.name}',
+      content: const Text('This is your current active plan. You can upgrade to a higher plan anytime.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 

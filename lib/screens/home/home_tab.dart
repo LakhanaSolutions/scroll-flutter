@@ -13,6 +13,8 @@ import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/images/app_image.dart';
 import '../../providers/theme_provider.dart';
 import '../search_screen.dart';
+import '../subscription_screen.dart';
+import '../profile_screen.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -71,7 +73,11 @@ class HomeTab extends ConsumerWidget {
               // Profile avatar
               GestureDetector(
                 onTap: () {
-                  debugPrint('Profile avatar tapped');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -109,8 +115,12 @@ class HomeTab extends ConsumerWidget {
               debugPrint('Dismissed notification: $id');
             },
             onAction: (notification) {
-              // Handle notification action
-              debugPrint('Action tapped for: ${notification.title}');
+              // Handle notification action - navigate to subscriptions page
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SubscriptionScreen(),
+                ),
+              );
             },
           ),
           
@@ -118,7 +128,11 @@ class HomeTab extends ConsumerWidget {
           PremiumBanner(
             benefits: MockData.getPremiumFeatures().take(3).toList(),
             onAction: () {
-              debugPrint('Premium upgrade tapped');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SubscriptionScreen(),
+                ),
+              );
             },
           ),
           
@@ -143,7 +157,11 @@ class HomeTab extends ConsumerWidget {
           PremiumContentSection(
             features: MockData.getPremiumFeatures(),
             onAction: () {
-              debugPrint('Try Premium tapped');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SubscriptionScreen(),
+                ),
+              );
             },
           ),
           

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/inputs/app_text_field.dart';
+import '../widgets/dialogs/app_dialogs.dart';
 import 'subscription_screen.dart';
 
 /// Upgrade plan screen showing plan details, coupon field, and payment options
@@ -489,29 +491,22 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
   }
 
   void _processPayment(BuildContext context) {
-    // TODO: Implement actual payment processing
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Payment Confirmation'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Plan: ${widget.plan.name}'),
-            Text('Amount: $_discountedPrice'),
-            Text('Start Date: ${_formatDate(_startDate)}'),
-            Text('End Date: ${_formatDate(_endDate)}'),
-            const SizedBox(height: 16),
-            const Text('Proceed with payment?'),
-          ],
-        ),
-        actions: [
-          TextButton(
+    final appTheme = context.appTheme;
+    
+    // Create platform-appropriate dialog actions
+    final cancelAction = appTheme.isIOS
+        ? CupertinoDialogAction(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
-          ),
-          FilledButton(
+          )
+        : AppTextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          );
+    
+    final confirmAction = appTheme.isIOS
+        ? CupertinoDialogAction(
+            isDefaultAction: true,
             onPressed: () {
               Navigator.of(context).pop(); // Close dialog
               Navigator.of(context).pop(); // Go back to subscription screen
@@ -523,9 +518,38 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
               );
             },
             child: const Text('Confirm Payment'),
-          ),
+          )
+        : AppPrimaryButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close dialog
+              Navigator.of(context).pop(); // Go back to subscription screen
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Successfully subscribed to ${widget.plan.name}!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            child: const Text('Confirm Payment'),
+          );
+
+    // TODO: Implement actual payment processing
+    AppAlertDialog.show(
+      context,
+      title: 'Payment Confirmation',
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Plan: ${widget.plan.name}'),
+          Text('Amount: $_discountedPrice'),
+          Text('Start Date: ${_formatDate(_startDate)}'),
+          Text('End Date: ${_formatDate(_endDate)}'),
+          const SizedBox(height: 16),
+          const Text('Proceed with payment?'),
         ],
       ),
+      actions: [cancelAction, confirmAction],
     );
   }
 }

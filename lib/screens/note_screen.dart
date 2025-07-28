@@ -6,6 +6,7 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/inputs/app_text_field.dart';
+import '../widgets/dialogs/app_dialogs.dart';
 
 /// Note colors for categorization
 enum NoteColor {
@@ -171,28 +172,26 @@ class _NoteScreenState extends State<NoteScreen> {
 
   void _discardChanges() {
     if (_hasUnsavedChanges) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Discard Changes?'),
-          content: const Text('You have unsaved changes. Are you sure you want to discard them?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+      AppAlertDialog.show(
+        context,
+        title: 'Discard Changes?',
+        content: const Text('You have unsaved changes. Are you sure you want to discard them?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close dialog
+              Navigator.of(context).pop(); // Close note screen
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Close note screen
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Discard'),
-            ),
-          ],
-        ),
+            child: const Text('Discard'),
+          ),
+        ],
       );
     } else {
       Navigator.of(context).pop();

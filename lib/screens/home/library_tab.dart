@@ -5,6 +5,7 @@ import '../../theme/theme_extensions.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/dialogs/app_dialogs.dart';
 import '../author_screen.dart';
 import '../narrator_screen.dart';
 import '../note_screen.dart' as note_screen;
@@ -677,29 +678,27 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   }
 
   void _showDeleteConfirmation(DownloadedBookData book) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Download'),
-        content: Text('Are you sure you want to delete "${book.title}" from your downloads?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+    AppAlertDialog.show(
+      context,
+      title: 'Delete Download',
+      content: Text('Are you sure you want to delete "${book.title}" from your downloads?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            debugPrint('Deleting book: ${book.title}');
+            // Handle delete logic here
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.error,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              debugPrint('Deleting book: ${book.title}');
-              // Handle delete logic here
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+          child: const Text('Delete'),
+        ),
+      ],
     );
   }
 
@@ -1241,12 +1240,6 @@ class _NoteTile extends StatelessWidget {
                       icon: Icons.edit_rounded,
                       label: 'Edit',
                       onTap: onEdit ?? () => debugPrint('Edit note'),
-                    ),
-                    const SizedBox(width: AppSpacing.medium),
-                    _ActionButton(
-                      icon: Icons.share_rounded,
-                      label: 'Share',
-                      onTap: () => debugPrint('Share note'),
                     ),
                     const Spacer(),
                     IconButton(

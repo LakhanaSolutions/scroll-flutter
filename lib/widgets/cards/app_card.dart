@@ -49,7 +49,7 @@ class AppCard extends StatelessWidget {
     return Container(
       margin: margin ?? const EdgeInsets.all(AppSpacing.small),
       child: Material(
-        color: gradient != null ? Colors.transparent : (backgroundColor ?? Colors.white),
+        color: gradient != null ? Colors.transparent : (backgroundColor ?? colorScheme.surface),
         borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
         elevation: elevation ?? AppSpacing.elevationMax,
         shadowColor: colorScheme.shadow.withValues(alpha: 0.2),

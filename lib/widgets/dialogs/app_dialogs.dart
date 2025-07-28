@@ -58,7 +58,12 @@ class AppAlertDialog extends StatelessWidget {
   }
 
   Widget _buildMaterialDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return AlertDialog(
+      backgroundColor: colorScheme.surface,
+      surfaceTintColor: Colors.transparent,
       title: title != null ? AppTitleText(title!) : null,
       content: content,
       actions: actions.isEmpty ? [

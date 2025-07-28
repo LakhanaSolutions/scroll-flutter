@@ -11,6 +11,8 @@ import '../widgets/search/narrator_result_tile.dart';
 import '../widgets/search/chapter_result_tile.dart';
 import 'author_screen.dart';
 import 'narrator_screen.dart';
+import 'playlist_screen.dart';
+import 'chapter_screen.dart';
 
 /// Search screen with comprehensive search functionality
 /// Shows recently searched, trending topics, tags, and categorized search results
@@ -26,6 +28,14 @@ class _SearchScreenState extends State<SearchScreen> {
   Map<String, List<dynamic>> _searchResults = {};
   bool _isSearching = false;
   bool _hasSearched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {}); // Rebuild to update suffix icon visibility
+    });
+  }
 
   @override
   void dispose() {
@@ -75,23 +85,24 @@ class _SearchScreenState extends State<SearchScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: const AppAppBar(
         title: 'Search',
       ),
-      body: Column(
-        children: [
+      body: GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping outside text fields
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          children: [
           // Search input
           Container(
             padding: const EdgeInsets.all(AppSpacing.medium),
-            color: colorScheme.surface,
             child: AppTextField(
               controller: _searchController,
               hintText: 'Search books, podcasts, authors...',
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                color: colorScheme.onSurfaceVariant,
-              ),
+              prefixIcon: const Icon(Icons.search_rounded),
+              fillColor: colorScheme.surfaceContainerLow,
               onChanged: _performSearch,
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
@@ -119,7 +130,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       : _buildInitialState(context),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -380,7 +392,11 @@ class _SearchScreenState extends State<SearchScreen> {
               return ContentTile(
                 content: item,
                 onTap: () {
-                  debugPrint('Navigate to content: ${item.title}');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PlaylistScreen(content: item),
+                    ),
+                  );
                 },
               );
             }).toList(),
@@ -402,7 +418,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 chapter: chapter,
                 parentContent: parent,
                 onTap: () {
-                  debugPrint('Navigate to chapter: ${chapter.title}');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ChapterScreen(
+                        chapter: chapter,
+                        content: parent,
+                      ),
+                    ),
+                  );
                 },
               );
             }).toList(),

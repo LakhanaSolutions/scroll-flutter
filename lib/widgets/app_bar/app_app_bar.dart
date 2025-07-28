@@ -54,8 +54,10 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColors.iosLightBackground,
+      backgroundColor: backgroundColor ?? colorScheme.iosBackground,
       elevation: elevation,
       centerTitle: centerTitle,
       automaticallyImplyLeading: automaticallyImplyLeading,

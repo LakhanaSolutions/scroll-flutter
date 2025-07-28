@@ -56,24 +56,9 @@ class _AuthorScreenState extends State<AuthorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: AppAppBar(
         title: widget.author.name,
-        actions: [
-          IconButton(
-            icon: Icon(
-              widget.author.isFollowing ? Icons.person_remove_rounded : Icons.person_add_rounded,
-              color: widget.author.isFollowing ? colorScheme.error : colorScheme.primary,
-            ),
-            onPressed: () {
-              debugPrint('${widget.author.isFollowing ? "Unfollowed" : "Followed"} author: ${widget.author.name}');
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(

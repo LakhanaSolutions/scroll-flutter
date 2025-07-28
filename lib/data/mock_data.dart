@@ -866,4 +866,105 @@ class MockData {
         ];
     }
   }
+
+  // Search-related mock data
+  static List<String> getRecentSearches() {
+    return [
+      'Islamic history',
+      'Seerah',
+      'Quran tafsir',
+      'Hadith collection',
+      'Ibn Kathir',
+    ];
+  }
+
+  static List<String> getTrendingTopics() {
+    return [
+      'Ramadan preparation',
+      'Hadith studies',
+      'Islamic finance',
+      'Quranic recitation',
+      'Prophet stories',
+      'Islamic ethics',
+    ];
+  }
+
+  static List<String> getPopularTags() {
+    return [
+      'Islamic History',
+      'Quran',
+      'Hadith',
+      'Seerah',
+      'Fiqh',
+      'Aqeedah',
+      'Tafsir',
+      'Arabic',
+      'Duas',
+      'Islamic Finance',
+      'Women in Islam',
+      'Youth',
+      'Contemporary Issues',
+    ];
+  }
+
+  static Map<String, List<dynamic>> performSearch(String query) {
+    // Simulate search results based on query
+    final authors = getMockAuthors();
+    final narrators = getMockNarrators();
+    final allContent = [
+      ...getCategoryContent('1'),
+      ...getCategoryContent('2'),
+      ...getCategoryContent('3'),
+    ];
+    final allChapters = <ChapterData>[];
+    
+    // Collect all chapters from all content
+    for (final content in allContent) {
+      allChapters.addAll(content.chapters);
+    }
+
+    final lowerQuery = query.toLowerCase();
+    
+    return {
+      'authors': authors.where((author) => 
+        author.name.toLowerCase().contains(lowerQuery) ||
+        author.bio.toLowerCase().contains(lowerQuery) ||
+        author.genres.any((genre) => genre.toLowerCase().contains(lowerQuery))
+      ).toList(),
+      'narrators': narrators.where((narrator) => 
+        narrator.name.toLowerCase().contains(lowerQuery) ||
+        narrator.bio.toLowerCase().contains(lowerQuery) ||
+        narrator.voiceDescription.toLowerCase().contains(lowerQuery) ||
+        narrator.languages.any((lang) => lang.toLowerCase().contains(lowerQuery))
+      ).toList(),
+      'content': allContent.where((content) => 
+        content.title.toLowerCase().contains(lowerQuery) ||
+        content.author.toLowerCase().contains(lowerQuery) ||
+        content.description.toLowerCase().contains(lowerQuery)
+      ).toList(),
+      'chapters': allChapters.where((chapter) => 
+        chapter.title.toLowerCase().contains(lowerQuery) ||
+        chapter.description.toLowerCase().contains(lowerQuery)
+      ).map((chapter) {
+        // Find parent content for this chapter
+        final parentContent = allContent.firstWhere(
+          (content) => content.chapters.contains(chapter),
+          orElse: () => allContent.first,
+        );
+        return {'chapter': chapter, 'parent': parentContent};
+      }).toList(),
+    };
+  }
+
+  static List<NarratorData> getFollowedNarrators() {
+    final allNarrators = getMockNarrators();
+    // Return narrators that are being followed (simulate some being followed)
+    return allNarrators.where((narrator) => narrator.isFollowing).toList();
+  }
+
+  static List<AuthorData> getFollowedAuthors() {
+    final allAuthors = getMockAuthors();
+    // Return authors that are being followed (simulate some being followed)
+    return allAuthors.where((author) => author.isFollowing).toList();
+  }
 }

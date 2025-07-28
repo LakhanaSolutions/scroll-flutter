@@ -3,6 +3,7 @@ import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/books/content_tile.dart';
+import '../widgets/cards/app_card.dart';
 import 'playlist_screen.dart';
 
 /// Category view screen that displays books and podcasts for a specific category
@@ -95,14 +96,18 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Category description
+          // Category description card
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(AppSpacing.medium),
-            color: colorScheme.surface,
-            child: AppBodyText(
-              widget.category.description,
-              color: colorScheme.onSurfaceVariant,
+            child: AppCard(
+              child: Text(
+                widget.category.description,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
+              ),
             ),
           ),
           // Content tabs

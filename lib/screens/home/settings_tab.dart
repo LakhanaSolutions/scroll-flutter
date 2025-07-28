@@ -5,6 +5,7 @@ import '../../providers/theme_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
+import '../../widgets/cards/app_card.dart';
 
 /// Settings tab content widget
 /// Provides access to app settings, account management, and preferences
@@ -41,23 +42,21 @@ class SettingsTab extends ConsumerWidget {
           
           const SizedBox(height: AppSpacing.large),
           
-          // Account section
+          // Profile tile
+          _buildProfileTile(context),
+          
+          const SizedBox(height: AppSpacing.large),
+          
+          // Main Features section
           _buildSection(
             context,
-            title: 'Account',
+            title: 'Library',
             children: [
               _buildListTile(
                 context,
-                icon: Icons.person_rounded,
-                title: 'Profile',
-                subtitle: 'Manage your profile information',
-                onTap: () => debugPrint('Profile tapped'),
-              ),
-              _buildListTile(
-                context,
-                icon: Icons.star_rounded,
+                icon: Icons.subscriptions_rounded,
                 title: 'Subscription',
-                subtitle: 'Manage your premium subscription',
+                subtitle: 'Manage your premium plan',
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.small,
@@ -76,21 +75,64 @@ class SettingsTab extends ConsumerWidget {
                   ),
                 ),
                 onTap: () => debugPrint('Subscription tapped'),
+                isFirst: true,
               ),
               _buildListTile(
                 context,
-                icon: Icons.cloud_sync_rounded,
-                title: 'Sync Settings',
-                subtitle: 'Sync across devices',
-                onTap: () => debugPrint('Sync settings tapped'),
+                icon: Icons.download_rounded,
+                title: 'Downloads',
+                subtitle: 'Manage offline content',
+                trailing: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.small,
+                    vertical: AppSpacing.extraSmall,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                  ),
+                  child: Text(
+                    '12',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () => debugPrint('Downloads tapped'),
+              ),
+              _buildListTile(
+                context,
+                icon: Icons.bookmark_rounded,
+                title: 'Bookmarks & Notes',
+                subtitle: 'Your saved moments and notes',
+                trailing: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.small,
+                    vertical: AppSpacing.extraSmall,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.tertiaryContainer,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                  ),
+                  child: Text(
+                    '28',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onTertiaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () => debugPrint('Bookmarks tapped'),
+                isLast: true,
               ),
             ],
           ),
           
-          // Appearance section
+          // App Settings section
           _buildSection(
             context,
-            title: 'Appearance',
+            title: 'App Settings',
             children: [
               _buildSwitchTile(
                 context,
@@ -99,6 +141,7 @@ class SettingsTab extends ConsumerWidget {
                 subtitle: 'Switch between light and dark themes',
                 value: isDarkMode,
                 onChanged: (value) => ref.read(themeProvider.notifier).toggleTheme(),
+                isFirst: true,
               ),
               _buildListTile(
                 context,
@@ -109,10 +152,49 @@ class SettingsTab extends ConsumerWidget {
               ),
               _buildListTile(
                 context,
+                icon: Icons.language_rounded,
+                title: 'Language',
+                subtitle: 'English (US)',
+                onTap: () => debugPrint('Language tapped'),
+              ),
+              _buildListTile(
+                context,
+                icon: Icons.notifications_rounded,
+                title: 'Notifications',
+                subtitle: 'Manage notification preferences',
+                onTap: () => debugPrint('Notifications tapped'),
+                isLast: true,
+              ),
+            ],
+          ),
+          
+          // Account section
+          _buildSection(
+            context,
+            title: 'Account',
+            children: [
+              _buildListTile(
+                context,
+                icon: Icons.cloud_sync_rounded,
+                title: 'Sync Settings',
+                subtitle: 'Sync across devices',
+                onTap: () => debugPrint('Sync settings tapped'),
+                isFirst: true,
+              ),
+              _buildListTile(
+                context,
+                icon: Icons.security_rounded,
+                title: 'Privacy & Security',
+                subtitle: 'Manage your account security',
+                onTap: () => debugPrint('Privacy tapped'),
+              ),
+              _buildListTile(
+                context,
                 icon: Icons.palette_rounded,
                 title: 'Theme Demo',
                 subtitle: 'View design system components',
                 onTap: () => context.go('/theme-demo'),
+                isLast: true,
               ),
             ],
           ),
@@ -133,6 +215,7 @@ class SettingsTab extends ConsumerWidget {
                   color: colorScheme.onSurfaceVariant,
                 ),
                 onTap: () => debugPrint('Audio quality tapped'),
+                isFirst: true,
               ),
               _buildListTile(
                 context,
@@ -147,6 +230,7 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Playback Speed',
                 subtitle: '1.0x',
                 onTap: () => debugPrint('Playback speed tapped'),
+                isLast: true,
               ),
             ],
           ),
@@ -162,6 +246,7 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Help & Support',
                 subtitle: 'Get help and contact support',
                 onTap: () => debugPrint('Help tapped'),
+                isFirst: true,
               ),
               _buildListTile(
                 context,
@@ -176,6 +261,7 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Rate App',
                 subtitle: 'Rate us on the App Store',
                 onTap: () => debugPrint('Rate app tapped'),
+                isLast: true,
               ),
             ],
           ),
@@ -190,6 +276,7 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.privacy_tip_rounded,
                 title: 'Privacy Policy',
                 onTap: () => debugPrint('Privacy policy tapped'),
+                isFirst: true,
               ),
               _buildListTile(
                 context,
@@ -203,6 +290,7 @@ class SettingsTab extends ConsumerWidget {
                 title: 'About',
                 subtitle: 'Version 1.0.0',
                 onTap: () => debugPrint('About tapped'),
+                isLast: true,
               ),
             ],
           ),
@@ -232,15 +320,34 @@ class SettingsTab extends ConsumerWidget {
     required String title,
     required List<Widget> children,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-          child: AppSubtitleText(title),
+          child: Text(
+            title.toUpperCase(),
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+              letterSpacing: 1.2,
+            ),
+          ),
         ),
         const SizedBox(height: AppSpacing.small),
-        ...children,
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+          child: AppCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: children,
+            ),
+          ),
+        ),
         const SizedBox(height: AppSpacing.large),
       ],
     );
@@ -253,32 +360,44 @@ class SettingsTab extends ConsumerWidget {
     String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
+    bool isFirst = false,
+    bool isLast = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: colorScheme.onSurfaceVariant,
-        size: AppSpacing.iconMedium,
+    return Container(
+      decoration: BoxDecoration(
+        border: !isLast ? Border(
+          bottom: BorderSide(
+            color: colorScheme.outline.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ) : null,
       ),
-      title: AppBodyText(title),
-      subtitle: subtitle != null 
-          ? AppCaptionText(
-              subtitle,
-              color: colorScheme.onSurfaceVariant,
-            )
-          : null,
-      trailing: trailing ?? Icon(
-        Icons.chevron_right_rounded,
-        color: colorScheme.onSurfaceVariant,
-        size: AppSpacing.iconMedium,
-      ),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.medium,
-        vertical: AppSpacing.extraSmall,
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: colorScheme.onSurfaceVariant,
+          size: AppSpacing.iconMedium,
+        ),
+        title: AppBodyText(title),
+        subtitle: subtitle != null 
+            ? AppCaptionText(
+                subtitle,
+                color: colorScheme.onSurfaceVariant,
+              )
+            : null,
+        trailing: trailing ?? Icon(
+          Icons.chevron_right_rounded,
+          color: colorScheme.onSurfaceVariant,
+          size: AppSpacing.iconMedium,
+        ),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.small,
+        ),
       ),
     );
   }
@@ -290,28 +409,117 @@ class SettingsTab extends ConsumerWidget {
     String? subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
+    bool isFirst = false,
+    bool isLast = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return SwitchListTile(
-      secondary: Icon(
-        icon,
-        color: colorScheme.onSurfaceVariant,
-        size: AppSpacing.iconMedium,
+    return Container(
+      decoration: BoxDecoration(
+        border: !isLast ? Border(
+          bottom: BorderSide(
+            color: colorScheme.outline.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ) : null,
       ),
-      title: AppBodyText(title),
-      subtitle: subtitle != null 
-          ? AppCaptionText(
-              subtitle,
-              color: colorScheme.onSurfaceVariant,
-            )
-          : null,
-      value: value,
-      onChanged: onChanged,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.medium,
-        vertical: AppSpacing.extraSmall,
+      child: SwitchListTile(
+        secondary: Icon(
+          icon,
+          color: colorScheme.onSurfaceVariant,
+          size: AppSpacing.iconMedium,
+        ),
+        title: AppBodyText(title),
+        subtitle: subtitle != null 
+            ? AppCaptionText(
+                subtitle,
+                color: colorScheme.onSurfaceVariant,
+              )
+            : null,
+        value: value,
+        onChanged: onChanged,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.small,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileTile(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      child: AppCard(
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(AppSpacing.medium),
+          leading: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colorScheme.primaryContainer,
+            ),
+            child: Icon(
+              Icons.person_rounded,
+              color: colorScheme.onPrimaryContainer,
+              size: AppSpacing.iconLarge,
+            ),
+          ),
+          title: const AppSubtitleText('Ahmed Al-Rashid'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppSpacing.extraSmall),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.small,
+                      vertical: AppSpacing.extraSmall,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: colorScheme.onSecondary,
+                          size: AppSpacing.iconExtraSmall,
+                        ),
+                        const SizedBox(width: AppSpacing.extraSmall),
+                        Text(
+                          'TRIAL',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSecondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  AppCaptionText(
+                    '14 days remaining',
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          trailing: Icon(
+            Icons.chevron_right_rounded,
+            color: colorScheme.onSurfaceVariant,
+            size: AppSpacing.iconMedium,
+          ),
+          onTap: () => debugPrint('Profile tapped'),
+        ),
       ),
     );
   }

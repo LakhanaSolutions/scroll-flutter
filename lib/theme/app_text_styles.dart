@@ -19,135 +19,135 @@ class AppTextStyles {
 
   // ====== Material You 3 Typography Scale ======
   
-  /// Display Large - 57sp
+  /// Display Large - 50sp
   static const TextStyle displayLarge = TextStyle(
-    fontSize: 57,
+    fontSize: 50,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.25,
     height: 1.12,
     fontFamily: primaryFontFamily,
   );
 
-  /// Display Medium - 45sp
+  /// Display Medium - 40sp
   static const TextStyle displayMedium = TextStyle(
-    fontSize: 45,
+    fontSize: 40,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.16,
     fontFamily: primaryFontFamily,
   );
 
-  /// Display Small - 36sp
+  /// Display Small - 32sp
   static const TextStyle displaySmall = TextStyle(
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.22,
     fontFamily: primaryFontFamily,
   );
 
-  /// Headline Large - 32sp
+  /// Headline Large - 28sp
   static const TextStyle headlineLarge = TextStyle(
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.25,
     fontFamily: primaryFontFamily,
   );
 
-  /// Headline Medium - 28sp
+  /// Headline Medium - 24sp
   static const TextStyle headlineMedium = TextStyle(
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.29,
     fontFamily: primaryFontFamily,
   );
 
-  /// Headline Small - 24sp
+  /// Headline Small - 20sp
   static const TextStyle headlineSmall = TextStyle(
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.33,
     fontFamily: primaryFontFamily,
   );
 
-  /// Title Large - 22sp
+  /// Title Large - 18sp
   static const TextStyle titleLarge = TextStyle(
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.27,
     fontFamily: primaryFontFamily,
   );
 
-  /// Title Medium - 16sp
+  /// Title Medium - 14sp
   static const TextStyle titleMedium = TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.15,
     height: 1.5,
     fontFamily: primaryFontFamily,
   );
 
-  /// Title Small - 14sp
+  /// Title Small - 12sp
   static const TextStyle titleSmall = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
     height: 1.43,
     fontFamily: primaryFontFamily,
   );
 
-  /// Label Large - 14sp
+  /// Label Large - 12sp
   static const TextStyle labelLarge = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
     height: 1.43,
     fontFamily: bodyFontFamily,
   );
 
-  /// Label Medium - 12sp
+  /// Label Medium - 11sp
   static const TextStyle labelMedium = TextStyle(
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
     height: 1.33,
     fontFamily: bodyFontFamily,
   );
 
-  /// Label Small - 11sp
+  /// Label Small - 10sp
   static const TextStyle labelSmall = TextStyle(
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
     height: 1.45,
     fontFamily: bodyFontFamily,
   );
 
-  /// Body Large - 16sp
+  /// Body Large - 14sp
   static const TextStyle bodyLarge = TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
     height: 1.5,
     fontFamily: bodyFontFamily,
   );
 
-  /// Body Medium - 14sp
+  /// Body Medium - 12sp
   static const TextStyle bodyMedium = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
     height: 1.43,
     fontFamily: bodyFontFamily,
   );
 
-  /// Body Small - 12sp
+  /// Body Small - 11sp
   static const TextStyle bodySmall = TextStyle(
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
     height: 1.33,
@@ -158,7 +158,7 @@ class AppTextStyles {
   
   /// Hero text for landing pages and main headlines
   static const TextStyle hero = TextStyle(
-    fontSize: 48,
+    fontSize: 42,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.5,
     height: 1.1,
@@ -167,7 +167,7 @@ class AppTextStyles {
 
   /// Subtitle text for sections
   static const TextStyle subtitle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
     height: 1.44,
@@ -176,7 +176,7 @@ class AppTextStyles {
 
   /// Caption text for small descriptions
   static const TextStyle caption = TextStyle(
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
     height: 1.4,
@@ -185,7 +185,7 @@ class AppTextStyles {
 
   /// Overline text for category labels
   static const TextStyle overline = TextStyle(
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.5,
     height: 1.4,
@@ -194,7 +194,7 @@ class AppTextStyles {
 
   /// Monospace text for code and technical content
   static const TextStyle monospace = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.43,
@@ -203,7 +203,7 @@ class AppTextStyles {
 
   /// Button text style
   static const TextStyle button = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.1,
     height: 1.43,
@@ -214,7 +214,7 @@ class AppTextStyles {
   
   /// iOS Large Title style
   static const TextStyle iosLargeTitle = TextStyle(
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: FontWeight.w700,
     letterSpacing: 0.374,
     height: 1.2,
@@ -223,7 +223,7 @@ class AppTextStyles {
 
   /// iOS Title 1 style
   static const TextStyle iosTitle1 = TextStyle(
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.364,
     height: 1.29,
@@ -232,7 +232,7 @@ class AppTextStyles {
 
   /// iOS Title 2 style
   static const TextStyle iosTitle2 = TextStyle(
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.352,
     height: 1.27,
@@ -241,7 +241,7 @@ class AppTextStyles {
 
   /// iOS Title 3 style
   static const TextStyle iosTitle3 = TextStyle(
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.38,
     height: 1.25,
@@ -250,7 +250,7 @@ class AppTextStyles {
 
   /// iOS Headline style
   static const TextStyle iosHeadline = TextStyle(
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.408,
     height: 1.29,
@@ -259,7 +259,7 @@ class AppTextStyles {
 
   /// iOS Body style
   static const TextStyle iosBody = TextStyle(
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.408,
     height: 1.29,
@@ -268,7 +268,7 @@ class AppTextStyles {
 
   /// iOS Callout style
   static const TextStyle iosCallout = TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.32,
     height: 1.31,
@@ -277,7 +277,7 @@ class AppTextStyles {
 
   /// iOS Subhead style
   static const TextStyle iosSubhead = TextStyle(
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.24,
     height: 1.33,
@@ -286,7 +286,7 @@ class AppTextStyles {
 
   /// iOS Footnote style
   static const TextStyle iosFootnote = TextStyle(
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.08,
     height: 1.38,
@@ -295,7 +295,7 @@ class AppTextStyles {
 
   /// iOS Caption 1 style
   static const TextStyle iosCaption1 = TextStyle(
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.33,
@@ -304,7 +304,7 @@ class AppTextStyles {
 
   /// iOS Caption 2 style
   static const TextStyle iosCaption2 = TextStyle(
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.07,
     height: 1.27,

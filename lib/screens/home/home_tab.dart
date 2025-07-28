@@ -11,6 +11,7 @@ import '../../widgets/banners/audiobook_of_week.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../providers/theme_provider.dart';
+import '../search_screen.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -29,7 +30,7 @@ class HomeTab extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: colorScheme.surface,
+            color: const Color(0xFFF2F2F7), // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),
@@ -48,6 +49,18 @@ class HomeTab extends ConsumerWidget {
               const Expanded(
                 child: AppTitleText('Home'),
               ),
+              AppIconButton(
+                icon: Icons.search_rounded,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
+                },
+                tooltip: 'Search',
+              ),
+              const SizedBox(width: AppSpacing.small),
               AppIconButton(
                 icon: isDarkMode ? Icons.light_mode : Icons.dark_mode,
                 onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),

@@ -3,6 +3,7 @@ import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/buttons/app_buttons.dart';
 import '../category_view_screen.dart';
 
 /// Categories tab content widget
@@ -17,7 +18,6 @@ class CategoriesTab extends StatefulWidget {
 class _CategoriesTabState extends State<CategoriesTab> {
   String _selectedLanguage = '';
   String _selectedVoiceType = '';
-  bool _isFiltersExpanded = false;
   
   final List<String> _languages = ['Arabic', 'English', 'Urdu'];
   final List<String> _voiceTypes = ['Female voice', 'Male voice', 'Kid voice', 'AI voice'];
@@ -34,7 +34,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: colorScheme.surface,
+            color: const Color(0xFFF2F2F7), // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),
@@ -53,263 +53,267 @@ class _CategoriesTabState extends State<CategoriesTab> {
               const Expanded(
                 child: AppTitleText('Categories'),
               ),
+              _buildFilterButton(context),
             ],
           ),
         ),
-        // Filters section
-        _buildFiltersSection(context),
         // Content
         Expanded(
-          child: ListView.builder(
+          child: ListView(
             padding: const EdgeInsets.all(AppSpacing.medium),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              final category = categories[index];
-              return _CategoryTile(
-                category: category,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CategoryViewScreen(category: category),
+            children: [
+              // Explore cards
+              Row(
+                children: [
+                  Expanded(
+                    child: _ExploreCard(
+                      title: 'Explore Authors',
+                      subtitle: 'Discover amazing writers',
+                      icon: Icons.edit_rounded,
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.primary,
+                          colorScheme.primaryContainer,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      onTap: () {
+                        debugPrint('Explore Authors tapped');
+                      },
                     ),
-                  );
-                },
-              );
-            },
+                  ),
+                  const SizedBox(width: AppSpacing.medium),
+                  Expanded(
+                    child: _ExploreCard(
+                      title: 'Explore Narrators',
+                      subtitle: 'Find amazing voices',
+                      icon: Icons.mic_rounded,
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.secondary,
+                          colorScheme.secondaryContainer,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      onTap: () {
+                        debugPrint('Explore Narrators tapped');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.large),
+              // Categories
+              ...categories.map((category) {
+                return _CategoryTile(
+                  category: category,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CategoryViewScreen(category: category),
+                      ),
+                    );
+                  },
+                );
+              }),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFiltersSection(BuildContext context) {
+  Widget _buildFilterButton(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final hasActiveFilters = _selectedLanguage.isNotEmpty || _selectedVoiceType.isNotEmpty;
 
-    return Container(
-      margin: const EdgeInsets.all(AppSpacing.medium),
-      child: AppCard(
-        child: Column(
-          children: [
-            // Header with expand/collapse functionality
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _isFiltersExpanded = !_isFiltersExpanded;
-                });
-              },
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.medium),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.small),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                      ),
-                      child: Icon(
-                        Icons.tune_rounded,
-                        color: colorScheme.onPrimaryContainer,
-                        size: AppSpacing.iconSmall,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.medium),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const AppSubtitleText('Filters'),
-                          if (hasActiveFilters)
-                            AppCaptionText(
-                              '${_selectedLanguage.isNotEmpty ? _selectedLanguage : ''}${_selectedLanguage.isNotEmpty && _selectedVoiceType.isNotEmpty ? ', ' : ''}${_selectedVoiceType.isNotEmpty ? _selectedVoiceType : ''}',
-                              color: colorScheme.primary,
-                            ),
-                        ],
-                      ),
-                    ),
-                    if (hasActiveFilters && !_isFiltersExpanded)
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${(_selectedLanguage.isNotEmpty ? 1 : 0) + (_selectedVoiceType.isNotEmpty ? 1 : 0)}',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ),
-                    const SizedBox(width: AppSpacing.small),
-                    AnimatedRotation(
-                      turns: _isFiltersExpanded ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: colorScheme.onSurfaceVariant,
-                        size: AppSpacing.iconMedium,
-                      ),
-                    ),
-                  ],
+    return Stack(
+      children: [
+        AppIconButton(
+          icon: Icons.tune_rounded,
+          onPressed: () => _showFiltersBottomSheet(context),
+          tooltip: 'Filters',
+        ),
+        if (hasActiveFilters)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '${(_selectedLanguage.isNotEmpty ? 1 : 0) + (_selectedVoiceType.isNotEmpty ? 1 : 0)}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 9,
+                  ),
                 ),
               ),
             ),
-            
-            // Expandable content
-            AnimatedCrossFade(
-              firstChild: const SizedBox.shrink(),
-              secondChild: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.medium,
-                  0,
-                  AppSpacing.medium,
-                  AppSpacing.medium,
-                ),
+          ),
+      ],
+    );
+  }
+
+  void _showFiltersBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusLarge),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                margin: const EdgeInsets.only(top: AppSpacing.medium),
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSpacing.radiusSmall),
-                    bottomRight: Radius.circular(AppSpacing.radiusSmall),
-                  ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
                 ),
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.large),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: AppSpacing.medium),
+                    // Title
+                    const AppTitleText('Filters'),
+                    const SizedBox(height: AppSpacing.large),
                     
                     // Languages section
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.language_rounded,
-                          color: colorScheme.primary,
-                          size: AppSpacing.iconSmall,
-                        ),
-                        const SizedBox(width: AppSpacing.small),
-                        const AppSubtitleText('Languages'),
-                      ],
+                    _buildFilterSection(
+                      context,
+                      title: 'Languages',
+                      icon: Icons.language_rounded,
+                      items: _languages,
+                      selectedItem: _selectedLanguage,
+                      onItemSelected: (language) {
+                        setState(() {
+                          _selectedLanguage = _selectedLanguage == language ? '' : language;
+                        });
+                        setModalState(() {});
+                      },
                     ),
-                    const SizedBox(height: AppSpacing.medium),
-                    SizedBox(
-                      height: 40,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _languages.length,
-                        separatorBuilder: (context, index) => const SizedBox(width: AppSpacing.small),
-                        itemBuilder: (context, index) {
-                          final language = _languages[index];
-                          final isSelected = _selectedLanguage == language;
-                          return _FilterChip(
-                            label: language,
-                            isSelected: isSelected,
-                            onTap: () {
-                              setState(() {
-                                _selectedLanguage = isSelected ? '' : language;
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    
                     const SizedBox(height: AppSpacing.large),
                     
                     // Voice types section
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.record_voice_over_rounded,
-                          color: colorScheme.primary,
-                          size: AppSpacing.iconSmall,
-                        ),
-                        const SizedBox(width: AppSpacing.small),
-                        const AppSubtitleText('Voice Type'),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.medium),
-                    SizedBox(
-                      height: 40,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _voiceTypes.length,
-                        separatorBuilder: (context, index) => const SizedBox(width: AppSpacing.small),
-                        itemBuilder: (context, index) {
-                          final voiceType = _voiceTypes[index];
-                          final isSelected = _selectedVoiceType == voiceType;
-                          return _FilterChip(
-                            label: voiceType,
-                            isSelected: isSelected,
-                            onTap: () {
-                              setState(() {
-                                _selectedVoiceType = isSelected ? '' : voiceType;
-                              });
-                            },
-                          );
-                        },
-                      ),
+                    _buildFilterSection(
+                      context,
+                      title: 'Voice Type',
+                      icon: Icons.record_voice_over_rounded,
+                      items: _voiceTypes,
+                      selectedItem: _selectedVoiceType,
+                      onItemSelected: (voiceType) {
+                        setState(() {
+                          _selectedVoiceType = _selectedVoiceType == voiceType ? '' : voiceType;
+                        });
+                        setModalState(() {});
+                      },
                     ),
                     
-                    // Clear filters button (only show if filters are active)
-                    if (hasActiveFilters) ...[
-                      const SizedBox(height: AppSpacing.large),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedLanguage = '';
-                            _selectedVoiceType = '';
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.medium,
-                            vertical: AppSpacing.small,
-                          ),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                            border: Border.all(
-                              color: colorScheme.outline.withValues(alpha: 0.2),
-                              width: 1,
-                            ),
-                          ),
+                    const SizedBox(height: AppSpacing.large),
+                    
+                    // Clear filters button
+                    if (_selectedLanguage.isNotEmpty || _selectedVoiceType.isNotEmpty)
+                      Center(
+                        child: AppSecondaryButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedLanguage = '';
+                              _selectedVoiceType = '';
+                            });
+                            setModalState(() {});
+                          },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
                                 Icons.clear_rounded,
-                                color: colorScheme.onSurfaceVariant,
-                                size: AppSpacing.iconExtraSmall,
+                                size: AppSpacing.iconSmall,
                               ),
-                              const SizedBox(width: AppSpacing.extraSmall),
-                              AppCaptionText(
-                                'Clear filters',
-                                color: colorScheme.onSurfaceVariant,
-                              ),
+                              const SizedBox(width: AppSpacing.small),
+                              const Text('Clear Filters'),
                             ],
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
               ),
-              crossFadeState: _isFiltersExpanded
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              duration: const Duration(milliseconds: 300),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required List<String> items,
+    required String selectedItem,
+    required Function(String) onItemSelected,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: colorScheme.primary,
+              size: AppSpacing.iconSmall,
+            ),
+            const SizedBox(width: AppSpacing.small),
+            Text(
+              title,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: AppSpacing.medium),
+        Wrap(
+          spacing: AppSpacing.small,
+          runSpacing: AppSpacing.small,
+          children: items.map((item) {
+            final isSelected = selectedItem == item;
+            return _FilterChip(
+              label: item,
+              isSelected: isSelected,
+              onTap: () => onItemSelected(item),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
@@ -470,6 +474,120 @@ class _CategoryTile extends StatelessWidget {
             size: AppSpacing.iconMedium,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Explore card widget for Authors and Narrators
+class _ExploreCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Gradient gradient;
+  final VoidCallback? onTap;
+
+  const _ExploreCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.gradient,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 120,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.primary.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Background pattern
+            Positioned(
+              right: -20,
+              top: -10,
+              child: Opacity(
+                opacity: 0.1,
+                child: Icon(
+                  icon,
+                  size: 80,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Icon
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: AppSpacing.iconMedium,
+                    ),
+                  ),
+                  // Text
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Arrow indicator
+            Positioned(
+              right: AppSpacing.medium,
+              bottom: AppSpacing.medium,
+              child: Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white.withValues(alpha: 0.8),
+                size: AppSpacing.iconSmall,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

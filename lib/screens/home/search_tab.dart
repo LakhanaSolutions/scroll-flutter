@@ -76,7 +76,7 @@ class _SearchTabState extends State<SearchTab> {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: colorScheme.surface,
+            color: const Color(0xFFF2F2F7), // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),

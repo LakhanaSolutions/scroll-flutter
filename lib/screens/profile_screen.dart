@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
+import '../theme/app_icons.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
@@ -87,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             children: [
               Icon(
-                Icons.workspace_premium_rounded,
+                AppIcons.premium,
                 color: colorScheme.onPrimaryContainer,
                 size: AppSpacing.iconMedium,
               ),
@@ -121,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.access_time_rounded,
+                      AppIcons.clock,
                       color: colorScheme.primary,
                       size: AppSpacing.iconMedium,
                     ),
@@ -193,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.upgrade_rounded,
+                    AppIcons.premium,
                     size: AppSpacing.iconSmall,
                     color: colorScheme.primary,
                   ),
@@ -232,14 +233,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildFormField(
             label: 'Full Name',
             controller: _nameController,
-            icon: Icons.person_rounded,
+            icon: AppIcons.person,
           ),
           const SizedBox(height: AppSpacing.medium),
           // Email Field
           _buildFormField(
             label: 'Email Address',
             controller: _emailController,
-            icon: Icons.email_rounded,
+            icon: AppIcons.mail,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: AppSpacing.large),

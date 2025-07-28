@@ -11,6 +11,7 @@ import '../../widgets/banners/audiobook_of_week.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/images/app_image.dart';
+import '../../theme/app_icons.dart';
 import '../../providers/theme_provider.dart';
 import '../search_screen.dart';
 import '../subscription_screen.dart';
@@ -44,7 +45,7 @@ class HomeTab extends ConsumerWidget {
           child: Row(
             children: [
               Icon(
-                Icons.home_rounded,
+                AppIcons.home,
                 color: colorScheme.primary,
                 size: AppSpacing.iconMedium,
               ),
@@ -53,7 +54,7 @@ class HomeTab extends ConsumerWidget {
                 child: AppTitleText('Home'),
               ),
               AppIconButton(
-                icon: Icons.search_rounded,
+                icon: AppIcons.search,
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -65,7 +66,7 @@ class HomeTab extends ConsumerWidget {
               ),
               const SizedBox(width: AppSpacing.small),
               AppIconButton(
-                icon: isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                icon: isDarkMode ? AppIcons.lightMode : AppIcons.darkMode,
                 onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
                 tooltip: 'Toggle theme',
               ),
@@ -89,7 +90,7 @@ class HomeTab extends ConsumerWidget {
                   ),
                   child: AppCircularImage(
                     imageUrl: null, // No user image in current data
-                    fallbackIcon: Icons.person_rounded,
+                    fallbackIcon: AppIcons.person,
                     size: 40,
                     backgroundColor: colorScheme.primary,
                     iconColor: colorScheme.onPrimary,

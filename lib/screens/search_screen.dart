@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
-import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/inputs/app_text_field.dart';
@@ -9,6 +8,7 @@ import '../widgets/books/content_tile.dart';
 import '../widgets/search/author_result_tile.dart';
 import '../widgets/search/narrator_result_tile.dart';
 import '../widgets/search/chapter_result_tile.dart';
+import '../theme/app_icons.dart';
 import 'author_screen.dart';
 import 'narrator_screen.dart';
 import 'playlist_screen.dart';
@@ -101,13 +101,13 @@ class _SearchScreenState extends State<SearchScreen> {
             child: AppTextField(
               controller: _searchController,
               hintText: 'Search books, podcasts, authors...',
-              prefixIcon: const Icon(Icons.search_rounded),
+              prefixIcon: const Icon(AppIcons.search),
               fillColor: colorScheme.surfaceContainerLow,
               onChanged: _performSearch,
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear_rounded,
+                        AppIcons.clear,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       onPressed: () {
@@ -183,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
         Row(
           children: [
             Icon(
-              Icons.history_rounded,
+              AppIcons.history,
               color: colorScheme.primary,
               size: AppSpacing.iconSmall,
             ),

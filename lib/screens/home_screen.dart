@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
-import 'dart:io';
 import '../providers/theme_provider.dart';
-import '../theme/theme_extensions.dart';
+import '../theme/app_icons.dart';
 import 'home/home_tab.dart';
 import 'home/categories_tab.dart';
 import 'home/library_tab.dart';
@@ -66,24 +65,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         selectedIndex: selectedIndex,
         barItems: <BarItem>[
           BarItem(
-            filledIcon: Icons.home_rounded,
-            outlinedIcon: Icons.home_outlined,
+            filledIcon: AppIcons.home,
+            outlinedIcon: AppIcons.homeOutlined,
           ),
           BarItem(
-            filledIcon: Icons.category_rounded,
-            outlinedIcon: Icons.category_outlined,
-          ),
-          // BarItem(
-          //   filledIcon: Icons.search_rounded,
-          //   outlinedIcon: Icons.search_rounded,
-          // ),
-          BarItem(
-            filledIcon: Icons.library_books_rounded,
-            outlinedIcon: Icons.library_books_outlined,
+            filledIcon: AppIcons.category,
+            outlinedIcon: AppIcons.categoryOutlined,
           ),
           BarItem(
-            filledIcon: Icons.settings_rounded,
-            outlinedIcon: Icons.settings_outlined,
+            filledIcon: AppIcons.library,
+            outlinedIcon: AppIcons.libraryOutlined,
+          ),
+          BarItem(
+            filledIcon: AppIcons.settings,
+            outlinedIcon: AppIcons.settings,
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'narrator_screen.dart';
+import 'note_screen.dart';
 
 /// Chapter screen with audio player interface
 /// Shows book cover, title, narrator, audio controls, and details functionality
@@ -376,6 +377,29 @@ class _ChapterScreenState extends State<ChapterScreen> {
           label: AppBodyText(
             '${_playbackSpeed}x',
             color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        // Add Note button
+        TextButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NoteScreen(
+                  chapter: widget.chapter,
+                  content: widget.content,
+                  currentPosition: _currentPosition,
+                ),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.note_add_rounded,
+            color: colorScheme.primary,
+            size: AppSpacing.iconSmall,
+          ),
+          label: AppBodyText(
+            'Add Note',
+            color: colorScheme.primary,
           ),
         ),
         // Details button

@@ -7,6 +7,7 @@ import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
 import '../author_screen.dart';
 import '../narrator_screen.dart';
+import '../note_screen.dart' as note_screen;
 
 enum NoteType { personal, highlight, thought }
 
@@ -45,6 +46,9 @@ class LibraryTab extends StatefulWidget {
 
 class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   late TabController _tabController;
+  
+  // Filter state for notes
+  Set<NoteType> _selectedNoteTypes = {};
 
   @override
   void initState() {
@@ -129,14 +133,14 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
               // Tab bar
               TabBar(
                 controller: _tabController,
-                isScrollable: true,
+                // isScrollable: true,
                 labelColor: colorScheme.primary,
                 unselectedLabelColor: colorScheme.onSurfaceVariant,
                 indicatorColor: colorScheme.primary,
                 dividerColor: Colors.transparent,
                 tabs: const [
-                  Tab(text: 'Recently Played'),
-                  Tab(text: 'Downloaded'),
+                  Tab(text: 'Recent'),
+                  Tab(text: 'Downloads'),
                   Tab(text: 'Following'),
                   Tab(text: 'Notes'),
                 ],
@@ -303,39 +307,58 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   }
 
   Widget _buildNotesTab() {
+    final filteredNotes = _selectedNoteTypes.isEmpty 
+        ? _mockNotes 
+        : _mockNotes.where((note) => _selectedNoteTypes.contains(note.type)).toList();
+
     return Column(
       children: [
-        // Add note button
+        // Filter header
         Container(
-          width: double.infinity,
-          margin: const EdgeInsets.all(AppSpacing.medium),
-          child: AppPrimaryButton(
-            onPressed: () => _showAddNoteDialog(),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.add_rounded),
-                SizedBox(width: AppSpacing.small),
-                Text('Add New Note'),
-              ],
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
+                width: 1,
+              ),
             ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.notes_rounded,
+                color: Theme.of(context).colorScheme.primary,
+                size: AppSpacing.iconSmall,
+              ),
+              const SizedBox(width: AppSpacing.small),
+              const Expanded(
+                child: AppSubtitleText('Notes'),
+              ),
+              _buildNotesFilterButton(context),
+            ],
           ),
         ),
         
-        // Notes list
+        // Notes content
         Expanded(
-          child: _mockNotes.isEmpty 
+          child: filteredNotes.isEmpty 
               ? _buildEmptyState(
                   icon: Icons.note_add_rounded,
-                  title: 'No Notes Yet',
-                  description: 'Start taking notes while listening to remember key insights',
+                  title: _selectedNoteTypes.isEmpty ? 'No Notes Yet' : 'No Notes Found',
+                  description: _selectedNoteTypes.isEmpty 
+                      ? 'Start taking notes while listening to remember key insights'
+                      : 'No notes match the selected filters',
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-                  itemCount: _mockNotes.length,
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  itemCount: filteredNotes.length,
                   itemBuilder: (context, index) {
-                    final note = _mockNotes[index];
-                    return _NoteTile(note: note);
+                    final note = filteredNotes[index];
+                    return _NoteTile(
+                      note: note,
+                      onEdit: () => _editNote(note),
+                    );
                   },
                 ),
         ),
@@ -343,44 +366,274 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
     );
   }
 
-  void _showAddNoteDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add New Note'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Note Title',
-                border: OutlineInputBorder(),
+  void _editNote(NoteItem note) {
+    // Mock chapter and content data for editing - in real app this would come from the note
+    final mockAuthor = AuthorData(
+      id: 'author1',
+      name: note.author,
+      bio: 'Renowned Islamic scholar and author',
+      nationality: 'Unknown',
+      birthYear: '1800',
+      genres: ['Islamic Studies'],
+      awards: [],
+      socialLinks: [],
+      quote: 'Knowledge is light',
+      totalBooks: 50,
+    );
+
+    final mockChapter = ChapterData(
+      id: 'chapter1',
+      title: note.contentTitle,
+      description: 'Chapter containing this note',
+      duration: '30m',
+      chapterNumber: 1,
+      status: ChapterStatus.notPlayed,
+      narratorId: 'narrator1',
+      progress: 0.5,
+    );
+    
+    final mockContent = ContentItemData(
+      id: 'content1',
+      title: note.contentTitle,
+      author: note.author,
+      authorData: mockAuthor,
+      coverUrl: 'https://via.placeholder.com/150x200',
+      type: ContentType.book,
+      availability: AvailabilityType.free,
+      rating: 4.5,
+      duration: '5h 30m',
+      chapterCount: 10,
+      description: 'Book description',
+      narrators: [
+        NarratorData(
+          id: 'narrator1',
+          name: note.author,
+          bio: 'Author bio',
+          languages: ['Arabic', 'Urdu'],
+          genres: ['Islamic Studies'],
+          awards: [],
+          socialLinks: [],
+          experienceYears: 20,
+          voiceDescription: 'Clear voice',
+          totalNarrations: 10,
+          isFollowing: false,
+        ),
+      ],
+      chapters: [mockChapter],
+      isBookmarked: false,
+    );
+
+    // Convert the library note to the note screen format
+    // Map NoteType from library to note screen
+    note_screen.NoteType noteScreenType;
+    switch (note.type) {
+      case NoteType.personal:
+        noteScreenType = note_screen.NoteType.personal;
+        break;
+      case NoteType.highlight:
+        noteScreenType = note_screen.NoteType.highlight;
+        break;
+      case NoteType.thought:
+        noteScreenType = note_screen.NoteType.thought;
+        break;
+    }
+
+    final editableNote = note_screen.NoteItem(
+      id: note.id,
+      title: note.title,
+      content: note.content,
+      contentTitle: note.contentTitle,
+      author: note.author,
+      createdAt: note.createdAt,
+      modifiedAt: note.modifiedAt,
+      type: noteScreenType,
+      timestamp: note.timestamp,
+    );
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => note_screen.NoteScreen(
+          chapter: mockChapter,
+          content: mockContent,
+          currentPosition: _parseTimestamp(note.timestamp),
+          existingNote: editableNote,
+        ),
+      ),
+    );
+  }
+
+  double _parseTimestamp(String timestamp) {
+    // Parse timestamp like "23:15" to seconds
+    final parts = timestamp.split(':');
+    if (parts.length == 2) {
+      final minutes = int.tryParse(parts[0]) ?? 0;
+      final seconds = int.tryParse(parts[1]) ?? 0;
+      return (minutes * 60 + seconds).toDouble();
+    }
+    return 0.0;
+  }
+
+  Widget _buildNotesFilterButton(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final hasActiveFilters = _selectedNoteTypes.isNotEmpty;
+
+    return Stack(
+      children: [
+        AppIconButton(
+          icon: Icons.tune_rounded,
+          onPressed: () => _showNotesFiltersBottomSheet(context),
+          tooltip: 'Filter Notes',
+        ),
+        if (hasActiveFilters)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '${_selectedNoteTypes.length}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 9,
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Note Content',
-                border: OutlineInputBorder(),
+          ),
+      ],
+    );
+  }
+
+  void _showNotesFiltersBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusLarge),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                margin: const EdgeInsets.only(top: AppSpacing.medium),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-              maxLines: 4,
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.large),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    const AppTitleText('Filter Notes'),
+                    const SizedBox(height: AppSpacing.large),
+                    
+                    // Note types section
+                    _buildNoteTypesFilterSection(context, setModalState),
+                    
+                    const SizedBox(height: AppSpacing.large),
+                    
+                    // Clear filters button
+                    if (_selectedNoteTypes.isNotEmpty)
+                      Center(
+                        child: AppSecondaryButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedNoteTypes.clear();
+                            });
+                            setModalState(() {});
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.clear_rounded,
+                                size: AppSpacing.iconSmall,
+                              ),
+                              const SizedBox(width: AppSpacing.small),
+                              const Text('Clear Filters'),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoteTypesFilterSection(BuildContext context, StateSetter setModalState) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.category_rounded,
+              color: colorScheme.primary,
+              size: AppSpacing.iconSmall,
+            ),
+            const SizedBox(width: AppSpacing.small),
+            Text(
+              'Note Types',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              debugPrint('Note added');
-            },
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
+        const SizedBox(height: AppSpacing.medium),
+        Wrap(
+          spacing: AppSpacing.small,
+          runSpacing: AppSpacing.small,
+          children: NoteType.values.map((noteType) {
+            final isSelected = _selectedNoteTypes.contains(noteType);
+            return _NoteTypeFilterChip(
+              noteType: noteType,
+              isSelected: isSelected,
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    _selectedNoteTypes.remove(noteType);
+                  } else {
+                    _selectedNoteTypes.add(noteType);
+                  }
+                });
+                setModalState(() {});
+              },
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
@@ -887,8 +1140,12 @@ class _FollowingTile extends StatelessWidget {
 /// Individual note tile widget
 class _NoteTile extends StatelessWidget {
   final NoteItem note;
+  final VoidCallback? onEdit;
 
-  const _NoteTile({required this.note});
+  const _NoteTile({
+    required this.note,
+    this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -897,9 +1154,23 @@ class _NoteTile extends StatelessWidget {
 
     return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
+          // Color indicator bar
+          Container(
+            width: 4,
+            height: 120,
+            decoration: BoxDecoration(
+              color: _getNoteColor(note.type),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.medium),
+          // Note content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
           // Header
           Row(
             children: [
@@ -963,30 +1234,33 @@ class _NoteTile extends StatelessWidget {
           ],
           const SizedBox(height: AppSpacing.small),
           
-          // Actions
-          Row(
-            children: [
-              _ActionButton(
-                icon: Icons.edit_rounded,
-                label: 'Edit',
-                onTap: () => debugPrint('Edit note'),
-              ),
-              const SizedBox(width: AppSpacing.medium),
-              _ActionButton(
-                icon: Icons.share_rounded,
-                label: 'Share',
-                onTap: () => debugPrint('Share note'),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: Icon(
-                  Icons.more_vert_rounded,
-                  color: colorScheme.onSurfaceVariant,
-                  size: AppSpacing.iconSmall,
+                // Actions
+                Row(
+                  children: [
+                    _ActionButton(
+                      icon: Icons.edit_rounded,
+                      label: 'Edit',
+                      onTap: onEdit ?? () => debugPrint('Edit note'),
+                    ),
+                    const SizedBox(width: AppSpacing.medium),
+                    _ActionButton(
+                      icon: Icons.share_rounded,
+                      label: 'Share',
+                      onTap: () => debugPrint('Share note'),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.more_vert_rounded,
+                        color: colorScheme.onSurfaceVariant,
+                        size: AppSpacing.iconSmall,
+                      ),
+                      onPressed: () => debugPrint('More options'),
+                    ),
+                  ],
                 ),
-                onPressed: () => debugPrint('More options'),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -1064,6 +1338,121 @@ class _ActionButton extends StatelessWidget {
             color: colorScheme.primary,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Note type filter chip widget
+class _NoteTypeFilterChip extends StatelessWidget {
+  final NoteType noteType;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _NoteTypeFilterChip({
+    required this.noteType,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  String _getNoteTypeLabel(NoteType type) {
+    switch (type) {
+      case NoteType.personal:
+        return 'Personal';
+      case NoteType.highlight:
+        return 'Highlight';
+      case NoteType.thought:
+        return 'Thought';
+    }
+  }
+
+  Color _getNoteTypeColor(NoteType type) {
+    switch (type) {
+      case NoteType.personal:
+        return Colors.green;
+      case NoteType.highlight:
+        return Colors.yellow.shade700;
+      case NoteType.thought:
+        return Colors.purple;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final noteColor = _getNoteTypeColor(noteType);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.small,
+        ),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    noteColor,
+                    noteColor.withValues(alpha: 0.7),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          border: Border.all(
+            color: isSelected 
+                ? Colors.transparent 
+                : colorScheme.outline.withValues(alpha: 0.3),
+            width: 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: noteColor.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Color dot
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.white : noteColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.small),
+            if (isSelected)
+              Icon(
+                Icons.check_rounded,
+                color: Colors.white,
+                size: AppSpacing.iconExtraSmall,
+              ),
+            if (isSelected)
+              const SizedBox(width: AppSpacing.extraSmall),
+            Text(
+              _getNoteTypeLabel(noteType),
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: isSelected 
+                    ? Colors.white 
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

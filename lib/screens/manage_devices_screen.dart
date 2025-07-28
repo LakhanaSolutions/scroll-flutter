@@ -92,7 +92,6 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: context.appTheme.iosSystemBackground,
       appBar: const AppAppBar(
         title: 'Manage Devices',
       ),
@@ -275,6 +274,7 @@ class _DeviceCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         gradient: LinearGradient(
           colors: [
             colorScheme.surfaceContainer.withValues(alpha: 0.8),

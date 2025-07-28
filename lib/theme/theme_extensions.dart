@@ -349,6 +349,9 @@ extension AppThemeExtensionGetter on BuildContext {
 
   /// Sweep gradient for circular elements
   SweepGradient get sweepGradient => AppGradients.sweepGradient(colorScheme);
+
+  /// Get gradient for a specific subscription plan
+  LinearGradient planGradient(String planName) => AppGradients.planGradient(colorScheme, planName);
 }
 
 /// Extension to easily access the theme extension from ThemeData

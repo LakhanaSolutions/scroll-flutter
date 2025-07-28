@@ -162,4 +162,43 @@ class AppGradients {
       center: Alignment.center,
     );
   }
+
+  /// Gets the appropriate gradient for a subscription plan
+  /// Used for plan cards and related UI elements based on plan type
+  static LinearGradient planGradient(ColorScheme colorScheme, String planName) {
+    if (planName.contains('Glimpse')) {
+      // Free plan - subtle gradient
+      return LinearGradient(
+        colors: [
+          colorScheme.surfaceContainer.withValues(alpha: 0.6),
+          colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else if (planName.contains('Premium')) {
+      // Premium plan - vibrant gradient
+      return LinearGradient(
+        colors: [
+          const Color(0xFF4CAF50).withValues(alpha: 0.1),
+          const Color(0xFF4CAF50).withValues(alpha: 0.05),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else if (planName.contains('Scholar')) {
+      // Scholar plan - premium gradient
+      return LinearGradient(
+        colors: [
+          const Color(0xFF1976D2).withValues(alpha: 0.1),
+          const Color(0xFF42A5F5).withValues(alpha: 0.05),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    } else {
+      // Default gradient
+      return surfaceGradient(colorScheme);
+    }
+  }
 } 

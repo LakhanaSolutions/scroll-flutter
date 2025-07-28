@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siraaj/screens/bookmarks_notes_screen.dart';
+import 'package:siraaj/screens/manage_devices_screen.dart';
 import 'package:siraaj/screens/profile_screen.dart';
 import 'package:siraaj/screens/subscription_screen.dart';
 import '../../providers/theme_provider.dart';
@@ -91,36 +91,6 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   );
                 },
-              ),
-              _buildListTile(
-                context,
-                icon: Icons.bookmark_rounded,
-                title: 'Bookmarks & Notes',
-                subtitle: 'Your saved moments and notes',
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.extraSmall,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.tertiaryContainer,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-                  ),
-                  child: Text(
-                    '28',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onTertiaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const BookmarksNotesScreen(),
-                    ),
-                  );
-                },
                 isLast: true,
               ),
             ],
@@ -177,9 +147,15 @@ class SettingsTab extends ConsumerWidget {
               _buildListTile(
                 context,
                 icon: Icons.cloud_sync_rounded,
-                title: 'Sync Settings',
-                subtitle: 'Sync across devices',
-                onTap: () => debugPrint('Sync settings tapped'),
+                title: 'Manage Devices',
+                subtitle: 'Manage your devices',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ManageDevicesScreen(),
+                    ),
+                  );
+                },
               ),
               _buildListTile(
                 context,

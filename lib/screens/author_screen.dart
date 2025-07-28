@@ -401,79 +401,74 @@ class _AuthorScreenState extends State<AuthorScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-      child: AppCard(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.large),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.library_books_rounded,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconSmall,
-                  ),
-                  const SizedBox(width: AppSpacing.small),
-                  const AppSubtitleText('Books by this Author'),
-                  const Spacer(),
-                  AppCaptionText(
-                    '${_authorBooks.length} books',
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ],
+              Icon(
+                Icons.library_books_rounded,
+                color: colorScheme.primary,
+                size: AppSpacing.iconSmall,
               ),
-              const SizedBox(height: AppSpacing.medium),
-              if (_authorBooks.isEmpty)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(AppSpacing.large),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.book_outlined,
-                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                        size: AppSpacing.iconLarge,
-                      ),
-                      const SizedBox(height: AppSpacing.medium),
-                      AppBodyText(
-                        'No books available yet',
-                        textAlign: TextAlign.center,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
-                )
-              else
-                ..._authorBooks.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final book = entry.value;
-                  return Column(
-                    children: [
-                      ContentTile(
-                        content: book,
-                        onTap: () {
-                          debugPrint('Navigate to book: ${book.title}');
-                        },
-                      ),
-                      if (index < _authorBooks.length - 1)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.small),
-                          child: Divider(
-                            color: colorScheme.outline.withValues(alpha: 0.1),
-                            thickness: 1,
-                            height: 1,
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+              const SizedBox(width: AppSpacing.small),
+              const AppSubtitleText('Books by this Author'),
+              const Spacer(),
+              AppCaptionText(
+                '${_authorBooks.length} books',
+                color: colorScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),
-      ),
+        const SizedBox(height: AppSpacing.medium),
+        
+        // Books list
+        if (_authorBooks.isEmpty)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+            child: AppCard(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.large),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.book_outlined,
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                      size: AppSpacing.iconLarge,
+                    ),
+                    const SizedBox(height: AppSpacing.medium),
+                    AppBodyText(
+                      'No books available yet',
+                      textAlign: TextAlign.center,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        else
+          ..._authorBooks.map((book) {
+            return Container(
+              margin: const EdgeInsets.only(
+                left: AppSpacing.medium,
+                right: AppSpacing.medium,
+                bottom: AppSpacing.small,
+              ),
+              child: ContentTile(
+                content: book,
+                onTap: () {
+                  debugPrint('Navigate to book: ${book.title}');
+                },
+              ),
+            );
+          }),
+      ],
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:siraaj/screens/narrators_list_screen.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../category_view_screen.dart';
+import '../authors_list_screen.dart';
 
 /// Categories tab content widget
 /// Displays Islamic categories with icons, item count, listening hours and arrow icons
@@ -79,7 +81,11 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         end: Alignment.bottomRight,
                       ),
                       onTap: () {
-                        debugPrint('Explore Authors tapped');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AuthorsListScreen(),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -97,13 +103,35 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      onTap: () {
-                        debugPrint('Explore Narrators tapped');
+                       onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const NarratorsListScreen(),
+                          ),
+                        );
                       },
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: AppSpacing.medium),
+              // Third explore card for Languages
+              // _ExploreCard(
+              //   title: 'Explore Languages',
+              //   subtitle: 'Browse content by language',
+              //   icon: Icons.language_rounded,
+              //   gradient: LinearGradient(
+              //     colors: [
+              //       colorScheme.tertiary,
+              //       colorScheme.tertiaryContainer,
+              //     ],
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //   ),
+              //   onTap: () {
+              //     debugPrint('Explore Languages tapped');
+              //   },
+              // ),
               const SizedBox(height: AppSpacing.large),
               // Categories
               ...categories.map((category) {

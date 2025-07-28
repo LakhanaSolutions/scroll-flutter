@@ -3,6 +3,7 @@ import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
+import '../cards/app_card_home.dart';
 
 /// Audiobook of the week banner widget
 /// Full width banner showcasing the featured audiobook with cover, title, author and action button
@@ -25,28 +26,26 @@ class AudiobookOfWeekBanner extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return AppCardHome(
       margin: margin ?? const EdgeInsets.symmetric(
         horizontal: AppSpacing.medium,
         vertical: AppSpacing.medium,
       ),
-      child: Material(
-        color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        elevation: AppSpacing.elevationMedium,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.surfaceContainer,
-                colorScheme.surfaceContainerHigh,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      padding: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.surfaceContainer.withValues(alpha: 0.5),
+              colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          padding: const EdgeInsets.all(AppSpacing.large),
+        ),
+        padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -80,7 +79,6 @@ class AudiobookOfWeekBanner extends StatelessWidget {
                 ],
               ),
             ],
-          ),
         ),
       ),
     );

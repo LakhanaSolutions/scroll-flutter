@@ -5,6 +5,7 @@ import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import 'chapter_screen.dart';
+import 'narrator_screen.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -436,6 +437,18 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               ),
             ],
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.info_outline_rounded),
+          color: colorScheme.primary,
+          tooltip: 'View Narrator',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NarratorScreen(narrator: narrator),
+              ),
+            );
+          },
         ),
       ],
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
+import '../cards/app_card_home.dart';
 
 /// Premium upgrade banner widget to convince users to upgrade to premium
 /// Shows premium benefits and call-to-action button
@@ -28,28 +29,25 @@ class PremiumBanner extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return AppCardHome(
       margin: const EdgeInsets.symmetric(
         horizontal: AppSpacing.medium,
         vertical: AppSpacing.small,
       ),
-      child: Material(
-        color: colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        elevation: AppSpacing.elevationSmall,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primaryContainer,
-                colorScheme.primaryContainer.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      padding: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.primaryContainer.withValues(alpha: 0.6),
+              colorScheme.primaryContainer.withValues(alpha: 0.4),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          padding: const EdgeInsets.all(AppSpacing.large),
+        ),
+        padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -117,7 +115,6 @@ class PremiumBanner extends StatelessWidget {
                 ),
               ),
             ],
-          ),
         ),
       ),
     );

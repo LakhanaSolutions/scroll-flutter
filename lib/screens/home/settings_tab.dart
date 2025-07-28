@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:siraaj/screens/bookmarks_notes_screen.dart';
+import 'package:siraaj/screens/subscription_screen.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/text/app_text.dart';
@@ -74,7 +76,13 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                onTap: () => debugPrint('Subscription tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SubscriptionScreen(),
+                    ),
+                  );
+                },
                 isFirst: true,
               ),
               _buildListTile(
@@ -123,7 +131,13 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                onTap: () => debugPrint('Bookmarks tapped'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const BookmarksNotesScreen(),
+                    ),
+                  );
+                },
                 isLast: true,
               ),
             ],
@@ -454,6 +468,7 @@ class SettingsTab extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        padding: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.all(AppSpacing.medium),
           leading: Container(

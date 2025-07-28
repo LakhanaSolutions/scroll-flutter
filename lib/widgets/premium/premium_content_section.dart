@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
+import '../cards/app_card_home.dart';
 
 /// Premium exclusive content section widget
 /// Shows trial users what premium features they're missing out on
@@ -32,24 +33,22 @@ class PremiumContentSection extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return AppCardHome(
       margin: const EdgeInsets.symmetric(
         horizontal: AppSpacing.medium,
         vertical: AppSpacing.medium,
       ),
-      child: Material(
-        color: colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        elevation: AppSpacing.elevationMedium,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
-            ),
+      padding: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          color: colorScheme.surfaceContainerHigh,
+          border: Border.all(
+            color: colorScheme.outline.withValues(alpha: 0.1),
+            width: 1,
           ),
-          padding: const EdgeInsets.all(AppSpacing.large),
+        ),
+        padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +111,6 @@ class PremiumContentSection extends StatelessWidget {
                 ),
               ),
             ],
-          ),
         ),
       ),
     );

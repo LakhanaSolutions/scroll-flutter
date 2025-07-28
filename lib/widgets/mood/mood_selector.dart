@@ -36,7 +36,7 @@ class MoodSelector extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.medium),
           SizedBox(
-            height: 100,
+            height: 170,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
@@ -72,23 +72,23 @@ class _MoodTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: AppSpacing.medium),
+      width: 160,
+      margin: const EdgeInsets.only(right: AppSpacing.large),
       child: Material(
-        color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        elevation: AppSpacing.elevationSmall,
+        color: colorScheme.surfaceContainer.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusExtraLarge),
+        elevation: 0,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusExtraLarge),
           child: Container(
-            padding: const EdgeInsets.all(AppSpacing.medium),
+            padding: const EdgeInsets.all(AppSpacing.large),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusExtraLarge),
               gradient: LinearGradient(
                 colors: [
-                  colorScheme.surfaceContainer,
-                  colorScheme.surfaceContainer.withValues(alpha: 0.8),
+                  colorScheme.surfaceContainer.withValues(alpha: 0.4),
+                  colorScheme.surfaceContainer.withValues(alpha: 0.2),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -97,24 +97,30 @@ class _MoodTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Emoji icon
+                // Emoji icon with enhanced styling
                 Container(
-                  width: AppSpacing.iconLarge,
-                  height: AppSpacing.iconLarge,
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                    border: Border.all(
+                      color: colorScheme.primary.withValues(alpha: 0.2),
+                      width: 2,
+                    ),
                   ),
                   child: Center(
                     child: Text(
                       category.emoji,
-                      style: theme.textTheme.headlineSmall,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontSize: 28,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.small),
-                // Category name
-                AppCaptionText(
+                const SizedBox(height: AppSpacing.medium),
+                // Category name with better typography
+                AppBodyText(
                   category.name,
                   textAlign: TextAlign.center,
                   maxLines: 2,

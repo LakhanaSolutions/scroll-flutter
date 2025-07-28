@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
-import '../text/app_text.dart';
-import '../buttons/app_buttons.dart';
 
 /// Notification area widget that displays dismissible notifications from API
 /// Supports different notification types: info, warning, success, error
@@ -77,31 +75,30 @@ class _NotificationCard extends StatelessWidget {
   });
 
   Color _getBackgroundColor(BuildContext context, NotificationType type) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (type) {
       case NotificationType.info:
-        return colorScheme.primaryContainer;
+        return isDark
+            ? const Color(0xFF1E293B) // dark blue-gray
+            : Colors.white;
       case NotificationType.warning:
-        return colorScheme.errorContainer.withValues(alpha: 0.8);
+        return isDark
+            ? const Color(0xFF3B2F13) // dark yellow-brown
+            : const Color(0xFFFFF9E5);
       case NotificationType.success:
-        return colorScheme.primaryContainer.withValues(alpha: 0.8);
+        return isDark
+            ? const Color(0xFF1B3C2E) // dark green
+            : const Color(0xFFF1FAF5);
       case NotificationType.error:
-        return colorScheme.errorContainer;
+        return isDark
+            ? const Color(0xFF3B2323) // dark red
+            : const Color(0xFFFDF2F2);
     }
   }
 
   Color _getTextColor(BuildContext context, NotificationType type) {
-    final colorScheme = Theme.of(context).colorScheme;
-    switch (type) {
-      case NotificationType.info:
-        return colorScheme.onPrimaryContainer;
-      case NotificationType.warning:
-        return colorScheme.onErrorContainer;
-      case NotificationType.success:
-        return colorScheme.onPrimaryContainer;
-      case NotificationType.error:
-        return colorScheme.onErrorContainer;
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark ? Colors.white : Colors.black;
   }
 
   IconData _getIcon(NotificationType type) {
@@ -132,38 +129,48 @@ class _NotificationCard extends StatelessWidget {
       child: Material(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-        elevation: 1,
+        elevation: 0,
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.medium),
+          padding: const EdgeInsets.all(AppSpacing.small),
           child: Row(
             children: [
               Icon(
                 _getIcon(notification.type),
                 color: textColor,
-                size: AppSpacing.iconMedium,
+                size: AppSpacing.iconSmall,
               ),
-              const SizedBox(width: AppSpacing.medium),
+              const SizedBox(width: AppSpacing.small),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppSubtitleText(
+                    Text(
                       notification.title,
-                      color: textColor,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: textColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.extraSmall),
-                    AppBodyText(
+                    const SizedBox(height: 2),
+                    Text(
                       notification.message,
-                      color: textColor.withValues(alpha: 0.9),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: textColor.withValues(alpha: 0.8),
+                        fontSize: 11,
+                      ),
                     ),
                     if (notification.actionText != null) ...[
-                      const SizedBox(height: AppSpacing.small),
-                      AppTextButton(
-                        onPressed: onAction,
+                      const SizedBox(height: AppSpacing.extraSmall),
+                      GestureDetector(
+                        onTap: onAction,
                         child: Text(
                           notification.actionText!,
-                          style: theme.textTheme.labelMedium?.copyWith(
+                          style: theme.textTheme.labelSmall?.copyWith(
                             color: textColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
@@ -172,16 +179,15 @@ class _NotificationCard extends StatelessWidget {
                 ),
               ),
               if (notification.isDismissible)
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: textColor.withValues(alpha: 0.7),
-                    size: AppSpacing.iconSmall,
-                  ),
-                  onPressed: onDismiss,
-                  constraints: const BoxConstraints(
-                    minWidth: AppSpacing.touchTarget,
-                    minHeight: AppSpacing.touchTarget,
+                GestureDetector(
+                  onTap: onDismiss,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.close,
+                      color: textColor.withValues(alpha: 0.6),
+                      size: 16,
+                    ),
                   ),
                 ),
             ],

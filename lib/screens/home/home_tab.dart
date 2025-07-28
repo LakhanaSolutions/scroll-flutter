@@ -30,7 +30,7 @@ class HomeTab extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(AppSpacing.medium),
           decoration: BoxDecoration(
-            color: const Color(0xFFF2F2F7), // iOS background
+            // color: const Color(0xFFF2F2F7), // iOS background
             border: Border(
               bottom: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.1),
@@ -100,9 +100,10 @@ class HomeTab extends ConsumerWidget {
         // Content
         Expanded(
           child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.medium),
           // Notification area
           NotificationArea(
             notifications: MockData.getNotifications(),

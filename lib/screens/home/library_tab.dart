@@ -468,6 +468,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
           content: mockContent,
           currentPosition: _parseTimestamp(note.timestamp),
           existingNote: editableNote,
+          wasAudioPlaying: false, // Not coming from active audio session
         ),
       ),
     );

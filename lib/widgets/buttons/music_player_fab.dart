@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/mock_data.dart';
 import '../../screens/chapter_screen.dart';
+import '../../providers/audio_provider.dart';
 import 'app_buttons.dart';
 
 /// Floating action button for quick access to music player
-/// Displays a headphones icon and navigates to chapter screen with mock playing content
-class MusicPlayerFab extends StatelessWidget {
+/// Only displays when there is audio loaded and navigates to chapter screen
+class MusicPlayerFab extends ConsumerWidget {
   const MusicPlayerFab({super.key});
 
   void _openMusicPlayer(BuildContext context) {
@@ -24,7 +26,15 @@ class MusicPlayerFab extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasAudio = ref.watch(hasAudioProvider);
+    final isPlaying = ref.watch(isPlayingProvider);
+    
+    // Only show FAB if there is audio loaded
+    if (!hasAudio) {
+      return const SizedBox.shrink();
+    }
+    
     final theme = Theme.of(context);
     
     return AppFloatingActionButton(
@@ -34,7 +44,7 @@ class MusicPlayerFab extends StatelessWidget {
       foregroundColor: theme.colorScheme.onPrimary,
       heroTag: 'music-player-fab',
       child: Icon(
-        Icons.headphones,
+        isPlaying ? Icons.pause : Icons.play_arrow,
         size: 28,
       ),
     );

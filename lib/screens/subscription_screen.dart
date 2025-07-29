@@ -255,6 +255,7 @@ class _PlanCard extends StatelessWidget {
       child: Stack(
                   children: [
             AppCard(
+              elevation: 0,
               gradient: context.planGradient(plan.name),
               onTap: onTap,
             child: Column(

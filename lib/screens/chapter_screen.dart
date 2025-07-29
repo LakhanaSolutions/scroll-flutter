@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../providers/audio_provider.dart';
 import './home/library_tab.dart';
 import 'narrator_screen.dart';
 import 'note_screen.dart';
 
 /// Chapter screen with audio player interface
 /// Shows book cover, title, narrator, audio controls, and details functionality
-class ChapterScreen extends StatefulWidget {
+class ChapterScreen extends ConsumerStatefulWidget {
   final ChapterData chapter;
   final ContentItemData content;
 
@@ -21,94 +23,126 @@ class ChapterScreen extends StatefulWidget {
   });
 
   @override
-  State<ChapterScreen> createState() => _ChapterScreenState();
+  ConsumerState<ChapterScreen> createState() => _ChapterScreenState();
 }
 
-class _ChapterScreenState extends State<ChapterScreen> {
-  bool _isPlaying = false;
-  double _currentPosition = 0.0; // Current position in seconds
-  double _totalDuration = 0.0; // Total duration in seconds
-  double _playbackSpeed = 1.0;
+class _ChapterScreenState extends ConsumerState<ChapterScreen>
+    with TickerProviderStateMixin {
+  bool _audioLoaded = false;
+  bool _isDragging = false;
+  double _dragValue = 0.0;
+  late AnimationController _playPauseController;
   
   @override
   void initState() {
     super.initState();
-    _isPlaying = widget.chapter.status == ChapterStatus.playing;
-    _totalDuration = _parseDuration(widget.chapter.duration);
-    _currentPosition = widget.chapter.progress * _totalDuration;
+    _playPauseController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    // Defer audio loading until after the widget tree is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAudio();
+    });
   }
 
-  double _parseDuration(String duration) {
-    // Parse duration like "45m" or "1h 20m" to seconds
-    final parts = duration.toLowerCase().replaceAll(' ', '');
-    double seconds = 0;
-    
-    if (parts.contains('h')) {
-      final hourPart = parts.split('h')[0];
-      seconds += double.tryParse(hourPart)! * 3600;
-      if (parts.contains('m')) {
-        final minutePart = parts.split('h')[1].replaceAll('m', '');
-        if (minutePart.isNotEmpty) {
-          seconds += double.tryParse(minutePart)! * 60;
+  @override
+  void dispose() {
+    _playPauseController.dispose();
+    super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return duration.inHours > 0
+        ? "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds"
+        : "$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  Future<void> _loadAudio() async {
+    if (mounted) {
+      try {
+        final audioPath = 'assets/audio/sample_audiobook.mp3';
+        final currentMediaItem = ref.read(audioPlayerProvider).currentMediaItem;
+        
+        // Check if the same audio is already loaded
+        if (currentMediaItem?.id == audioPath) {
+          setState(() {
+            _audioLoaded = true;
+          });
+          return; // Don't reload the same audio
+        }
+
+        debugPrint('Loading audio: $audioPath');
+        
+        await ref.read(audioPlayerProvider.notifier).loadAndPlay(
+          audioPath: audioPath,
+          title: widget.chapter.title,
+          album: widget.content.title,
+          artist: widget.content.type == ContentType.book 
+              ? widget.content.narrators.first.name
+              : 'Podcast',
+        );
+        
+        // Wait a moment for state to update and verify audio is loaded
+        await Future.delayed(const Duration(milliseconds: 500));
+        
+        if (mounted) {
+          final audioState = ref.read(audioPlayerProvider);
+          debugPrint('Audio load completed. Has audio: ${audioState.hasAudio}, Duration: ${audioState.duration}');
+          
+          setState(() {
+            _audioLoaded = audioState.hasAudio;
+          });
+          
+          // Force a state refresh if needed
+          if (audioState.hasAudio && audioState.duration == null) {
+            ref.read(audioPlayerProvider.notifier).refreshState();
+          }
+        }
+      } catch (e) {
+        debugPrint('Error loading audio: $e');
+        // Handle error gracefully
+        if (mounted) {
+          setState(() {
+            _audioLoaded = false;
+          });
         }
       }
-    } else if (parts.contains('m')) {
-      final minutePart = parts.replaceAll('m', '');
-      seconds += double.tryParse(minutePart)! * 60;
-    }
-    
-    return seconds;
-  }
-
-  String _formatTime(double seconds) {
-    final hours = (seconds / 3600).floor();
-    final minutes = ((seconds % 3600) / 60).floor();
-    final secs = (seconds % 60).floor();
-    
-    if (hours > 0) {
-      return '${hours.toString().padLeft(1, '0')}:${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
-    } else {
-      return '${minutes.toString().padLeft(1, '0')}:${secs.toString().padLeft(2, '0')}';
     }
   }
 
   void _togglePlayPause() {
-    setState(() {
-      _isPlaying = !_isPlaying;
-    });
-    debugPrint('Play/Pause toggled: $_isPlaying');
+    ref.read(audioPlayerProvider.notifier).togglePlayPause();
   }
 
   void _rewind() {
-    setState(() {
-      _currentPosition = (_currentPosition - 10).clamp(0, _totalDuration);
-    });
-    debugPrint('Rewound 10 seconds');
+    ref.read(audioPlayerProvider.notifier).skipBackward();
   }
 
   void _forward() {
-    setState(() {
-      _currentPosition = (_currentPosition + 10).clamp(0, _totalDuration);
-    });
-    debugPrint('Forwarded 10 seconds');
+    ref.read(audioPlayerProvider.notifier).skipForward();
   }
 
   void _changeSpeed() {
-    setState(() {
-      if (_playbackSpeed == 1.0) {
-        _playbackSpeed = 1.25;
-      } else if (_playbackSpeed == 1.25) {
-        _playbackSpeed = 1.5;
-      } else if (_playbackSpeed == 1.5) {
-        _playbackSpeed = 2.0;
-      } else {
-        _playbackSpeed = 1.0;
-      }
-    });
-    debugPrint('Speed changed to: ${_playbackSpeed}x');
+    final currentSpeed = ref.read(audioPlayerProvider).speed;
+    double newSpeed;
+    if (currentSpeed == 1.0) {
+      newSpeed = 1.25;
+    } else if (currentSpeed == 1.25) {
+      newSpeed = 1.5;
+    } else if (currentSpeed == 1.5) {
+      newSpeed = 2.0;
+    } else {
+      newSpeed = 1.0;
+    }
+    ref.read(audioPlayerProvider.notifier).setSpeed(newSpeed);
   }
 
   void _showDetailsBottomSheet() {
+    final position = ref.read(audioPositionProvider);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -116,7 +150,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
       builder: (context) => _DetailsBottomSheet(
         chapter: widget.chapter,
         content: widget.content,
-        currentPosition: _currentPosition,
+        currentPosition: position.inSeconds.toDouble(),
       ),
     );
   }
@@ -262,16 +296,35 @@ class _ChapterScreenState extends State<ChapterScreen> {
             overlayColor: colorScheme.primary.withValues(alpha: 0.1),
             trackHeight: 4,
           ),
-          child: Slider(
-            value: _currentPosition,
-            max: _totalDuration,
-            onChanged: (value) {
-              setState(() {
-                _currentPosition = value;
-              });
-            },
-            onChangeEnd: (value) {
-              debugPrint('Seeked to: ${_formatTime(value)}');
+          child: Consumer(
+            builder: (context, ref, child) {
+              final position = ref.watch(audioPositionProvider);
+              final duration = ref.watch(audioDurationProvider);
+              
+              final maxValue = duration?.inSeconds.toDouble() ?? 1.0;
+              final currentValue = _isDragging 
+                  ? _dragValue 
+                  : (duration != null 
+                      ? position.inSeconds.toDouble().clamp(0.0, maxValue)
+                      : 0.0);
+              
+              return Slider(
+                value: currentValue,
+                max: maxValue,
+                onChanged: duration != null ? (value) {
+                  setState(() {
+                    _isDragging = true;
+                    _dragValue = value;
+                  });
+                } : null,
+                onChangeEnd: duration != null ? (value) {
+                  setState(() {
+                    _isDragging = false;
+                  });
+                  // Final seek when dragging ends
+                  ref.read(audioPlayerProvider.notifier).seek(Duration(seconds: value.toInt()));
+                } : null,
+              );
             },
           ),
         ),
@@ -280,13 +333,23 @@ class _ChapterScreenState extends State<ChapterScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppCaptionText(
-                _formatTime(_currentPosition),
-                color: colorScheme.onSurfaceVariant,
+              Consumer(
+                builder: (context, ref, child) {
+                  final position = ref.watch(audioPositionProvider);
+                  return AppCaptionText(
+                    _formatDuration(position),
+                    color: colorScheme.onSurfaceVariant,
+                  );
+                },
               ),
-              AppCaptionText(
-                _formatTime(_totalDuration),
-                color: colorScheme.onSurfaceVariant,
+              Consumer(
+                builder: (context, ref, child) {
+                  final duration = ref.watch(audioDurationProvider);
+                  return AppCaptionText(
+                    duration != null ? _formatDuration(duration) : '--:--',
+                    color: colorScheme.onSurfaceVariant,
+                  );
+                },
               ),
             ],
           ),
@@ -328,13 +391,36 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 ),
               ],
             ),
-            child: IconButton(
-              onPressed: _togglePlayPause,
-              icon: Icon(
-                _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                color: colorScheme.onPrimary,
-                size: 40,
-              ),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final isLoading = ref.watch(isLoadingProvider);
+                final hasAudio = ref.watch(hasAudioProvider);
+                final isPlaying = ref.watch(isPlayingProvider);
+
+                // Update animation based on play state
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (isPlaying) {
+                    _playPauseController.forward();
+                  } else {
+                    _playPauseController.reverse();
+                  }
+                });
+
+                return isLoading
+                  ? CircularProgressIndicator(
+                      color: colorScheme.onPrimary,
+                      strokeWidth: 2,
+                    )
+                  : IconButton(
+                      onPressed: _togglePlayPause,
+                      icon: AnimatedIcon(
+                        icon: AnimatedIcons.play_pause,
+                        progress: _playPauseController,
+                        color: colorScheme.onPrimary,
+                        size: 40,
+                      ),
+                    );
+              },
             ),
           ),
         ),
@@ -359,40 +445,60 @@ class _ChapterScreenState extends State<ChapterScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         // Speed control
-        TextButton.icon(
-          onPressed: _changeSpeed,
-          icon: Icon(
-            Icons.speed_rounded,
-            color: colorScheme.onSurfaceVariant,
-            size: AppSpacing.iconSmall,
-          ),
-          label: AppBodyText(
-            '${_playbackSpeed}x',
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        // Add Note button
-        TextButton.icon(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NoteScreen(
-                  chapter: widget.chapter,
-                  content: widget.content,
-                  currentPosition: _currentPosition,
-                ),
+        Consumer(
+          builder: (context, ref, child) {
+            final speed = ref.watch(audioSpeedProvider);
+            return TextButton.icon(
+              onPressed: _changeSpeed,
+              icon: Icon(
+                Icons.speed_rounded,
+                color: colorScheme.onSurfaceVariant,
+                size: AppSpacing.iconSmall,
+              ),
+              label: AppBodyText(
+                '${speed}x',
+                color: colorScheme.onSurfaceVariant,
               ),
             );
           },
-          icon: Icon(
-            Icons.note_add_rounded,
-            color: colorScheme.primary,
-            size: AppSpacing.iconSmall,
-          ),
-          label: AppBodyText(
-            'Add Note',
-            color: colorScheme.primary,
-          ),
+        ),
+        // Add Note button
+        Consumer(
+          builder: (context, ref, child) {
+            final position = ref.watch(audioPositionProvider);
+            return TextButton.icon(
+              onPressed: () async {
+                // Check if audio was playing before pausing
+                final wasPlaying = ref.read(isPlayingProvider);
+                
+                // Pause audio if playing and remember state
+                await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
+                
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => NoteScreen(
+                      chapter: widget.chapter,
+                      content: widget.content,
+                      currentPosition: position.inSeconds.toDouble(),
+                      wasAudioPlaying: wasPlaying,
+                    ),
+                  ),
+                );
+                
+                // Resume audio if it was playing before navigation
+                await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+              },
+              icon: Icon(
+                Icons.note_add_rounded,
+                color: colorScheme.primary,
+                size: AppSpacing.iconSmall,
+              ),
+              label: AppBodyText(
+                'Add Note',
+                color: colorScheme.primary,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -729,9 +835,12 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
         SizedBox(
           width: double.infinity,
           child: AppSecondaryButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop(); // Close the bottom sheet first
-              Navigator.of(context).push(
+              
+              // Use ref from the parent widget context
+              final parentContext = context;
+              Navigator.of(parentContext).push(
                 MaterialPageRoute(
                   builder: (context) => Scaffold(
                     appBar: AppBar(

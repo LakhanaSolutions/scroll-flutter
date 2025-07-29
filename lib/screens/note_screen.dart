@@ -59,6 +59,7 @@ class NoteScreen extends StatefulWidget {
   final ContentItemData content;
   final double currentPosition;
   final NoteItem? existingNote; // Optional existing note for editing
+  final bool wasAudioPlaying; // Whether audio was playing when navigating here
 
   const NoteScreen({
     super.key,
@@ -66,6 +67,7 @@ class NoteScreen extends StatefulWidget {
     required this.content,
     required this.currentPosition,
     this.existingNote,
+    this.wasAudioPlaying = false,
   });
 
   @override
@@ -236,6 +238,12 @@ class _NoteScreenState extends State<NoteScreen> {
               // Privacy Info Section
               _buildPrivacyInfoSection(context),
               const SizedBox(height: AppSpacing.large),
+
+              // Audio Status Section (only show if audio was playing)
+              if (widget.wasAudioPlaying) ...[
+                _buildAudioStatusSection(context),
+                const SizedBox(height: AppSpacing.large),
+              ],
 
               // Track Info Section
               _buildTrackInfoSection(context),
@@ -408,6 +416,61 @@ class _NoteScreenState extends State<NoteScreen> {
                 const SizedBox(height: AppSpacing.extraSmall),
                 Text(
                   'Your notes and bookmarks are personal and only visible to you. They are stored securely and never shared.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAudioStatusSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.medium),
+      decoration: BoxDecoration(
+        color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+        border: Border.all(
+          color: colorScheme.tertiary.withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.small),
+            decoration: BoxDecoration(
+              color: colorScheme.tertiary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.pause_circle_outline_rounded,
+              color: colorScheme.tertiary,
+              size: AppSpacing.iconMedium,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.medium),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Audio Paused',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: colorScheme.tertiary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.extraSmall),
+                Text(
+                  'Audio playback is automatically paused while taking notes to help you focus. It will resume when you go back to the player.',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurface.withValues(alpha: 0.8),
                   ),

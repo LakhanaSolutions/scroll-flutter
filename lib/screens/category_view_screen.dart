@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -53,6 +54,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
+      floatingActionButton: const MusicPlayerFab(),
       appBar: AppAppBarExtensions.withTabBar(
         title: widget.category.name,
         tabController: _tabController,

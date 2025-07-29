@@ -139,7 +139,7 @@ class _ThemeModeBottomSheet extends _BaseBottomSheet {
         'Follow system theme',
         Icons.brightness_auto_rounded,
         () {
-          // TODO: Implement system theme
+          ref.read(themeProvider.notifier).setSystemTheme();
           Navigator.pop(context);
         },
       ),

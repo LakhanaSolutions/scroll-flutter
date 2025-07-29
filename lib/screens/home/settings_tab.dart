@@ -6,6 +6,7 @@ import 'package:siraaj/screens/profile_screen.dart';
 import 'package:siraaj/screens/subscription_screen.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/app_icons.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
@@ -26,7 +27,7 @@ class SettingsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDarkMode = ref.watch(themeProvider);
+    final themeState = ref.watch(themeProvider);
 
     return SingleChildScrollView(
       child: Column(
@@ -40,7 +41,7 @@ class SettingsTab extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.settings_rounded,
+                  AppIcons.settings,
                   color: colorScheme.primary,
                   size: AppSpacing.iconMedium,
                 ),
@@ -103,9 +104,9 @@ class SettingsTab extends ConsumerWidget {
             children: [
               _buildListTile(
                 context,
-                icon: isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                icon: _getThemeIcon(themeState),
                 title: 'Theme',
-                subtitle: isDarkMode ? 'Dark Mode' : 'Light Mode',
+                subtitle: _getThemeLabel(themeState),
                 onTap: () => showThemeModeBottomSheet(context, ref),
               ),
               _buildListTile(
@@ -475,5 +476,27 @@ class SettingsTab extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  IconData _getThemeIcon(ThemeState themeState) {
+    switch (themeState.mode) {
+      case AppThemeMode.light:
+        return Icons.light_mode;
+      case AppThemeMode.dark:
+        return Icons.dark_mode;
+      case AppThemeMode.system:
+        return Icons.brightness_auto_rounded;
+    }
+  }
+
+  String _getThemeLabel(ThemeState themeState) {
+    switch (themeState.mode) {
+      case AppThemeMode.light:
+        return 'Light Mode';
+      case AppThemeMode.dark:
+        return 'Dark Mode';
+      case AppThemeMode.system:
+        return 'System Default';
+    }
   }
 }

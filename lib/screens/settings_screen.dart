@@ -8,7 +8,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = ref.watch(themeProvider);
+    final themeState = ref.watch(themeProvider);
     final localeState = ref.watch(localeProvider);
 
     return Scaffold(
@@ -16,7 +16,7 @@ class SettingsScreen extends ConsumerWidget {
         title: const Text('Settings'),
         actions: [
           IconButton(
-            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(themeState.isDark ? Icons.light_mode : Icons.dark_mode),
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
           ),
         ],
@@ -25,9 +25,9 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         children: [
           SwitchListTile(
-            secondary: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            secondary: Icon(themeState.isDark ? Icons.dark_mode : Icons.light_mode),
             title: const Text('Dark Theme'),
-            value: isDarkMode,
+            value: themeState.isDark,
             onChanged: (_) => ref.read(themeProvider.notifier).toggleTheme(),
           ),
           const Divider(),

@@ -25,7 +25,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.25,
     height: 1.12,
-    fontFamily: primaryFontFamily,
   );
 
   /// Display Medium - 40sp
@@ -34,7 +33,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.16,
-    fontFamily: primaryFontFamily,
   );
 
   /// Display Small - 32sp
@@ -43,7 +41,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.22,
-    fontFamily: primaryFontFamily,
   );
 
   /// Headline Large - 28sp
@@ -52,7 +49,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.25,
-    fontFamily: primaryFontFamily,
   );
 
   /// Headline Medium - 24sp
@@ -61,7 +57,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.29,
-    fontFamily: primaryFontFamily,
   );
 
   /// Headline Small - 20sp
@@ -70,7 +65,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.33,
-    fontFamily: primaryFontFamily,
   );
 
   /// Title Large - 18sp
@@ -79,7 +73,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.27,
-    fontFamily: primaryFontFamily,
   );
 
   /// Title Medium - 14sp
@@ -88,7 +81,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.15,
     height: 1.5,
-    fontFamily: primaryFontFamily,
   );
 
   /// Title Small - 12sp
@@ -97,7 +89,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
     height: 1.43,
-    fontFamily: primaryFontFamily,
   );
 
   /// Label Large - 12sp
@@ -106,7 +97,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
     height: 1.43,
-    fontFamily: bodyFontFamily,
   );
 
   /// Label Medium - 11sp
@@ -115,7 +105,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
     height: 1.33,
-    fontFamily: bodyFontFamily,
   );
 
   /// Label Small - 10sp
@@ -124,7 +113,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
     height: 1.45,
-    fontFamily: bodyFontFamily,
   );
 
   /// Body Large - 14sp
@@ -133,7 +121,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
     height: 1.5,
-    fontFamily: bodyFontFamily,
   );
 
   /// Body Medium - 12sp
@@ -142,7 +129,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
     height: 1.43,
-    fontFamily: bodyFontFamily,
   );
 
   /// Body Small - 11sp
@@ -151,7 +137,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
     height: 1.33,
-    fontFamily: bodyFontFamily,
   );
 
   // ====== Custom Semantic Text Styles ======
@@ -162,7 +147,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
     letterSpacing: -0.5,
     height: 1.1,
-    fontFamily: primaryFontFamily,
   );
 
   /// Subtitle text for sections
@@ -171,7 +155,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
     height: 1.44,
-    fontFamily: primaryFontFamily,
   );
 
   /// Caption text for small descriptions
@@ -180,7 +163,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
     height: 1.4,
-    fontFamily: bodyFontFamily,
   );
 
   /// Overline text for category labels
@@ -189,7 +171,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     letterSpacing: 1.5,
     height: 1.4,
-    fontFamily: bodyFontFamily,
   );
 
   /// Monospace text for code and technical content
@@ -198,7 +179,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.43,
-    fontFamily: monospaceFontFamily,
   );
 
   /// Button text style
@@ -207,7 +187,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     letterSpacing: 0.1,
     height: 1.43,
-    fontFamily: bodyFontFamily,
   );
 
   // ====== Platform-Specific Styles ======
@@ -218,7 +197,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
     letterSpacing: 0.374,
     height: 1.2,
-    fontFamily: primaryFontFamily,
   );
 
   /// iOS Title 1 style
@@ -227,7 +205,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.364,
     height: 1.29,
-    fontFamily: primaryFontFamily,
   );
 
   /// iOS Title 2 style
@@ -236,7 +213,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.352,
     height: 1.27,
-    fontFamily: primaryFontFamily,
   );
 
   /// iOS Title 3 style
@@ -245,7 +221,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.38,
     height: 1.25,
-    fontFamily: primaryFontFamily,
   );
 
   /// iOS Headline style
@@ -254,7 +229,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     letterSpacing: -0.408,
     height: 1.29,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Body style
@@ -263,7 +237,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.408,
     height: 1.29,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Callout style
@@ -272,7 +245,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.32,
     height: 1.31,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Subhead style
@@ -281,7 +253,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.24,
     height: 1.33,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Footnote style
@@ -290,7 +261,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.08,
     height: 1.38,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Caption 1 style
@@ -299,7 +269,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1.33,
-    fontFamily: bodyFontFamily,
   );
 
   /// iOS Caption 2 style
@@ -308,7 +277,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0.07,
     height: 1.27,
-    fontFamily: bodyFontFamily,
   );
 
   // ====== Material TextTheme ======

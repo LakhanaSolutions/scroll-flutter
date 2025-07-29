@@ -16,6 +16,7 @@ import '../../providers/theme_provider.dart';
 import '../search_screen.dart';
 import '../subscription_screen.dart';
 import '../profile_screen.dart';
+import '../../widgets/buttons/music_player_fab.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -26,9 +27,10 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDarkMode = ref.watch(themeProvider);
+    final themeState = ref.watch(themeProvider);
 
-    return Column(
+    return Scaffold(
+      body: Column(
       children: [
         // Header/AppBar area
         Container(
@@ -66,7 +68,7 @@ class HomeTab extends ConsumerWidget {
               ),
               const SizedBox(width: AppSpacing.small),
               AppIconButton(
-                icon: isDarkMode ? AppIcons.lightMode : AppIcons.darkMode,
+                icon: themeState.isDark ? AppIcons.lightMode : AppIcons.darkMode,
                 onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
                 tooltip: 'Toggle theme',
               ),
@@ -180,6 +182,7 @@ class HomeTab extends ConsumerWidget {
         ),
       ),
       ],
+      ),
     );
   }
 }

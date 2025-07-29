@@ -12,7 +12,8 @@ class AppIcons {
   static const IconData search = CupertinoIcons.search;
   static const IconData library = CupertinoIcons.book_fill;
   static const IconData libraryOutlined = CupertinoIcons.book;
-  static const IconData settings = CupertinoIcons.settings;
+  static const IconData settings = CupertinoIcons.gear_solid;
+  static const IconData settingsOutlined = CupertinoIcons.gear;
   static const IconData profile = CupertinoIcons.person_circle_fill;
   static const IconData profileOutlined = CupertinoIcons.person_circle;
 

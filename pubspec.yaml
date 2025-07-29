@@ -54,6 +54,9 @@ dependencies:
   flutter_widget_from_html: ^0.17.0
 
   modal_bottom_sheet: ^3.0.0
+  
+  # Toast messages
+  fluttertoast: ^8.2.8
 
 dev_dependencies:
   flutter_test:

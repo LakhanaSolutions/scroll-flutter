@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'router/app_router.dart';
-import 'providers/theme_provider.dart';
+import 'providers/theme_provider.dart' as providers;
 import 'providers/locale_provider.dart';
 import 'services/preferences_service.dart';
 import 'theme/app_theme.dart';
@@ -13,12 +14,37 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = ref.watch(themeProvider);
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    // Update theme when system brightness changes
+    final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    ref.read(providers.themeProvider.notifier).updateSystemBrightness(brightness);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeState = ref.watch(providers.themeProvider);
     final localeState = ref.watch(localeProvider);
 
     return MaterialApp.router(
@@ -30,7 +56,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme.copyWith(
         extensions: [AppThemeExtension.getForPlatform(isDark: true)],
       ),
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: _getFlutterThemeMode(themeState),
       routerConfig: appRouter,
       builder: (context, child) {
         return Directionality(
@@ -39,6 +65,17 @@ class MyApp extends ConsumerWidget {
         );
       },
     );
+  }
+
+  ThemeMode _getFlutterThemeMode(providers.ThemeState themeState) {
+    switch (themeState.mode) {
+      case providers.AppThemeMode.light:
+        return ThemeMode.light;
+      case providers.AppThemeMode.dark:
+        return ThemeMode.dark;
+      case providers.AppThemeMode.system:
+        return ThemeMode.system;
+    }
   }
 }
 

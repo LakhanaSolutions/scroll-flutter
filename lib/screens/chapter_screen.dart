@@ -4,6 +4,7 @@ import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
+import './home/library_tab.dart';
 import 'narrator_screen.dart';
 import 'note_screen.dart';
 
@@ -311,26 +312,29 @@ class _ChapterScreenState extends State<ChapterScreen> {
           ),
         ),
         // Play/Pause
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: colorScheme.primary,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.primary.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+        Hero(
+          tag: 'music-player-fab',
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: _togglePlayPause,
+              icon: Icon(
+                _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                color: colorScheme.onPrimary,
+                size: 40,
               ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: _togglePlayPause,
-            icon: Icon(
-              _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-              color: colorScheme.onPrimary,
-              size: 40,
             ),
           ),
         ),
@@ -503,13 +507,18 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
                   // Timestamps section
                   _buildTimestampsSection(context),
                   _buildSectionDivider(context),
-                  
+                                    
+                  // View Notes section
+                  _buildViewNotesSection(context),
+                  _buildSectionDivider(context),
+
                   // Description section
                   _buildDescriptionSection(context),
                   _buildSectionDivider(context),
                   
                   // Narrator section
                   _buildNarratorSection(context),
+                  _buildSectionDivider(context),
                 ],
               ),
             ),
@@ -692,6 +701,50 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
                   ? 'View Narrator Details' 
                   : 'View All Speakers',
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildViewNotesSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.notes_rounded,
+              color: colorScheme.primary,
+              size: AppSpacing.iconSmall,
+            ),
+            const SizedBox(width: AppSpacing.small),
+            const AppSubtitleText('My Notes'),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.medium),
+        SizedBox(
+          width: double.infinity,
+          child: AppSecondaryButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the bottom sheet first
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: const Text('My Notes'),
+                      backgroundColor: colorScheme.surface,
+                      foregroundColor: colorScheme.onSurface,
+                    ),
+                    body: const LibraryTab(initialTabIndex: 3), // Notes tab is at index 3
+                  ),
+                ),
+              );
+            },
+            child: const Text('View All Notes'),
           ),
         ),
       ],

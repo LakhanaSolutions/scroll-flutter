@@ -37,14 +37,14 @@ class _ThemeDemoScreenState extends ConsumerState<ThemeDemoScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appTheme = context.appTheme;
-    final isDarkMode = ref.watch(themeProvider);
+    final themeState = ref.watch(themeProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const AppTitleText('Design System Demo'),
         actions: [
           AppIconButton(
-            icon: isDarkMode ? Icons.light_mode : Icons.dark_mode,
+            icon: themeState.isDark ? Icons.light_mode : Icons.dark_mode,
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
             tooltip: 'Toggle theme',
           ),

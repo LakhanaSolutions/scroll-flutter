@@ -8,6 +8,8 @@ import '../widgets/buttons/app_buttons.dart';
 import '../widgets/dialogs/app_dialogs.dart';
 import 'subscription_history_screen.dart';
 import 'upgrade_plan_screen.dart';
+import 'terms_of_service_screen.dart';
+import 'privacy_policy_screen.dart';
 
 enum SubscriptionType { trial, basic, premium, family }
 
@@ -169,7 +171,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () => debugPrint('Terms tapped'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const TermsOfServiceScreen(),
+                          ),
+                        );
+                      },
                       child: AppCaptionText(
                         'Terms of Service',
                         color: colorScheme.primary,
@@ -177,7 +185,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                     const SizedBox(width: AppSpacing.medium),
                     TextButton(
-                      onPressed: () => debugPrint('Privacy tapped'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyScreen(),
+                          ),
+                        );
+                      },
                       child: AppCaptionText(
                         'Privacy Policy',
                         color: colorScheme.primary,

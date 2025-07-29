@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -42,6 +43,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
+      floatingActionButton: const MusicPlayerFab(),
       appBar: AppAppBar(
         title: widget.content.title,
         backgroundColor: colorScheme.surface,

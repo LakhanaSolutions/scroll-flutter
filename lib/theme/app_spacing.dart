@@ -146,6 +146,17 @@ class AppSpacing {
   
   /// Large floating action button size
   static const double fabSizeLarge = 64.0;
+  
+  // ====== Player Constants ======
+  
+  /// Mini music player height
+  static const double playerMiniHeight = 72.0;
+  
+  /// Mini music player thumbnail size
+  static const double playerMiniThumbnailSize = 48.0;
+  
+  /// Mini music player control button size
+  static const double playerMiniControlSize = 36.0;
 
   // ====== Icon Sizes ======
   

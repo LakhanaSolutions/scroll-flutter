@@ -425,6 +425,7 @@ class AppFloatingActionButton extends StatelessWidget {
     this.foregroundColor,
     this.elevation,
     this.size = AppFabSize.regular,
+    this.heroTag,
   });
 
   /// Callback for button press
@@ -448,6 +449,9 @@ class AppFloatingActionButton extends StatelessWidget {
   /// FAB size
   final AppFabSize size;
 
+  /// Hero tag
+  final String? heroTag;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -461,6 +465,7 @@ class AppFloatingActionButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           elevation: elevation ?? appTheme.fabElevation,
+          heroTag: heroTag,
           child: child,
         );
         
@@ -471,6 +476,7 @@ class AppFloatingActionButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           elevation: elevation ?? appTheme.fabElevation,
+          heroTag: heroTag,
           child: child,
         );
         
@@ -481,6 +487,7 @@ class AppFloatingActionButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           elevation: elevation ?? appTheme.fabElevation,
+          heroTag: heroTag,
           child: child,
         );
     }

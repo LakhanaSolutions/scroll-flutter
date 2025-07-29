@@ -22,6 +22,7 @@ class AppTheme {
       
       // Typography
       textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),
+      fontFamily: GoogleFonts.josefinSans().fontFamily,
       
       // App Bar Theme
       appBarTheme: AppBarTheme(
@@ -202,6 +203,7 @@ class AppTheme {
       
       // Typography
       textTheme: GoogleFonts.josefinSansTextTheme(AppTextStyles.materialTextTheme),
+      fontFamily: GoogleFonts.josefinSans().fontFamily,
       
       // App Bar Theme
       appBarTheme: AppBarTheme(

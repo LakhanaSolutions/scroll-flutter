@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
+import '../../theme/app_icons.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
@@ -39,7 +40,12 @@ class NoteItem {
 /// Library tab content widget
 /// Shows user's personal library with recently played and downloaded books
 class LibraryTab extends StatefulWidget {
-  const LibraryTab({super.key});
+  final int initialTabIndex;
+  
+  const LibraryTab({
+    super.key, 
+    this.initialTabIndex = 0,
+  });
 
   @override
   State<LibraryTab> createState() => _LibraryTabState();
@@ -54,7 +60,11 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(
+      length: 4, 
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
   }
 
   @override
@@ -122,7 +132,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
               Row(
                 children: [
                   Icon(
-                    Icons.library_books_rounded,
+                    AppIcons.library,
                     color: colorScheme.primary,
                     size: AppSpacing.iconMedium,
                   ),

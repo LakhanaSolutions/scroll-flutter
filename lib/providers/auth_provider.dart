@@ -2,9 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/auth_state_model.dart';
 import '../models/user_model.dart';
 import '../services/token_service.dart';
+import 'subscription_provider.dart';
+
+/// Authentication provider with test users for different subscription plans:
+/// - trial@example.com: Trial user with 8/15 minutes used
+/// - premium@example.com: Premium subscriber with unlimited access
+/// - free@example.com: Free user (trial expired)
+/// - new@example.com: New trial user with 2/15 minutes used
+/// OTP for all test accounts: 123456
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier();
+  return AuthNotifier(ref);
 });
 
 final isLoadingProvider = Provider<bool>((ref) {
@@ -13,25 +21,48 @@ final isLoadingProvider = Provider<bool>((ref) {
 });
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(AuthState.initial());
+  final Ref _ref;
+  
+  AuthNotifier(this._ref) : super(AuthState.initial());
 
   // Dummy user data - in real app this would come from API
+  // Each user represents a different subscription plan for testing
   static const Map<String, Map<String, dynamic>> _dummyUsers = {
-    'test@example.com': {
+    'trial@example.com': {
       'id': '1',
-      'email': 'test@example.com',
-      'name': 'Test User',
+      'email': 'trial@example.com',
+      'name': 'Trial User',
       'isNew': false,
       'createdAt': '2024-01-01T00:00:00.000Z',
       'lastLoginAt': '2024-01-15T00:00:00.000Z',
+      'subscriptionPlan': 'trial',
+    },
+    'premium@example.com': {
+      'id': '2',
+      'email': 'premium@example.com',
+      'name': 'Premium User',
+      'isNew': false,
+      'createdAt': '2024-01-01T00:00:00.000Z',
+      'lastLoginAt': '2024-01-15T00:00:00.000Z',
+      'subscriptionPlan': 'premium',
+    },
+    'free@example.com': {
+      'id': '3',
+      'email': 'free@example.com',
+      'name': 'Free User',
+      'isNew': false,
+      'createdAt': '2024-01-01T00:00:00.000Z',
+      'lastLoginAt': '2024-01-15T00:00:00.000Z',
+      'subscriptionPlan': 'free',
     },
     'new@example.com': {
-      'id': '2',
+      'id': '4',
       'email': 'new@example.com',
       'name': null,
       'isNew': true,
       'createdAt': '2024-01-20T00:00:00.000Z',
       'lastLoginAt': null,
+      'subscriptionPlan': 'trial',
     },
   };
 
@@ -52,6 +83,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
           token: token,
           email: user.email,
         );
+        
+        // Set subscription status for existing user
+        _setSubscriptionForUser(user.email);
         return;
       }
     }
@@ -168,6 +202,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         token: token,
       );
 
+      // Set subscription status based on user plan
+      _setSubscriptionForUser(updatedUser.email);
+      
       // Clear OTP data
       _currentOTP = null;
       _otpSentAt = null;
@@ -250,5 +287,50 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   bool _isValidEmail(String email) {
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
+  }
+  
+  /// Sets subscription status based on user's email/plan for testing purposes
+  void _setSubscriptionForUser(String email) {
+    final subscriptionNotifier = _ref.read(subscriptionProvider.notifier);
+    final userData = _dummyUsers[email.toLowerCase()];
+    final plan = userData?['subscriptionPlan'] as String?;
+    
+    switch (plan) {
+      case 'premium':
+        subscriptionNotifier.setPremium();
+        break;
+      case 'free':
+        subscriptionNotifier.setFree();
+        break;
+      case 'trial':
+      default:
+        // Set trial with different usage amounts based on email
+        final now = DateTime.now();
+        final TrialUsageData trialUsage;
+        
+        if (email.contains('trial')) {
+          // Trial user with some usage (8 minutes used)
+          trialUsage = TrialUsageData(
+            minutesUsed: 8,
+            maxMinutes: 15,
+            lastResetAt: now.subtract(const Duration(days: 10)),
+            currentMonth: now.month,
+            currentYear: now.year,
+          );
+        } else {
+          // New user with minimal usage (2 minutes used)
+          trialUsage = TrialUsageData(
+            minutesUsed: 2,
+            maxMinutes: 15,
+            lastResetAt: now.subtract(const Duration(days: 5)),
+            currentMonth: now.month,
+            currentYear: now.year,
+          );
+        }
+        
+        subscriptionNotifier.setFreeTrial();
+        subscriptionNotifier.updateTrialUsage(trialUsage);
+        break;
+    }
   }
 }

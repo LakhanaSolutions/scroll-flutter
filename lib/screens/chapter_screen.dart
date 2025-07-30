@@ -8,6 +8,8 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/waveform/audio_waveform.dart';
 import '../providers/audio_provider.dart';
+import '../providers/subscription_provider.dart';
+import '../widgets/trial/glimpse_into_premium_stats.dart';
 import './home/library_tab.dart';
 
 /// Chapter screen with audio player interface
@@ -134,10 +136,28 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
   }
 
   void _rewind() {
+    // Check if user can access premium content controls
+    final isFreeTrial = ref.read(isFreeTrialProvider);
+    final canAccessPremiumContent = ref.read(canAccessPremiumContentProvider);
+    
+    if (widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent) {
+      // Show upgrade dialog or message
+      return;
+    }
+    
     ref.read(audioPlayerProvider.notifier).skipBackward();
   }
 
   void _forward() {
+    // Check if user can access premium content controls
+    final isFreeTrial = ref.read(isFreeTrialProvider);
+    final canAccessPremiumContent = ref.read(canAccessPremiumContentProvider);
+    
+    if (widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent) {
+      // Show upgrade dialog or message
+      return;
+    }
+    
     ref.read(audioPlayerProvider.notifier).skipForward();
   }
 
@@ -176,6 +196,8 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
+      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppAppBar(
         title: widget.chapter.title,
         actions: [
@@ -317,6 +339,11 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
         final duration = ref.watch(audioDurationProvider);
         final isLoading = ref.watch(isLoadingProvider);
         final waveformData = _effectiveWaveformData;
+        final isFreeTrial = ref.watch(isFreeTrialProvider);
+        final canAccessPremiumContent = ref.watch(canAccessPremiumContentProvider);
+        
+        // Determine if seeking should be disabled
+        final isSeekDisabled = widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent;
         
         // Use waveform if data is available, otherwise fallback to traditional seekbar
         if (waveformData.isNotEmpty) {
@@ -325,18 +352,18 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
             duration: duration,
             currentPosition: position,
             isLoading: isLoading,
-            onSeek: (seekPosition) {
+            onSeek: isSeekDisabled ? null : (seekPosition) {
               ref.read(audioPlayerProvider.notifier).seek(seekPosition);
             },
           );
         } else {
-          return _buildTraditionalSeekbar(context, ref, position, duration, isLoading);
+          return _buildTraditionalSeekbar(context, ref, position, duration, isLoading, isSeekDisabled);
         }
       },
     );
   }
 
-  Widget _buildTraditionalSeekbar(BuildContext context, WidgetRef ref, Duration position, Duration? duration, bool isLoading) {
+  Widget _buildTraditionalSeekbar(BuildContext context, WidgetRef ref, Duration position, Duration? duration, bool isLoading, bool isSeekDisabled) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -362,13 +389,13 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
               return Slider(
                 value: currentValue,
                 max: maxValue,
-                onChanged: duration != null ? (value) {
+                onChanged: duration != null && !isSeekDisabled ? (value) {
                   setState(() {
                     _isDragging = true;
                     _dragValue = value;
                   });
                 } : null,
-                onChangeEnd: duration != null ? (value) {
+                onChangeEnd: duration != null && !isSeekDisabled ? (value) {
                   setState(() {
                     _isDragging = false;
                   });
@@ -406,18 +433,24 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Rewind 10s
-        IconButton(
-          onPressed: _rewind,
-          icon: Icon(
-            Icons.replay_10_rounded,
-            color: colorScheme.onSurfaceVariant,
-            size: AppSpacing.iconLarge,
-          ),
-        ),
+    return Consumer(
+      builder: (context, ref, child) {
+        final isFreeTrial = ref.watch(isFreeTrialProvider);
+        final canAccessPremiumContent = ref.watch(canAccessPremiumContentProvider);
+        final isControlsDisabled = widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Rewind 10s
+            IconButton(
+              onPressed: isControlsDisabled ? null : _rewind,
+              icon: Icon(
+                Icons.replay_10_rounded,
+                color: isControlsDisabled ? colorScheme.onSurfaceVariant.withValues(alpha: 0.3) : colorScheme.onSurfaceVariant,
+                size: AppSpacing.iconLarge,
+              ),
+            ),
         // Play/Pause
         Hero(
           tag: 'music-player-fab',
@@ -467,16 +500,18 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
             ),
           ),
         ),
-        // Forward 10s
-        IconButton(
-          onPressed: _forward,
-          icon: Icon(
-            Icons.forward_10_rounded,
-            color: colorScheme.onSurfaceVariant,
-            size: AppSpacing.iconLarge,
-          ),
-        ),
-      ],
+            // Forward 10s
+            IconButton(
+              onPressed: isControlsDisabled ? null : _forward,
+              icon: Icon(
+                Icons.forward_10_rounded,
+                color: isControlsDisabled ? colorScheme.onSurfaceVariant.withValues(alpha: 0.3) : colorScheme.onSurfaceVariant,
+                size: AppSpacing.iconLarge,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -484,60 +519,129 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Speed control
-        Consumer(
-          builder: (context, ref, child) {
-            final speed = ref.watch(audioSpeedProvider);
-            return TextButton.icon(
-              onPressed: _changeSpeed,
-              icon: Icon(
-                Icons.speed_rounded,
-                color: colorScheme.onSurfaceVariant,
-                size: AppSpacing.iconSmall,
-              ),
-              label: AppBodyText(
-                '${speed}x',
-                color: colorScheme.onSurfaceVariant,
-              ),
-            );
-          },
-        ),
-        // Add Note button
-        Consumer(
-          builder: (context, ref, child) {
-            final position = ref.watch(audioPositionProvider);
-            return TextButton.icon(
-              onPressed: () async {
-                // Check if audio was playing before pausing
-                final wasPlaying = ref.read(isPlayingProvider);
-                final router = GoRouter.of(context);
-                
-                // Pause audio if playing and remember state
-                await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
-                
-                if (mounted) {
-                  router.go('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
-                }
-                
-                // Resume audio if it was playing before navigation
-                await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+    return Consumer(
+      builder: (context, ref, child) {
+        final isFreeTrial = ref.watch(isFreeTrialProvider);
+        final canAccessPremiumContent = ref.watch(canAccessPremiumContentProvider);
+        final isControlsDisabled = widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Speed control
+            Consumer(
+              builder: (context, ref, child) {
+                final speed = ref.watch(audioSpeedProvider);
+                return TextButton.icon(
+                  onPressed: _changeSpeed,
+                  icon: Icon(
+                    Icons.speed_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                    size: AppSpacing.iconSmall,
+                  ),
+                  label: AppBodyText(
+                    '${speed}x',
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                );
               },
-              icon: Icon(
-                Icons.note_add_rounded,
-                color: colorScheme.primary,
-                size: AppSpacing.iconSmall,
-              ),
-              label: AppBodyText(
-                'Add Note',
-                color: colorScheme.primary,
-              ),
-            );
+            ),
+            // Add Note button
+            Consumer(
+              builder: (context, ref, child) {
+                final position = ref.watch(audioPositionProvider);
+                return TextButton.icon(
+                  onPressed: isControlsDisabled ? null : () async {
+                    // Check if audio was playing before pausing
+                    final wasPlaying = ref.read(isPlayingProvider);
+                    final router = GoRouter.of(context);
+                    
+                    // Pause audio if playing and remember state
+                    await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
+                    
+                    if (mounted) {
+                      router.go('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
+                    }
+                    
+                    // Resume audio if it was playing before navigation
+                    await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+                  },
+                  icon: Icon(
+                    Icons.note_add_rounded,
+                    color: isControlsDisabled ? colorScheme.primary.withValues(alpha: 0.3) : colorScheme.primary,
+                    size: AppSpacing.iconSmall,
+                  ),
+                  label: AppBodyText(
+                    'Add Note',
+                    color: isControlsDisabled ? colorScheme.primary.withValues(alpha: 0.3) : colorScheme.primary,
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final isFreeTrial = ref.watch(isFreeTrialProvider);
+        
+        // Only show for trial users on premium content
+        if (!isFreeTrial || widget.content.availability != AvailabilityType.premium) {
+          return const SizedBox.shrink();
+        }
+
+        return GlimpseIntoPremiumStatsFAB(
+          onPressed: () {
+            _showTrialStatsBottomSheet(context);
           },
+        );
+      },
+    );
+  }
+
+  void _showTrialStatsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
         ),
-      ],
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusLarge),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.only(top: AppSpacing.medium),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Content
+            const Flexible(
+              child: SingleChildScrollView(
+                child: GlimpseIntoPremiumStats(
+                  margin: EdgeInsets.all(AppSpacing.large),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -713,6 +817,9 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
   Widget _buildTimestampsSection(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isFreeTrial = ref.read(isFreeTrialProvider);
+    final canAccessPremiumContent = ref.read(canAccessPremiumContentProvider);
+    final isControlsDisabled = widget.content.availability == AvailabilityType.premium && isFreeTrial && !canAccessPremiumContent;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,11 +828,14 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
           children: [
             Icon(
               Icons.access_time_rounded,
-              color: colorScheme.primary,
+              color: isControlsDisabled ? colorScheme.primary.withValues(alpha: 0.3) : colorScheme.primary,
               size: AppSpacing.iconSmall,
             ),
             const SizedBox(width: AppSpacing.small),
-            const AppSubtitleText('Timestamps'),
+            AppSubtitleText(
+              'Timestamps',
+              color: isControlsDisabled ? colorScheme.onSurface.withValues(alpha: 0.3) : null,
+            ),
           ],
         ),
         const SizedBox(height: AppSpacing.medium),
@@ -737,11 +847,13 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.medium),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: isControlsDisabled ? 0.1 : 0.3),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                 ),
                 child: InkWell(
-                  onTap: () => _jumpToTimestamp(timestamp['duration']!, timestamp['title']!),
+                  onTap: isControlsDisabled ? null : () {
+                    _jumpToTimestamp(timestamp['duration']!, timestamp['title']!);
+                  },
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                   child: Row(
                     children: [
@@ -772,7 +884,7 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
                             Text(
                               timestamp['title']!,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurface,
+                                color: isControlsDisabled ? colorScheme.onSurface.withValues(alpha: 0.3) : colorScheme.onSurface,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -780,7 +892,7 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
                             Text(
                               timestamp['duration']!,
                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: colorScheme.primary,
+                                color: isControlsDisabled ? colorScheme.primary.withValues(alpha: 0.3) : colorScheme.primary,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,
                               ),
@@ -791,7 +903,7 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
                       // Play icon
                       Icon(
                         Icons.play_arrow_rounded,
-                        color: colorScheme.primary,
+                        color: isControlsDisabled ? colorScheme.primary.withValues(alpha: 0.3) : colorScheme.primary,
                         size: AppSpacing.iconMedium,
                       ),
                     ],

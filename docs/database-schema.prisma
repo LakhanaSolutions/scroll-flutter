@@ -51,6 +51,7 @@ model User {
   reviews               Review[]
   searchHistory         SearchHistory[]
   feedbackSubmissions   Feedback[]
+  trialUsage            TrialUsage?
 
   @@map("users")
 }
@@ -912,6 +913,66 @@ model Feedback{
   @@index([status, priority])
   @@index([createdAt])
   @@map("feedback")
+}
+
+// ============================================================================
+// TRIAL USAGE TRACKING
+// ============================================================================
+
+// Tracks trial users' usage of premium content with monthly limits
+// Manages the 15-minute monthly allowance for premium content access
+model TrialUsage {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  
+  // Monthly usage tracking (resets every month)
+  currentMonth     Int      // Month (1-12)
+  currentYear      Int      // Year (e.g., 2024)
+  minutesUsed      Int      @default(0) // Total minutes used this month
+  maxMinutes       Int      @default(15) // Monthly limit (15 minutes)
+  
+  // Usage sessions for detailed tracking
+  sessions         TrialUsageSession[]
+  
+  // Timestamps
+  lastResetAt      DateTime // When the monthly counter was last reset
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, currentMonth, currentYear])
+  @@map("trial_usage")
+}
+
+// Individual premium content listening sessions for trial users
+// Provides granular tracking of when and what premium content was accessed
+model TrialUsageSession {
+  id            String   @id @default(cuid())
+  trialUsageId  String
+  contentId     String
+  chapterId     String?
+  
+  // Session details
+  minutesListened Int    // Minutes listened in this session
+  startPosition   Int    @default(0) // Starting position in seconds
+  endPosition     Int    @default(0) // Ending position in seconds
+  
+  // Content info
+  contentTitle    String // Store for historical reference
+  chapterTitle    String? // Store for historical reference
+  
+  // Timestamps
+  sessionDate     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  // Relationships
+  trialUsage TrialUsage @relation(fields: [trialUsageId], references: [id], onDelete: Cascade)
+
+  @@index([trialUsageId, sessionDate])
+  @@index([contentId, sessionDate])
+  @@map("trial_usage_sessions")
 }
 
 // ============================================================================

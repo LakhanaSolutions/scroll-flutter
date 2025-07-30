@@ -13,10 +13,11 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 5. [Audio Player & Session Management](#audio-player--session-management)
 6. [Notifications & Communication](#notifications--communication)
 7. [User Preferences & Settings](#user-preferences--settings)
-8. [Search & Discovery](#search--discovery)
-9. [Feedback & Support](#feedback--support)
-10. [Relationships Overview](#relationships-overview)
-11. [Indexes & Performance](#indexes--performance)
+8. [Trial Usage Tracking](#trial-usage-tracking)
+9. [Search & Discovery](#search--discovery)
+10. [Feedback & Support](#feedback--support)
+11. [Relationships Overview](#relationships-overview)
+12. [Indexes & Performance](#indexes--performance)
 
 ## Authentication & User Management
 
@@ -223,6 +224,32 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 - Audio playback defaults (speed, volume, auto-play)
 - Notification preferences and privacy controls
 - Content filtering and parental control settings
+
+## Trial Usage Tracking
+
+**Trial Usage Table**
+- **Purpose**: Tracks trial users' premium content usage with monthly limits
+- Manages the 15-minute monthly allowance for accessing premium content
+- Automatically resets usage counters monthly (every 30 days)
+- Tracks current month and year for proper usage period management
+- Configurable monthly limit (default: 15 minutes)
+- Links to detailed session tracking for audit purposes
+
+**Trial Usage Sessions Table**
+- **Purpose**: Individual premium content listening sessions for trial users
+- Granular tracking of when and what premium content was accessed
+- Records exact start and end positions for accurate time calculation
+- Stores content and chapter titles for historical reference
+- Enables detailed usage analytics and reporting
+- Supports usage pattern analysis for business intelligence
+
+### Trial Usage Business Logic
+- **Monthly Reset**: Usage counters reset on the same day each month (30-day cycle)
+- **Content Access**: Trial users can listen to premium content until limit is reached
+- **Graceful Degradation**: When limit exceeded, premium features are disabled
+- **Usage Calculation**: Time is calculated based on actual playback position changes
+- **Session Tracking**: Each listening session is recorded with precise timing
+- **Historical Data**: Past usage sessions are retained for user statistics
 
 ## Search & Discovery
 

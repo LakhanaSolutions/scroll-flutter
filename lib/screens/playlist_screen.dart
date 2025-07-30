@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
-import '../theme/theme_extensions.dart';
+import '../providers/subscription_provider.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../widgets/trial/glimpse_into_premium_stats.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
-class PlaylistScreen extends StatefulWidget {
+class PlaylistScreen extends ConsumerStatefulWidget {
   final ContentItemData content;
 
   const PlaylistScreen({
@@ -20,10 +22,10 @@ class PlaylistScreen extends StatefulWidget {
   });
 
   @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
+  ConsumerState<PlaylistScreen> createState() => _PlaylistScreenState();
 }
 
-class _PlaylistScreenState extends State<PlaylistScreen> {
+class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
   String _selectedNarratorId = '';
   bool _isBookmarked = false;
 
@@ -75,6 +77,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           children: [
             // Content info section
             _buildContentInfoSection(context),
+            // Trial usage stats section (for trial users only)
+            _buildTrialStatsSection(context),
             // Actions section
             _buildActionsSection(context),
             // Narrator selection section
@@ -297,9 +301,28 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 
+  Widget _buildTrialStatsSection(BuildContext context) {
+    final isFreeTrial = ref.watch(isFreeTrialProvider);
+    
+    // Only show for trial users on premium content
+    if (!isFreeTrial || widget.content.availability != AvailabilityType.premium) {
+      return const SizedBox.shrink();
+    }
+
+    return const GlimpseIntoPremiumStats();
+  }
+
   Widget _buildActionsSection(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isFreeTrial = ref.watch(isFreeTrialProvider);
+    final isPremium = ref.watch(isPremiumProvider);
+    final canAccessPremiumContent = ref.watch(canAccessPremiumContentProvider);
+    
+    // Determine if we should show action buttons
+    final showActionButtons = !isFreeTrial || 
+                             widget.content.availability != AvailabilityType.premium ||
+                             isPremium;
 
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
@@ -315,49 +338,90 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                 widget.content.description,
                 color: colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(height: AppSpacing.large),
-              // Action buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: AppPrimaryButton(
-                      onPressed: () {
-                        debugPrint('Play tapped for: ${widget.content.title}');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.play_arrow_rounded,
-                            size: AppSpacing.iconSmall,
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          const Text('Play'),
-                        ],
+              if (showActionButtons) ...[
+                const SizedBox(height: AppSpacing.large),
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppPrimaryButton(
+                        onPressed: () {
+                          debugPrint('Play tapped for: ${widget.content.title}');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.play_arrow_rounded,
+                              size: AppSpacing.iconSmall,
+                            ),
+                            const SizedBox(width: AppSpacing.small),
+                            const Text('Play'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpacing.medium),
-                  Expanded(
-                    child: AppSecondaryButton(
-                      onPressed: () {
-                        debugPrint('Download tapped for: ${widget.content.title}');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.download_rounded,
-                            size: AppSpacing.iconSmall,
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          const Text('Download'),
-                        ],
+                    const SizedBox(width: AppSpacing.medium),
+                    Expanded(
+                      child: AppSecondaryButton(
+                        onPressed: () {
+                          debugPrint('Download tapped for: ${widget.content.title}');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.download_rounded,
+                              size: AppSpacing.iconSmall,
+                            ),
+                            const SizedBox(width: AppSpacing.small),
+                            const Text('Download'),
+                          ],
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ] else if (isFreeTrial && widget.content.availability == AvailabilityType.premium && !canAccessPremiumContent) ...[
+                const SizedBox(height: AppSpacing.large),
+                // Message for trial users who have exceeded their limit
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    border: Border.all(
+                      color: colorScheme.outline.withValues(alpha: 0.2),
+                    ),
                   ),
-                ],
-              ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.lock_rounded,
+                        color: colorScheme.onSurfaceVariant,
+                        size: AppSpacing.iconMedium,
+                      ),
+                      const SizedBox(width: AppSpacing.medium),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppBodyText(
+                              'Premium Content',
+                              color: colorScheme.onSurface,
+                            ),
+                            const SizedBox(height: AppSpacing.extraSmall),
+                            AppCaptionText(
+                              'You\'ve used all your trial minutes this month. Upgrade to continue listening.',
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

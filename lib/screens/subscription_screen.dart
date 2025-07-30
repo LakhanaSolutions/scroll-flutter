@@ -7,7 +7,6 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/dialogs/app_dialogs.dart';
-import 'subscription_history_screen.dart';
 import 'upgrade_plan_screen.dart';
 
 enum SubscriptionType { trial, basic, premium, family }
@@ -57,6 +56,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         'Access a curated selection of introductory content',
         'Discover the app\'s quality and ease of use',
         'Basic search functionality',
+        'Try premium content: 15 minutes per month of premium audiobooks',
       ],
       cons: [
         'Your content options are limited.',

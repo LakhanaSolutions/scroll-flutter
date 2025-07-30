@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
-import '../screens/settings_screen.dart';
 import '../screens/theme_demo_screen.dart';
 import '../screens/auth/welcome_screen.dart';
 import '../screens/auth/login_screen.dart';
@@ -58,10 +57,6 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'profile',
           builder: (context, state) => const ProfileScreen(),
-        ),
-        GoRoute(
-          path: 'settings',
-          builder: (context, state) => const SettingsScreen(),
         ),
         GoRoute(
           path: 'theme-demo',

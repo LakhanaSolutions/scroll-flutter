@@ -30,6 +30,11 @@ class ChapterScreen extends ConsumerStatefulWidget {
 class _ChapterScreenState extends ConsumerState<ChapterScreen>
     with TickerProviderStateMixin {
   late AnimationController _playPauseController;
+  bool _isDragging = false;
+  double _dragValue = 0.0;
+  
+  // Demo toggle for testing waveform vs seekbar
+  bool _useWaveform = true;
   
   // Mock waveform data from API sample
   final List<double> _mockWaveformData = [
@@ -44,6 +49,24 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
     0.26, 0.29, 0.25, 0.28, 0.32, 0.34, 0.36, 0.31, 0.28, 0.26,
     0.12, 0.10, 0.11, 0.09, 0.08, 0.07, 0.06, 0.08, 0.09, 0.10
   ];
+  
+  // Get effective waveform data - returns empty list if waveform should not be used
+  List<double> get _effectiveWaveformData {
+    if (!_useWaveform) return [];
+    
+    // In real implementation, you would check if waveform data exists for this audio file
+    // For demo, we simulate missing waveform data when toggle is off
+    return _mockWaveformData;
+  }
+  
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return duration.inHours > 0
+        ? "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds"
+        : "$twoDigitMinutes:$twoDigitSeconds";
+  }
   
   @override
   void initState() {
@@ -157,6 +180,19 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
       appBar: AppAppBar(
         title: widget.chapter.title,
         actions: [
+          // Demo toggle button for waveform/seekbar
+          IconButton(
+            icon: Icon(
+              _useWaveform ? Icons.graphic_eq_rounded : Icons.linear_scale_rounded,
+              color: colorScheme.primary,
+            ),
+            onPressed: () {
+              setState(() {
+                _useWaveform = !_useWaveform;
+              });
+            },
+            tooltip: _useWaveform ? 'Switch to Seekbar' : 'Switch to Waveform',
+          ),
           IconButton(
             icon: Icon(
               Icons.more_vert_rounded,
@@ -281,17 +317,89 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
         final position = ref.watch(audioPositionProvider);
         final duration = ref.watch(audioDurationProvider);
         final isLoading = ref.watch(isLoadingProvider);
+        final waveformData = _effectiveWaveformData;
         
-        return AudioWaveform(
-          waveformData: _mockWaveformData,
-          duration: duration,
-          currentPosition: position,
-          isLoading: isLoading,
-          onSeek: (seekPosition) {
-            ref.read(audioPlayerProvider.notifier).seek(seekPosition);
-          },
-        );
+        // Use waveform if data is available, otherwise fallback to traditional seekbar
+        if (waveformData.isNotEmpty) {
+          return AudioWaveform(
+            waveformData: waveformData,
+            duration: duration,
+            currentPosition: position,
+            isLoading: isLoading,
+            onSeek: (seekPosition) {
+              ref.read(audioPlayerProvider.notifier).seek(seekPosition);
+            },
+          );
+        } else {
+          return _buildTraditionalSeekbar(context, ref, position, duration, isLoading);
+        }
       },
+    );
+  }
+
+  Widget _buildTraditionalSeekbar(BuildContext context, WidgetRef ref, Duration position, Duration? duration, bool isLoading) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      children: [
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: colorScheme.primary,
+            inactiveTrackColor: colorScheme.surfaceContainerHighest,
+            thumbColor: colorScheme.primary,
+            overlayColor: colorScheme.primary.withValues(alpha: 0.1),
+            trackHeight: 4,
+          ),
+          child: Builder(
+            builder: (context) {
+              final maxValue = duration?.inSeconds.toDouble() ?? 1.0;
+              final currentValue = _isDragging 
+                  ? _dragValue 
+                  : (duration != null 
+                      ? position.inSeconds.toDouble().clamp(0.0, maxValue)
+                      : 0.0);
+              
+              return Slider(
+                value: currentValue,
+                max: maxValue,
+                onChanged: duration != null ? (value) {
+                  setState(() {
+                    _isDragging = true;
+                    _dragValue = value;
+                  });
+                } : null,
+                onChangeEnd: duration != null ? (value) {
+                  setState(() {
+                    _isDragging = false;
+                  });
+                  ref.read(audioPlayerProvider.notifier).seek(Duration(seconds: value.toInt()));
+                } : null,
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _formatDuration(position),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                duration != null ? _formatDuration(duration) : '--:--',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -406,12 +514,13 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
               onPressed: () async {
                 // Check if audio was playing before pausing
                 final wasPlaying = ref.read(isPlayingProvider);
+                final navigator = Navigator.of(context);
                 
                 // Pause audio if playing and remember state
                 await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
                 
                 if (mounted) {
-                  await Navigator.of(context).push(
+                  await navigator.push(
                     MaterialPageRoute(
                       builder: (context) => NoteScreen(
                         chapter: widget.chapter,

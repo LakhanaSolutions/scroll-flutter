@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:siraaj/screens/manage_devices_screen.dart';
 import 'package:siraaj/screens/profile_screen.dart';
 import 'package:siraaj/screens/subscription_screen.dart';
+import 'package:siraaj/screens/theme_demo_screen.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_icons.dart';
@@ -163,7 +164,13 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.palette_rounded,
                 title: 'Theme Demo',
                 subtitle: 'View design system components',
-                onTap: () => context.go('/theme-demo'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ThemeDemoScreen(),
+                    ),
+                  );
+                },
                 isLast: true,
               ),
             ],

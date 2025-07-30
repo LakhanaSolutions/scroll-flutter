@@ -23,23 +23,33 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 ### Core Authentication Tables
 
 **Users Table**
+- **Purpose**: Core user entity storing account information and profile data
 - Primary user entity with BetterAuth compatibility
 - Supports both email/password and OAuth authentication
 - Includes profile information (name, bio, nationality)
 - Tracks user state (isNew, isActive, lastLoginAt)
+- Links to all user-related data (subscriptions, progress, bookmarks, etc.)
 
 **Sessions Table**
-- Manages user sessions with expiration
-- Tracks device and browser information
-- Supports multiple concurrent sessions
+- **Purpose**: Manages active user login sessions with security tracking
+- Manages user sessions with expiration dates
+- Tracks device and browser information for security
+- Supports multiple concurrent sessions across devices
+- Includes IP address and user agent for audit trails
 
 **Accounts Table**
-- Links users to external OAuth providers
-- Stores OAuth tokens and provider-specific data
+- **Purpose**: Links user accounts to external OAuth providers (Google, Apple, etc.)
+- Stores OAuth provider connections and tokens
+- Handles refresh tokens and provider-specific data
+- Enables social login functionality
+- Maintains provider account relationships
 
-**Verification Tokens**
-- Handles email verification and password reset flows
-- Time-limited tokens with expiration
+**Verification Tokens Table**
+- **Purpose**: Handles secure email verification and password reset workflows
+- Stores time-limited verification tokens
+- Supports email verification during registration
+- Enables secure password reset functionality
+- Automatic cleanup of expired tokens
 
 ### User Roles
 - `USER`: Standard user with basic access
@@ -52,123 +62,185 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 ### Core Content Tables
 
 **Content Table**
-- Central table for all audio content (books, podcasts, series)
-- Rich metadata including duration, ratings, view counts
-- Support for multiple content types and availability levels
-- SEO-friendly with slugs, tags, and keywords
+- **Purpose**: Central repository for all audio content (audiobooks, podcasts, series)
+- Stores core metadata: title, description, duration, ratings
+- Manages content types (BOOK, PODCAST, AUDIOBOOK, SERIES)
+- Handles availability levels (FREE, PREMIUM, TRIAL, PAID)
+- SEO optimization with slugs, tags, and keywords
+- Tracks engagement metrics (views, listening hours, ratings)
 
 **Chapters Table**
-- Individual chapters/episodes within content
-- Audio metadata and transcript support
-- Hierarchical structure with chapter numbering
+- **Purpose**: Individual chapters or episodes within content items
+- Hierarchical structure with chapter numbering and ordering
+- Audio-specific metadata (duration, file URLs, transcripts)
+- Links to primary narrators for chapter-specific voice artists
+- Supports different chapter statuses (DRAFT, PUBLISHED, ARCHIVED)
 
-**Audio Files & Waveform Data**
-- Audio file metadata including duration, bitrate, and format
-- Sample URL support for preview functionality
-- Waveform table stores visual representation data for audio players
-- Normalized peak values for efficient waveform rendering
+**Waveform Table**
+- **Purpose**: Stores audio visualization data for interactive player controls
+- Contains normalized peak values for waveform rendering
 - Configurable sample rate and resolution for different quality needs
+- One-to-one relationship with chapters for efficient loading
+- Enables users to visually navigate through audio content
 
-**Authors & Narrators**
-- Separate entities for content creators and voice artists
-- Rich profile information including bios, awards, social links
-- Rating and follower systems
+**Authors Table**
+- **Purpose**: Content creators and book authors with rich profile information
+- Stores biographical data, nationality, birth year, awards
+- Social media links and external website connections
+- Follower system for user engagement
+- Genre specialization and book count tracking
 
-**Categories & Mood Categories**
-- Hierarchical category system for content organization
-- Mood-based content grouping for personalized recommendations
-- Featured and sorting capabilities
+**Narrators Table**
+- **Purpose**: Voice artists who narrate audiobook content
+- Professional information: experience, voice description, languages
+- Rating system for narrator quality assessment
+- Genre specialization and narration portfolio
+- Social links and verification status
+
+**Categories Table**
+- **Purpose**: Hierarchical content organization system (genres, topics, themes)
+- Parent-child relationships for nested categorization
+- Visual elements: icons, colors, images for UI representation
+- Metadata tracking: item counts, listening hours, popularity
+- Featured category support for promotional content
+
+**Mood Categories Table**
+- **Purpose**: Emotion-based content grouping for personalized recommendations
+- Mood-driven discovery (relaxing, energetic, educational, etc.)
+- Visual representation with emojis and colors
+- Helps users find content matching their current mood or activity
 
 ### Junction Tables
-- `ContentAuthor`: Many-to-many relationship with role support
-- `ContentNarrator`: Links content to voice artists
-- `ContentCategory`: Content categorization
-- `MoodContent`: Mood-based content associations
-- `UserAuthorFollow`: User following system for authors
-- `UserNarratorFollow`: User following system for narrators
+
+**ContentAuthor Table**
+- **Purpose**: Links content to multiple authors with role definitions
+- Supports role specifications (primary, co-author, contributor)
+- Sort ordering for proper author attribution display
+- Many-to-many relationship between content and authors
+
+**ContentNarrator Table**
+- **Purpose**: Associates content with voice artists and narrators
+- Role-based assignments (primary, secondary, guest narrator)
+- Supports multiple narrators per content item
+- Sort ordering for proper narrator credit display
+
+**ContentCategory Table**
+- **Purpose**: Categorizes content into multiple genres and topics
+- Enables content to belong to multiple categories simultaneously
+- Simple many-to-many relationship without additional metadata
+
+**MoodContent Table**
+- **Purpose**: Associates content with mood-based categories for discovery
+- Enables mood-driven content recommendations
+- Sort ordering for featured content within mood categories
+
+**UserAuthorFollow Table**
+- **Purpose**: User subscription system for following favorite authors
+- Tracks when users started following specific authors
+- Enables notifications for new releases from followed authors
+
+**UserNarratorFollow Table**
+- **Purpose**: User subscription system for following favorite narrators
+- Similar to author follows but for voice artists
+- Supports narrator-based content discovery and notifications
 
 ## User Interaction & Progress Tracking
 
-**Recently Played**
-- Tracks user listening history and progress
+**Recently Played Table**
+- **Purpose**: Tracks user listening progress and session history across all content
 - Position tracking in seconds with percentage completion
-- Playback speed and session duration tracking
+- Playback speed preferences and session duration logging
+- Enables "continue listening" functionality and progress synchronization
+- Marks completed content and calculates listening statistics
 
-**Downloads**
-- Offline content management
-- Download progress and file size tracking
-- Quality settings and local file paths
+**Downloads Table**
+- **Purpose**: Manages offline content downloads for premium users
+- Tracks download status, progress, and file management
+- Quality settings and local file path storage
+- File size tracking for storage management
+- Supports pause/resume download functionality
 
-**Bookmarks**
-- User-saved content with optional notes
-- Quick access to favorite content
+**Bookmarks Table**
+- **Purpose**: User-saved content for quick access and personal library management
+- Enables users to bookmark favorite content items
+- Optional personal notes for each bookmark
+- Quick access functionality for saved content
 
-**Reviews**
-- User ratings and reviews (1-5 stars)
-- Public/private visibility controls
-- Aggregated ratings for content
+**Reviews Table**
+- **Purpose**: User rating and review system for content quality assessment
+- 1-5 star rating system with optional written reviews
+- Public/private visibility controls for user privacy
+- Aggregated ratings used for content recommendation algorithms
 
-**Notes System**
-- Personal notes and highlights during listening
-- Timestamp-based annotations
-- Different note types (personal, highlight, thought)
+**Notes Table**
+- **Purpose**: Personal annotation system for timestamped notes during listening
+- Timestamp-based annotations linked to specific audio positions
+- Multiple note types: personal thoughts, highlights, bookmarks
+- Private note system for individual learning and reference
 
 ## Subscription & Payment System
 
-**Subscription Plans**
-- Flexible plan definitions with pricing
-- Feature and limitation specifications
-- Stripe integration with external IDs
+**Subscription Plans Table**
+- **Purpose**: Defines available subscription tiers and pricing structures
+- Flexible plan definitions with monthly/yearly billing cycles
+- Feature lists and limitation specifications for each tier
+- Stripe integration with external price IDs for payment processing
 
-**User Subscriptions**
-- Current subscription status and billing periods
-- Stripe customer and subscription linking
-- Cancellation and renewal management
+**User Subscriptions Table**
+- **Purpose**: Manages active user subscriptions and billing relationships
+- Current subscription status tracking (ACTIVE, CANCELED, EXPIRED, etc.)
+- Billing period management and renewal dates
+- Stripe customer and subscription ID linking for payment processing
 
-**Subscription History**
-- Complete billing and payment history
-- Transaction tracking with external references
-- Audit trail for billing disputes
+**Subscription History Table**
+- **Purpose**: Complete audit trail of all billing transactions and subscription changes
+- Transaction tracking with external payment references
+- Historical billing data for customer service and disputes
+- Financial reporting and analytics data
 
 ## Audio Player & Session Management
 
-**Audio Sessions**
-- Current playback state and position tracking
-- Multi-device session support
-- Quality and volume preferences
-- Device-specific metadata
+**Audio Sessions Table**
+- **Purpose**: Manages active audio playback sessions across multiple devices
+- Real-time playback state synchronization between devices
+- Quality preferences and volume settings per session
+- Device-specific metadata for optimized playback experience
 
 ## Notifications & Communication
 
-**Notifications**
-- In-app notification system
-- Multiple notification types (info, warning, promotion)
-- Scheduling support for future notifications
-- Read/unread and archival states
+**Notifications Table**
+- **Purpose**: In-app notification system for user engagement and communication
+- Multiple notification types (informational, promotional, system alerts)
+- Scheduling support for future notifications and campaigns
+- Read/unread status tracking and notification archival
 
 ## User Preferences & Settings
 
-**User Preferences**
-- Comprehensive user settings management
-- Theme, language, and display preferences
-- Audio playback defaults
-- Notification preferences
-- Privacy and content settings
+**User Preferences Table**
+- **Purpose**: Comprehensive user settings and personalization preferences
+- Theme preferences (light, dark, system default)
+- Language and localization settings
+- Audio playback defaults (speed, volume, auto-play)
+- Notification preferences and privacy controls
+- Content filtering and parental control settings
 
 ## Search & Discovery
 
-**Search History**
-- User search query tracking
-- Filter and result count logging
-- Personalization and recommendation data
+**Search History Table**
+- **Purpose**: User search behavior tracking for personalization and analytics
+- Query history for improved search suggestions
+- Applied filter tracking for better user experience
+- Result count logging for search optimization
+- Data used for personalized content recommendations
 
 ## Feedback & Support
 
-**Feedback System**
-- User feedback and support requests
-- Multiple feedback types (bug reports, feature requests)
-- Priority and status tracking
-- Admin assignment and notes
+**Feedback Table**
+- **Purpose**: User feedback collection and customer support ticket management
+- Multiple feedback categories (bug reports, feature requests, general inquiries)
+- Priority classification and status tracking workflow
+- Admin assignment system for support team management
+- Device information capture for technical issue resolution
 
 ## Relationships Overview
 

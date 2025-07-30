@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audio_service/audio_service.dart';
 import '../services/audio_service.dart';
+import '../data/mock_data.dart';
 
 /// Audio player state
 class AudioPlayerState {
@@ -13,6 +14,8 @@ class AudioPlayerState {
   final MediaItem? currentMediaItem;
   final bool isLoading;
   final String? error;
+  final ContentItemData? currentContent;
+  final ChapterData? currentChapter;
 
   const AudioPlayerState({
     this.isPlaying = false,
@@ -22,6 +25,8 @@ class AudioPlayerState {
     this.currentMediaItem,
     this.isLoading = false,
     this.error,
+    this.currentContent,
+    this.currentChapter,
   });
 
   AudioPlayerState copyWith({
@@ -32,6 +37,8 @@ class AudioPlayerState {
     MediaItem? currentMediaItem,
     bool? isLoading,
     String? error,
+    ContentItemData? currentContent,
+    ChapterData? currentChapter,
   }) {
     return AudioPlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -41,6 +48,8 @@ class AudioPlayerState {
       currentMediaItem: currentMediaItem ?? this.currentMediaItem,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
+      currentContent: currentContent ?? this.currentContent,
+      currentChapter: currentChapter ?? this.currentChapter,
     );
   }
 
@@ -135,6 +144,8 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
     required String album,
     required String artist,
     String? artUri,
+    ContentItemData? content,
+    ChapterData? chapter,
   }) async {
     try {
       // Check if same audio is already loaded
@@ -185,6 +196,8 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
         position: _audioService.position,
         speed: _audioService.speed,
         error: null,
+        currentContent: content,
+        currentChapter: chapter,
       );
       
       state = newState;
@@ -390,4 +403,12 @@ final audioSpeedProvider = Provider<double>((ref) {
 
 final audioProgressProvider = Provider<double>((ref) {
   return ref.watch(audioPlayerProvider.select((state) => state.progress));
+});
+
+final currentContentProvider = Provider<ContentItemData?>((ref) {
+  return ref.watch(audioPlayerProvider.select((state) => state.currentContent));
+});
+
+final currentChapterProvider = Provider<ChapterData?>((ref) {
+  return ref.watch(audioPlayerProvider.select((state) => state.currentChapter));
 }); 

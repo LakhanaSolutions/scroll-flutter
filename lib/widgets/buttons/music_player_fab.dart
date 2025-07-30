@@ -12,12 +12,18 @@ import 'app_buttons.dart';
 class MusicPlayerFab extends ConsumerWidget {
   const MusicPlayerFab({super.key});
 
-  void _openMusicPlayer(BuildContext context) {
-    // Get mock content for demo purposes
-    final mockContent = MockData.getCategoryContent('1').first;
-    final mockChapter = mockContent.chapters.first;
+  void _openMusicPlayer(BuildContext context, WidgetRef ref) {
+    final currentContent = ref.read(currentContentProvider);
+    final currentChapter = ref.read(currentChapterProvider);
     
-    context.push('/home/chapter/${mockChapter.id}/${mockContent.id}');
+    if (currentContent != null && currentChapter != null) {
+      context.push('/home/chapter/${currentChapter.id}/${currentContent.id}');
+    } else {
+      // Fallback to mock data if no current content
+      final mockContent = MockData.getCategoryContent('1').first;
+      final mockChapter = mockContent.chapters.first;
+      context.push('/home/chapter/${mockChapter.id}/${mockContent.id}');
+    }
   }
 
   @override
@@ -32,10 +38,10 @@ class MusicPlayerFab extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     
-    // Get current content (using mock data for now)
-    final mockContent = MockData.getCategoryContent('1').first;
-    final isPremiumContent = mockContent.availability == AvailabilityType.premium;
-    final shouldShowTrialWidget = isFreeTrial && isPremiumContent && !canAccessPremiumContent;
+    // Get current content from audio state
+    final currentContent = ref.watch(currentContentProvider);
+    final isPremiumContent = currentContent?.availability == AvailabilityType.premium;
+    final shouldShowTrialWidget = isFreeTrial && isPremiumContent == true && !canAccessPremiumContent;
     
     if (shouldShowTrialWidget) {
       return GlimpseIntoPremiumStatsFAB(
@@ -46,7 +52,7 @@ class MusicPlayerFab extends ConsumerWidget {
     final theme = Theme.of(context);
     
     return AppFloatingActionButton(
-      onPressed: () => _openMusicPlayer(context),
+      onPressed: () => _openMusicPlayer(context, ref),
       tooltip: 'Open Music Player',
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.onPrimary,

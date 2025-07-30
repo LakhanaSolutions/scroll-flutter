@@ -109,6 +109,8 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
           artist: widget.content.type == ContentType.book 
               ? widget.content.narrators.first.name
               : 'Podcast',
+          content: widget.content,
+          chapter: widget.chapter,
         );
         
         // Wait a moment for state to update and verify audio is loaded

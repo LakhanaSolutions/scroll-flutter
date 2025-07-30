@@ -1,0 +1,934 @@
+// Siraaj - Audiobook & Learning Platform Database Schema
+// Comprehensive Prisma schema based on Flutter frontend analysis
+// Designed for PostgreSQL with BetterAuth integration
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// AUTHENTICATION & USER MANAGEMENT (BetterAuth Compatible)
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  name          String?
+  image         String?
+  bio           String?
+  nationality   String?
+  isNew         Boolean   @default(true)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // BetterAuth fields
+  role          UserRole  @default(USER)
+  
+  // Relationships
+  sessions              Session[]
+  accounts              Account[]
+  subscriptions         Subscription[]
+  subscriptionHistory   SubscriptionHistory[]
+  notes                 Note[]
+  recentlyPlayed        RecentlyPlayed[]
+  downloads             Download[]
+  notifications         Notification[]
+  preferences           UserPreference?
+  audioSessions         AudioSession[]
+  followingAuthors      UserAuthorFollow[]
+  followingNarrators    UserNarratorFollow[]
+  bookmarks             Bookmark[]
+  reviews               Review[]
+  searchHistory         SearchHistory[]
+  feedbackSubmissions   Feedback[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum UserRole {
+  USER
+  PREMIUM
+  ADMIN
+  MODERATOR
+}
+
+// ============================================================================
+// CONTENT MANAGEMENT SYSTEM
+// ============================================================================
+
+model Content {
+  id            String          @id @default(cuid())
+  title         String
+  slug          String          @unique
+  description   String?
+  coverUrl      String?
+  type          ContentType
+  availability  AvailabilityType
+  status        ContentStatus   @default(PUBLISHED)
+  
+  // Metadata
+  duration      Int?            // in seconds
+  chapterCount  Int             @default(0)
+  rating        Float           @default(0)
+  ratingCount   Int             @default(0)
+  viewCount     Int             @default(0)
+  listeningHours Int            @default(0)
+  
+  // Content flags
+  isFeatured    Boolean         @default(false)
+  isPopular     Boolean         @default(false)
+  isPremium     Boolean         @default(false)
+  
+  // SEO & Discovery
+  tags          String[]
+  keywords      String?
+  language      String          @default("en")
+  
+  // Timestamps
+  publishedAt   DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relationships
+  authors       ContentAuthor[]
+  narrators     ContentNarrator[]
+  categories    ContentCategory[]
+  chapters      Chapter[]
+  notes         Note[]
+  recentlyPlayed RecentlyPlayed[]
+  downloads     Download[]
+  bookmarks     Bookmark[]
+  reviews       Review[]
+  moodContents  MoodContent[]
+
+  @@index([type, availability, status])
+  @@index([isPremium, isFeatured])
+  @@index([publishedAt])
+  @@map("content")
+}
+
+model Chapter {
+  id            String        @id @default(cuid())
+  contentId     String
+  title         String
+  slug          String
+  description   String?
+  chapterNumber Int
+  
+  // Audio metadata
+  duration      Int           // in seconds
+  audioUrl      String?
+  fileSize      Int?          // in bytes
+  
+  // Content
+  transcript    String?
+  
+  // Status
+  status        ChapterStatus @default(PUBLISHED)
+  
+  // Timestamps
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relationships
+  content         Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  primaryNarrator Narrator? @relation(fields: [narratorId], references: [id])
+  narratorId      String?
+  notes           Note[]
+  recentlyPlayed  RecentlyPlayed[]
+
+  @@unique([contentId, chapterNumber])
+  @@unique([contentId, slug])
+  @@index([contentId, chapterNumber])
+  @@map("chapters")
+}
+
+model Author {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  bio           String?
+  imageUrl      String?
+  nationality   String?
+  birthYear     Int?
+  
+  // Social & external links
+  website       String?
+  socialLinks   Json?    // {twitter, facebook, linkedin, etc.}
+  
+  // Metadata
+  quote         String?
+  genres        String[]
+  awards        String[]
+  totalBooks    Int      @default(0)
+  followers     Int      @default(0)
+  
+  // Status
+  isActive      Boolean  @default(true)
+  isVerified    Boolean  @default(false)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  contents      ContentAuthor[]
+  followers     UserAuthorFollow[]
+
+  @@index([slug])
+  @@index([nationality])
+  @@map("authors")
+}
+
+model Narrator {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  bio             String?
+  imageUrl        String?
+  
+  // Professional info
+  experienceYears Int?
+  voiceDescription String?
+  languages       String[]
+  genres          String[]
+  awards          String[]
+  
+  // Social & external links
+  website         String?
+  socialLinks     Json?
+  
+  // Metadata
+  totalNarrations Int      @default(0)
+  followers       Int      @default(0)
+  rating          Float    @default(0)
+  ratingCount     Int      @default(0)
+  
+  // Status
+  isActive        Boolean  @default(true)
+  isVerified      Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  contents        ContentNarrator[]
+  chapters        Chapter[]
+  followers       UserNarratorFollow[]
+
+  @@index([slug])
+  @@map("narrators")
+}
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  slug          String   @unique
+  description   String?
+  icon          String?  // Icon identifier
+  imageUrl      String?
+  color         String?  // Hex color code
+  
+  // Hierarchy
+  parentId      String?
+  parent        Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children      Category[] @relation("CategoryHierarchy")
+  
+  // Metadata
+  itemCount     Int      @default(0)
+  listeningHours Int     @default(0)
+  sortOrder     Int      @default(0)
+  
+  // Status
+  isActive      Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  contents      ContentCategory[]
+
+  @@index([slug])
+  @@index([parentId, sortOrder])
+  @@map("categories")
+}
+
+model MoodCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  emoji       String?
+  color       String?  // Hex color code
+  
+  // Metadata
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  contents    MoodContent[]
+
+  @@index([slug])
+  @@index([sortOrder])
+  @@map("mood_categories")
+}
+
+// ============================================================================
+// JUNCTION TABLES FOR MANY-TO-MANY RELATIONSHIPS
+// ============================================================================
+
+model ContentAuthor {
+  id        String   @id @default(cuid())
+  contentId String
+  authorId  String
+  role      String?  // "primary", "co-author", "contributor"
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  author  Author  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, authorId])
+  @@index([contentId, sortOrder])
+  @@map("content_authors")
+}
+
+model ContentNarrator {
+  id          String   @id @default(cuid())
+  contentId   String
+  narratorId  String
+  role        String?  // "primary", "secondary", "guest"
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  content  Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  narrator Narrator @relation(fields: [narratorId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, narratorId])
+  @@index([contentId, sortOrder])
+  @@map("content_narrators")
+}
+
+model ContentCategory {
+  id         String   @id @default(cuid())
+  contentId  String
+  categoryId String
+  createdAt  DateTime @default(now())
+
+  content  Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, categoryId])
+  @@map("content_categories")
+}
+
+model MoodContent {
+  id             String       @id @default(cuid())
+  moodCategoryId String
+  contentId      String
+  sortOrder      Int          @default(0)
+  createdAt      DateTime     @default(now())
+
+  moodCategory MoodCategory @relation(fields: [moodCategoryId], references: [id], onDelete: Cascade)
+  content      Content      @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([moodCategoryId, contentId])
+  @@index([moodCategoryId, sortOrder])
+  @@map("mood_content")
+}
+
+model UserAuthorFollow {
+  id        String   @id @default(cuid())
+  userId    String
+  authorId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  author Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, authorId])
+  @@map("user_author_follows")
+}
+
+model UserNarratorFollow {
+  id         String   @id @default(cuid())
+  userId     String
+  narratorId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  narrator Narrator @relation(fields: [narratorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, narratorId])
+  @@map("user_narrator_follows")
+}
+
+// ============================================================================
+// USER INTERACTION & PROGRESS TRACKING
+// ============================================================================
+
+model RecentlyPlayed {
+  id            String   @id @default(cuid())
+  userId        String
+  contentId     String
+  chapterId     String?
+  
+  // Progress tracking
+  position      Int      @default(0) // Current position in seconds
+  duration      Int?     // Total duration in seconds
+  progress      Float    @default(0) // Percentage (0.0 to 1.0)
+  
+  // Session info
+  playedMinutes Int      @default(0)
+  isFinished    Boolean  @default(false)
+  speed         Float    @default(1.0)
+  
+  // Timestamps
+  lastPlayedAt  DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  chapter Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, contentId])
+  @@index([userId, lastPlayedAt])
+  @@map("recently_played")
+}
+
+model Download {
+  id               String        @id @default(cuid())
+  userId           String
+  contentId        String
+  
+  // Download metadata
+  status           DownloadStatus @default(PENDING)
+  progress         Float          @default(0)
+  downloadSize     BigInt?        // in bytes
+  downloadedSize   BigInt         @default(0)
+  
+  // File info
+  localPath        String?
+  quality          String?        // "high", "medium", "low"
+  
+  // Timestamps
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Relationships
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@index([userId, status])
+  @@map("downloads")
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  contentId String
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@index([userId, createdAt])
+  @@map("bookmarks")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  contentId String
+  rating    Int      // 1-5 stars
+  title     String?
+  comment   String?
+  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@index([contentId, rating])
+  @@map("reviews")
+}
+
+// ============================================================================
+// NOTES & ANNOTATIONS SYSTEM
+// ============================================================================
+
+model Note {
+  id          String   @id @default(cuid())
+  userId      String
+  contentId   String
+  chapterId   String?
+  
+  // Note content
+  title       String?
+  content     String
+  type        NoteType @default(PERSONAL)
+  
+  // Position in content
+  timestamp   Int?     // Position in seconds where note was taken
+  
+  // Status
+  isPrivate   Boolean  @default(false)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  chapter Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+
+  @@index([userId, contentId])
+  @@index([userId, createdAt])
+  @@map("notes")
+}
+
+// ============================================================================
+// SUBSCRIPTION & PAYMENT SYSTEM
+// ============================================================================
+
+model Subscription {
+  id            String             @id @default(cuid())
+  userId        String
+  planId        String
+  status        SubscriptionStatus @default(ACTIVE)
+  
+  // Billing
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean         @default(false)
+  
+  // Payment
+  stripeCustomerId      String?
+  stripeSubscriptionId  String?      @unique
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  canceledAt    DateTime?
+
+  // Relationships
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@unique([userId, planId])
+  @@index([userId, status])
+  @@map("subscriptions")
+}
+
+model SubscriptionPlan {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  displayName   String
+  description   String?
+  
+  // Pricing
+  price         Decimal  @db.Decimal(10, 2)
+  currency      String   @default("USD")
+  interval      String   // "month", "year"
+  intervalCount Int      @default(1)
+  
+  // Features
+  features      Json     // Array of feature descriptions
+  limitations   Json?    // Array of limitations
+  
+  // Metadata
+  isPopular     Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  
+  // External IDs
+  stripePriceId String?  @unique
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  subscriptions Subscription[]
+  history       SubscriptionHistory[]
+
+  @@map("subscription_plans")
+}
+
+model SubscriptionHistory {
+  id              String             @id @default(cuid())
+  userId          String
+  planId          String
+  status          SubscriptionStatus
+  
+  // Billing period
+  periodStart     DateTime
+  periodEnd       DateTime
+  
+  // Payment details
+  amount          Decimal            @db.Decimal(10, 2)
+  currency        String             @default("USD")
+  paymentMethod   String?
+  transactionId   String?
+  
+  // External references
+  stripeInvoiceId String?
+  
+  // Timestamps
+  createdAt       DateTime           @default(now())
+
+  // Relationships
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("subscription_history")
+}
+
+// ============================================================================
+// AUDIO PLAYER & SESSION MANAGEMENT
+// ============================================================================
+
+model AudioSession {
+  id          String   @id @default(cuid())
+  userId      String
+  contentId   String
+  chapterId   String?
+  
+  // Playback state
+  position    Int      @default(0) // Current position in seconds
+  duration    Int?     // Total duration in seconds
+  speed       Float    @default(1.0)
+  volume      Float    @default(1.0)
+  
+  // Session metadata
+  deviceInfo  Json?    // Device information
+  quality     String?  // Audio quality setting
+  
+  // Status
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@index([userId, startedAt])
+  @@map("audio_sessions")
+}
+
+// ============================================================================
+// NOTIFICATIONS & COMMUNICATION
+// ============================================================================
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  
+  // Content
+  title       String
+  message     String
+  type        NotificationType @default(INFO)
+  
+  // Behavior
+  isDismissible Boolean        @default(true)
+  actionText    String?
+  actionUrl     String?
+  
+  // Status
+  isRead      Boolean          @default(false)
+  isArchived  Boolean          @default(false)
+  
+  // Scheduling (for future notifications)
+  scheduledFor DateTime?
+  
+  // Timestamps
+  createdAt   DateTime         @default(now())
+  readAt      DateTime?
+  archivedAt  DateTime?
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@index([scheduledFor])
+  @@map("notifications")
+}
+
+// ============================================================================
+// USER PREFERENCES & SETTINGS
+// ============================================================================
+
+model UserPreference {
+  id              String         @id @default(cuid())
+  userId          String         @unique
+  
+  // Theme & Display
+  themeMode       ThemeMode      @default(SYSTEM)
+  language        String         @default("en")
+  isRTL           Boolean        @default(false)
+  
+  // Audio preferences
+  defaultSpeed    Float          @default(1.0)
+  defaultVolume   Float          @default(1.0)
+  autoPlay        Boolean        @default(true)
+  rememberPosition Boolean       @default(true)
+  
+  // Notification preferences
+  emailNotifications    Boolean  @default(true)
+  pushNotifications     Boolean  @default(true)
+  weeklyDigest         Boolean  @default(true)
+  newContentAlerts     Boolean  @default(true)
+  
+  // Privacy settings
+  publicProfile        Boolean  @default(false)
+  shareListeningStats  Boolean  @default(false)
+  
+  // Content preferences
+  preferredGenres      String[]
+  contentLanguages     String[]
+  explicitContent      Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// ============================================================================
+// SEARCH & DISCOVERY
+// ============================================================================
+
+model SearchHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  query     String
+  filters   Json?    // Search filters applied
+  resultCount Int    @default(0)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("search_history")
+}
+
+// ============================================================================
+// FEEDBACK & SUPPORT
+// ============================================================================
+
+model Feedback {
+  id          String       @id @default(cuid())
+  userId      String?
+  
+  // Content
+  type        FeedbackType @default(GENERAL)
+  subject     String
+  message     String
+  
+  // User details (for anonymous feedback)
+  email       String?
+  name        String?
+  
+  // Metadata
+  deviceInfo  Json?
+  appVersion  String?
+  
+  // Status
+  status      FeedbackStatus @default(OPEN)
+  priority    FeedbackPriority @default(MEDIUM)
+  
+  // Admin notes
+  adminNotes  String?
+  assignedTo  String?
+  
+  // Timestamps
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  resolvedAt  DateTime?
+
+  // Relationships
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, priority])
+  @@index([createdAt])
+  @@map("feedback")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum ContentType {
+  BOOK
+  PODCAST
+  AUDIOBOOK
+  SERIES
+}
+
+enum AvailabilityType {
+  FREE
+  PREMIUM
+  TRIAL
+  PAID
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+enum ChapterStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DownloadStatus {
+  PENDING
+  DOWNLOADING
+  COMPLETED
+  FAILED
+  PAUSED
+}
+
+enum NoteType {
+  PERSONAL
+  HIGHLIGHT
+  THOUGHT
+  BOOKMARK
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+  PAST_DUE
+  UNPAID
+  PAUSED
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+  PROMOTION
+  CONTENT_UPDATE
+  SYSTEM
+}
+
+enum ThemeMode {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum FeedbackType {
+  GENERAL
+  BUG_REPORT
+  FEATURE_REQUEST
+  CONTENT_ISSUE
+  BILLING
+  ACCOUNT
+  TECHNICAL
+}
+
+enum FeedbackStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  DUPLICATE
+}
+
+enum FeedbackPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}

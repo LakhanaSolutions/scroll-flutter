@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'router/app_router.dart';
 import 'providers/theme_provider.dart' as providers;
 import 'providers/locale_provider.dart';
+import 'providers/auth_provider.dart';
 import 'services/preferences_service.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_extensions.dart';
@@ -26,6 +26,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    
+    // Initialize auth provider after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authProvider.notifier).initialize();
+    });
   }
 
   @override

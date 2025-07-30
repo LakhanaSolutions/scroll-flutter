@@ -5,6 +5,7 @@ import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/buttons/app_buttons.dart';
+import '../widgets/waveform/audio_waveform.dart';
 import '../providers/audio_provider.dart';
 import './home/library_tab.dart';
 import 'narrator_screen.dart';
@@ -28,10 +29,21 @@ class ChapterScreen extends ConsumerStatefulWidget {
 
 class _ChapterScreenState extends ConsumerState<ChapterScreen>
     with TickerProviderStateMixin {
-  bool _audioLoaded = false;
-  bool _isDragging = false;
-  double _dragValue = 0.0;
   late AnimationController _playPauseController;
+  
+  // Mock waveform data from API sample
+  final List<double> _mockWaveformData = [
+    0.12, 0.25, 0.19, 0.45, 0.33, 0.28, 0.60, 0.55, 0.42, 0.30,
+    0.22, 0.26, 0.21, 0.35, 0.41, 0.38, 0.47, 0.50, 0.43, 0.37,
+    0.18, 0.20, 0.16, 0.22, 0.27, 0.25, 0.33, 0.29, 0.24, 0.19,
+    0.14, 0.17, 0.13, 0.12, 0.18, 0.22, 0.20, 0.26, 0.24, 0.21,
+    0.35, 0.40, 0.32, 0.39, 0.44, 0.46, 0.50, 0.48, 0.45, 0.43,
+    0.30, 0.33, 0.29, 0.34, 0.36, 0.38, 0.42, 0.41, 0.40, 0.37,
+    0.20, 0.23, 0.19, 0.22, 0.27, 0.24, 0.30, 0.32, 0.29, 0.25,
+    0.18, 0.15, 0.16, 0.13, 0.14, 0.17, 0.19, 0.21, 0.18, 0.20,
+    0.26, 0.29, 0.25, 0.28, 0.32, 0.34, 0.36, 0.31, 0.28, 0.26,
+    0.12, 0.10, 0.11, 0.09, 0.08, 0.07, 0.06, 0.08, 0.09, 0.10
+  ];
   
   @override
   void initState() {
@@ -52,14 +64,6 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
     super.dispose();
   }
 
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return duration.inHours > 0
-        ? "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds"
-        : "$twoDigitMinutes:$twoDigitSeconds";
-  }
 
   Future<void> _loadAudio() async {
     if (mounted) {
@@ -69,9 +73,6 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
         
         // Check if the same audio is already loaded
         if (currentMediaItem?.id == audioPath) {
-          setState(() {
-            _audioLoaded = true;
-          });
           return; // Don't reload the same audio
         }
 
@@ -93,10 +94,6 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
           final audioState = ref.read(audioPlayerProvider);
           debugPrint('Audio load completed. Has audio: ${audioState.hasAudio}, Duration: ${audioState.duration}');
           
-          setState(() {
-            _audioLoaded = audioState.hasAudio;
-          });
-          
           // Force a state refresh if needed
           if (audioState.hasAudio && audioState.duration == null) {
             ref.read(audioPlayerProvider.notifier).refreshState();
@@ -105,11 +102,7 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
       } catch (e) {
         debugPrint('Error loading audio: $e');
         // Handle error gracefully
-        if (mounted) {
-          setState(() {
-            _audioLoaded = false;
-          });
-        }
+        debugPrint('Audio loading failed, but UI will show loading state until providers update');
       }
     }
   }
@@ -283,78 +276,22 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
   }
 
   Widget _buildProgressBar(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Column(
-      children: [
-        SliderTheme(
-          data: SliderTheme.of(context).copyWith(
-            activeTrackColor: colorScheme.primary,
-            inactiveTrackColor: colorScheme.surfaceContainerHighest,
-            thumbColor: colorScheme.primary,
-            overlayColor: colorScheme.primary.withValues(alpha: 0.1),
-            trackHeight: 4,
-          ),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final position = ref.watch(audioPositionProvider);
-              final duration = ref.watch(audioDurationProvider);
-              
-              final maxValue = duration?.inSeconds.toDouble() ?? 1.0;
-              final currentValue = _isDragging 
-                  ? _dragValue 
-                  : (duration != null 
-                      ? position.inSeconds.toDouble().clamp(0.0, maxValue)
-                      : 0.0);
-              
-              return Slider(
-                value: currentValue,
-                max: maxValue,
-                onChanged: duration != null ? (value) {
-                  setState(() {
-                    _isDragging = true;
-                    _dragValue = value;
-                  });
-                } : null,
-                onChangeEnd: duration != null ? (value) {
-                  setState(() {
-                    _isDragging = false;
-                  });
-                  // Final seek when dragging ends
-                  ref.read(audioPlayerProvider.notifier).seek(Duration(seconds: value.toInt()));
-                } : null,
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Consumer(
-                builder: (context, ref, child) {
-                  final position = ref.watch(audioPositionProvider);
-                  return AppCaptionText(
-                    _formatDuration(position),
-                    color: colorScheme.onSurfaceVariant,
-                  );
-                },
-              ),
-              Consumer(
-                builder: (context, ref, child) {
-                  final duration = ref.watch(audioDurationProvider);
-                  return AppCaptionText(
-                    duration != null ? _formatDuration(duration) : '--:--',
-                    color: colorScheme.onSurfaceVariant,
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
+    return Consumer(
+      builder: (context, ref, child) {
+        final position = ref.watch(audioPositionProvider);
+        final duration = ref.watch(audioDurationProvider);
+        final isLoading = ref.watch(isLoadingProvider);
+        
+        return AudioWaveform(
+          waveformData: _mockWaveformData,
+          duration: duration,
+          currentPosition: position,
+          isLoading: isLoading,
+          onSeek: (seekPosition) {
+            ref.read(audioPlayerProvider.notifier).seek(seekPosition);
+          },
+        );
+      },
     );
   }
 
@@ -394,7 +331,6 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
             child: Consumer(
               builder: (context, ref, child) {
                 final isLoading = ref.watch(isLoadingProvider);
-                final hasAudio = ref.watch(hasAudioProvider);
                 final isPlaying = ref.watch(isPlayingProvider);
 
                 // Update animation based on play state
@@ -474,16 +410,18 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
                 // Pause audio if playing and remember state
                 await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
                 
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => NoteScreen(
-                      chapter: widget.chapter,
-                      content: widget.content,
-                      currentPosition: position.inSeconds.toDouble(),
-                      wasAudioPlaying: wasPlaying,
+                if (mounted) {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NoteScreen(
+                        chapter: widget.chapter,
+                        content: widget.content,
+                        currentPosition: position.inSeconds.toDouble(),
+                        wasAudioPlaying: wasPlaying,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
                 
                 // Resume audio if it was playing before navigation
                 await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();

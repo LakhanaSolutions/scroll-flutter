@@ -49,7 +49,10 @@ dependencies:
   
   # Google Fonts
   google_fonts: ^6.2.1
-  
+
+  # UI Effects
+  glowy_borders: ^1.0.2
+
   # HTML rendering
   flutter_widget_from_html: ^0.17.0
 

@@ -266,7 +266,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 contentLabel: 'narrations',
                 isFollowing: narrator.isFollowing,
                 onTap: () {
-                  context.go('/home/narrator/${narrator.id}');
+                  context.push('/home/narrator/${narrator.id}');
                 },
                 onFollowToggle: () {
                   debugPrint('${narrator.isFollowing ? "Unfollowed" : "Followed"} narrator: ${narrator.name}');
@@ -294,7 +294,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 contentLabel: 'books',
                 isFollowing: author.isFollowing,
                 onTap: () {
-                  context.go('/home/author/${author.id}');
+                  context.push('/home/author/${author.id}');
                 },
                 onFollowToggle: () {
                   debugPrint('${author.isFollowing ? "Unfollowed" : "Followed"} author: ${author.name}');
@@ -424,7 +424,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
       isBookmarked: false,
     );
 
-    context.go('/home/note/${mockChapter.id}/${mockContent.id}?position=${_parseTimestamp(note.timestamp)}&wasPlaying=false');
+    context.push('/home/note/${mockChapter.id}/${mockContent.id}?position=${_parseTimestamp(note.timestamp)}&wasPlaying=false');
   }
 
   double _parseTimestamp(String timestamp) {

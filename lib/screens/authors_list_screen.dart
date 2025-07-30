@@ -87,7 +87,7 @@ class _AuthorsListScreenState extends State<AuthorsListScreen> with TickerProvid
         return _AuthorTile(
           author: author,
           onTap: () {
-            context.go('/home/author/${author.id}');
+            context.push('/home/author/${author.id}');
           },
         );
       },

@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: double.infinity,
             child: AppSecondaryButton(
               onPressed: () {
-                context.go('/home/subscription');
+                context.push('/home/subscription');
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

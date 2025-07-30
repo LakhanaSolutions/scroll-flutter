@@ -53,7 +53,7 @@ class HomeTab extends ConsumerWidget {
               ),
               // Profile avatar
               GestureDetector(
-                onTap: () => context.go('/home/profile'),
+                onTap: () => context.push('/home/profile'),
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -87,7 +87,7 @@ class HomeTab extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
                   child: GestureDetector(
-                    onTap: () => context.go('/home/search'),
+                    onTap: () => context.push('/home/search'),
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(AppSpacing.medium),
@@ -130,7 +130,7 @@ class HomeTab extends ConsumerWidget {
             },
             onAction: (notification) {
               // Handle notification action - navigate to subscriptions page
-              context.go('/home/subscription');
+              context.push('/home/subscription');
             },
           ),
           
@@ -138,7 +138,7 @@ class HomeTab extends ConsumerWidget {
           if (shouldShowPremiumAds)
             PremiumBanner(
               benefits: MockData.getPremiumFeatures().take(3).toList(),
-              onAction: () => context.go('/home/subscription'),
+              onAction: () => context.push('/home/subscription'),
             ),
           
           // Top shelf books
@@ -162,7 +162,7 @@ class HomeTab extends ConsumerWidget {
           if (shouldShowPremiumAds)
             PremiumContentSection(
               features: MockData.getPremiumFeatures(),
-              onAction: () => context.go('/home/subscription'),
+              onAction: () => context.push('/home/subscription'),
             ),
           
           // Audiobook of the week
@@ -170,7 +170,7 @@ class HomeTab extends ConsumerWidget {
             book: MockData.getAudiobookOfTheWeek(),
             onAction: () {
               final audiobook = MockData.getAudiobookOfTheWeek();
-              context.go('/home/playlist/${audiobook.id}');
+              context.push('/home/playlist/${audiobook.id}');
             },
           ),
           

@@ -96,7 +96,7 @@ class GlimpseIntoPremiumStats extends ConsumerWidget {
         SizedBox(
           width: double.infinity,
           child: AppPrimaryButton(
-            onPressed: onUpgrade ?? () => context.go('/home/subscription'),
+            onPressed: onUpgrade ?? () => context.push('/home/subscription'),
             child: const Text('Upgrade to Premium'),
           ),
         ),
@@ -134,7 +134,7 @@ class GlimpseIntoPremiumStats extends ConsumerWidget {
         
         // Upgrade link
         GestureDetector(
-          onTap: onUpgrade ?? () => context.go('/home/subscription'),
+          onTap: onUpgrade ?? () => context.push('/home/subscription'),
           child: AppCaptionText(
             'Upgrade to Premium →',
             color: colorScheme.primary,

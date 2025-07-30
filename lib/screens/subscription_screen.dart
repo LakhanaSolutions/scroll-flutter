@@ -171,7 +171,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.go('/home/terms-of-service');
+                        context.push('/home/terms-of-service');
                       },
                       child: AppCaptionText(
                         'Terms of Service',
@@ -181,7 +181,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     const SizedBox(width: AppSpacing.medium),
                     TextButton(
                       onPressed: () {
-                        context.go('/home/privacy-policy');
+                        context.push('/home/privacy-policy');
                       },
                       child: AppCaptionText(
                         'Privacy Policy',

@@ -82,7 +82,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         end: Alignment.bottomRight,
                       ),
                       onTap: () {
-                        context.go('/home/authors');
+                        context.push('/home/authors');
                       },
                     ),
                   ),
@@ -101,7 +101,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         end: Alignment.bottomRight,
                       ),
                        onTap: () {
-                        context.go('/home/narrators');
+                        context.push('/home/narrators');
                       },
                     ),
                   ),
@@ -131,7 +131,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 return _CategoryTile(
                   category: category,
                   onTap: () {
-                    context.go('/home/category/${category.id}');
+                    context.push('/home/category/${category.id}');
                   },
                 );
               }),

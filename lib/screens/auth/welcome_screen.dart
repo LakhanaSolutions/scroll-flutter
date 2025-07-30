@@ -120,6 +120,6 @@ class WelcomeScreen extends StatelessWidget {
     // - get_started_clicked
     
     // Navigate to login screen
-    context.go('/login');
+    context.push('/login');
   }
 }

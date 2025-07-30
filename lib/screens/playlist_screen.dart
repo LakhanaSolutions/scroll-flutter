@@ -501,7 +501,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
           color: colorScheme.primary,
           tooltip: 'View Narrator',
           onPressed: () {
-            context.go('/home/narrator/${narrator.id}');
+            context.push('/home/narrator/${narrator.id}');
           },
         ),
       ],
@@ -545,7 +545,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                   color: colorScheme.primary,
                   tooltip: 'View Narrator',
                   onPressed: () {
-                    context.go('/home/narrator/${narrator.id}');
+                    context.push('/home/narrator/${narrator.id}');
                   },
                 ),
               ],
@@ -612,7 +612,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                     color: colorScheme.primary,
                     tooltip: 'View Narrator',
                     onPressed: () {
-                      context.go('/home/narrator/${narrator.id}');
+                      context.push('/home/narrator/${narrator.id}');
                     },
                   ),
                 ],
@@ -667,7 +667,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                     _ChapterTile(
                       chapter: chapter,
                       onTap: () {
-                        context.go('/home/chapter/${chapter.id}/${widget.content.id}');
+                        context.push('/home/chapter/${chapter.id}/${widget.content.id}');
                       },
                     ),
                     // Add divider between chapters (except after the last one)

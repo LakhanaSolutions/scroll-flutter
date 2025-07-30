@@ -114,13 +114,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (next.status == AuthStatus.authenticated) {
         // Navigate based on user status
         if (next.user?.isNew == true) {
-          context.go('/finish-profile');
+          context.push('/finish-profile');
         } else {
-          context.go('/home');
+          context.push('/home');
         }
       } else if (next.status == AuthStatus.otpSent) {
         // Navigate to OTP verification screen
-        context.go('/verify-otp');
+        context.push('/verify-otp');
       }
     });
 

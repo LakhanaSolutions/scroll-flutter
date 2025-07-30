@@ -36,7 +36,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen>
       if (authState.status != AuthStatus.otpSent && 
           authState.status != AuthStatus.otpVerifying &&
           authState.status != AuthStatus.error) {
-        context.go('/login');
+        context.push('/login');
       }
     });
   }
@@ -95,7 +95,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen>
 
   void _handleBackToLogin() {
     ref.read(authProvider.notifier).goBackToUserDetected();
-    context.go('/login');
+    context.push('/login');
   }
 
   String _getMaskedEmail(String email) {
@@ -129,20 +129,20 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen>
       if (next.status == AuthStatus.authenticated) {
         // Navigate based on user status
         if (next.user?.isNew == true) {
-          context.go('/finish-profile');
+          context.push('/finish-profile');
         } else {
-          context.go('/home');
+          context.push('/home');
         }
       } else if (next.status == AuthStatus.userDetected) {
         // Navigate back to login screen
-        context.go('/login');
+        context.push('/login');
       }
     });
 
     // If we don't have the required state, redirect to login
     if (authState.email == null || authState.user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/login');
+        context.push('/login');
       });
       return const SizedBox.shrink();
     }

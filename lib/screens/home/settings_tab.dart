@@ -77,7 +77,7 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                onTap: () => context.go('/home/subscription'),
+                onTap: () => context.push('/home/subscription'),
                 isLast: true,
               ),
             ],
@@ -114,7 +114,7 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.notifications_rounded,
                 title: 'Notifications',
                 subtitle: 'Manage notification preferences',
-                onTap: () => context.go('/home/notifications'),
+                onTap: () => context.push('/home/notifications'),
                 isLast: true,
               ),
             ],
@@ -130,14 +130,14 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.cloud_sync_rounded,
                 title: 'Manage Devices',
                 subtitle: 'Manage your devices',
-                onTap: () => context.go('/home/manage-devices'),
+                onTap: () => context.push('/home/manage-devices'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.palette_rounded,
                 title: 'Theme Demo',
                 subtitle: 'View design system components',
-                onTap: () => context.go('/home/theme-demo'),
+                onTap: () => context.push('/home/theme-demo'),
                 isLast: true,
               ),
             ],
@@ -183,14 +183,14 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.help_outline_rounded,
                 title: 'Help & Support',
                 subtitle: 'Get help and contact support',
-                onTap: () => context.go('/home/help-support'),
+                onTap: () => context.push('/home/help-support'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.feedback_rounded,
                 title: 'Send Feedback',
                 subtitle: 'Share your thoughts with us',
-                onTap: () => context.go('/home/send-feedback'),
+                onTap: () => context.push('/home/send-feedback'),
               ),
               _buildListTile(
                 context,
@@ -212,20 +212,20 @@ class SettingsTab extends ConsumerWidget {
                 context,
                 icon: Icons.privacy_tip_rounded,
                 title: 'Privacy Policy',
-                onTap: () => context.go('/home/privacy-policy'),
+                onTap: () => context.push('/home/privacy-policy'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.description_rounded,
                 title: 'Terms of Service',
-                onTap: () => context.go('/home/terms-of-service'),
+                onTap: () => context.push('/home/terms-of-service'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.info_outline_rounded,
                 title: 'About',
                 subtitle: 'Version 1.0.0',
-                onTap: () => context.go('/home/about'),
+                onTap: () => context.push('/home/about'),
                 isLast: true,
               ),
             ],
@@ -242,7 +242,7 @@ class SettingsTab extends ConsumerWidget {
                 onPressed: () async {
                   await ref.read(authProvider.notifier).logout();
                   if (context.mounted) {
-                    context.go('/welcome');
+                    context.push('/welcome');
                   }
                 },
                 child: const Text('Sign Out'),
@@ -415,7 +415,7 @@ class SettingsTab extends ConsumerWidget {
             color: colorScheme.onSurfaceVariant,
             size: AppSpacing.iconMedium,
           ),
-          onTap: () => context.go('/home/profile'),
+          onTap: () => context.push('/home/profile'),
         ),
       ),
     );

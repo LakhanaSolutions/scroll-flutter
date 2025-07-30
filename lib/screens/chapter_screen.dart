@@ -560,7 +560,7 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
                     await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
                     
                     if (mounted) {
-                      router.go('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
+                      router.push('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
                     }
                     
                     // Resume audio if it was playing before navigation
@@ -733,7 +733,7 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
 
   void _showSingleNarratorInfo(NarratorData narrator) {
     Navigator.of(context).pop(); // Close the bottom sheet first
-    context.go('/home/narrator/${narrator.id}');
+    context.push('/home/narrator/${narrator.id}');
   }
 
   @override
@@ -1096,7 +1096,7 @@ class _SpeakersBottomSheet extends StatelessWidget {
                     ),
                     onTap: () {
                       Navigator.of(context).pop();
-                      context.go('/home/narrator/${speaker.id}');
+                      context.push('/home/narrator/${speaker.id}');
                     },
                   );
                 }),

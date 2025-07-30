@@ -343,7 +343,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return AuthorResultTile(
                 author: author,
                 onTap: () {
-                  context.go('/home/author/${author.id}');
+                  context.push('/home/author/${author.id}');
                 },
               );
             }).toList(),
@@ -362,7 +362,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return NarratorResultTile(
                 narrator: narrator,
                 onTap: () {
-                  context.go('/home/narrator/${narrator.id}');
+                  context.push('/home/narrator/${narrator.id}');
                 },
               );
             }).toList(),
@@ -381,7 +381,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return ContentTile(
                 content: item,
                 onTap: () {
-                  context.go('/home/playlist/${item.id}');
+                  context.push('/home/playlist/${item.id}');
                 },
               );
             }).toList(),
@@ -403,7 +403,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 chapter: chapter,
                 parentContent: parent,
                 onTap: () {
-                  context.go('/home/chapter/${chapter.id}/${parent.id}');
+                  context.push('/home/chapter/${chapter.id}/${parent.id}');
                 },
               );
             }).toList(),

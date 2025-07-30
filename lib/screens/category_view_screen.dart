@@ -153,7 +153,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
         return ContentTile(
           content: item,
           onTap: () {
-            context.go('/home/playlist/${item.id}');
+            context.push('/home/playlist/${item.id}');
           },
         );
       },

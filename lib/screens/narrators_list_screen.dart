@@ -88,7 +88,7 @@ class _NarratorsListScreenState extends State<NarratorsListScreen> with TickerPr
           narrator: narrator,
           voiceType: voiceType,
           onTap: () {
-            context.go('/home/narrator/${narrator.id}');
+            context.push('/home/narrator/${narrator.id}');
           },
         );
       },

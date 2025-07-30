@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -6,7 +7,6 @@ import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/images/app_image.dart';
 import '../widgets/app_bar/app_app_bar.dart';
-import 'narrator_screen.dart';
 
 /// Narrators list screen with voice type tabs
 /// Shows narrators categorized by their voice type
@@ -88,11 +88,7 @@ class _NarratorsListScreenState extends State<NarratorsListScreen> with TickerPr
           narrator: narrator,
           voiceType: voiceType,
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NarratorScreen(narrator: narrator),
-              ),
-            );
+            context.go('/home/narrator/${narrator.id}');
           },
         );
       },

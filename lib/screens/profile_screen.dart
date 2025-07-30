@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
 import '../theme/app_icons.dart';
@@ -7,7 +8,6 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/inputs/app_text_field.dart';
-import 'subscription_screen.dart';
 
 /// User profile screen showing profile details and settings
 class ProfileScreen extends StatefulWidget {
@@ -184,11 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: double.infinity,
             child: AppSecondaryButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const SubscriptionScreen(),
-                  ),
-                );
+                context.go('/home/subscription');
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

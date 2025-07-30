@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/notifications/notification_area.dart';
@@ -13,10 +14,6 @@ import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/images/app_image.dart';
 import '../../theme/app_icons.dart';
 import '../../providers/theme_provider.dart';
-import '../search_screen.dart';
-import '../subscription_screen.dart';
-import '../profile_screen.dart';
-import '../../widgets/buttons/music_player_fab.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -57,13 +54,7 @@ class HomeTab extends ConsumerWidget {
               ),
               AppIconButton(
                 icon: AppIcons.search,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SearchScreen(),
-                    ),
-                  );
-                },
+                onPressed: () => context.go('/home/search'),
                 tooltip: 'Search',
               ),
               const SizedBox(width: AppSpacing.small),
@@ -75,13 +66,7 @@ class HomeTab extends ConsumerWidget {
               const SizedBox(width: AppSpacing.small),
               // Profile avatar
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/profile'),
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -119,24 +104,14 @@ class HomeTab extends ConsumerWidget {
             },
             onAction: (notification) {
               // Handle notification action - navigate to subscriptions page
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SubscriptionScreen(),
-                ),
-              );
+              context.go('/home/subscription');
             },
           ),
           
           // Premium upgrade banner
           PremiumBanner(
             benefits: MockData.getPremiumFeatures().take(3).toList(),
-            onAction: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SubscriptionScreen(),
-                ),
-              );
-            },
+            onAction: () => context.go('/home/subscription'),
           ),
           
           // Top shelf books
@@ -159,13 +134,7 @@ class HomeTab extends ConsumerWidget {
           // Premium exclusive content
           PremiumContentSection(
             features: MockData.getPremiumFeatures(),
-            onAction: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SubscriptionScreen(),
-                ),
-              );
-            },
+            onAction: () => context.go('/home/subscription'),
           ),
           
           // Audiobook of the week

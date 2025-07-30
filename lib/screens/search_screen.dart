@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
@@ -9,10 +10,6 @@ import '../widgets/search/author_result_tile.dart';
 import '../widgets/search/narrator_result_tile.dart';
 import '../widgets/search/chapter_result_tile.dart';
 import '../theme/app_icons.dart';
-import 'author_screen.dart';
-import 'narrator_screen.dart';
-import 'playlist_screen.dart';
-import 'chapter_screen.dart';
 
 /// Search screen with comprehensive search functionality
 /// Shows recently searched, trending topics, tags, and categorized search results
@@ -346,11 +343,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return AuthorResultTile(
                 author: author,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => AuthorScreen(author: author),
-                    ),
-                  );
+                  context.go('/home/author/${author.id}');
                 },
               );
             }).toList(),
@@ -369,11 +362,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return NarratorResultTile(
                 narrator: narrator,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NarratorScreen(narrator: narrator),
-                    ),
-                  );
+                  context.go('/home/narrator/${narrator.id}');
                 },
               );
             }).toList(),
@@ -392,11 +381,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return ContentTile(
                 content: item,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PlaylistScreen(content: item),
-                    ),
-                  );
+                  context.go('/home/playlist/${item.id}');
                 },
               );
             }).toList(),
@@ -418,14 +403,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 chapter: chapter,
                 parentContent: parent,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ChapterScreen(
-                        chapter: chapter,
-                        content: parent,
-                      ),
-                    ),
-                  );
+                  context.go('/home/chapter/${chapter.id}/${parent.id}');
                 },
               );
             }).toList(),

@@ -62,6 +62,13 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 - Audio metadata and transcript support
 - Hierarchical structure with chapter numbering
 
+**Audio Files & Waveform Data**
+- Audio file metadata including duration, bitrate, and format
+- Sample URL support for preview functionality
+- Waveform table stores visual representation data for audio players
+- Normalized peak values for efficient waveform rendering
+- Configurable sample rate and resolution for different quality needs
+
 **Authors & Narrators**
 - Separate entities for content creators and voice artists
 - Rich profile information including bios, awards, social links
@@ -172,6 +179,7 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 3. **Content ↔ Categories**: Many-to-many hierarchical relationships
 4. **User ↔ Subscriptions**: One-to-many with history tracking
 5. **Content ↔ Chapters**: One-to-many hierarchical structure
+6. **AudioFile ↔ Waveform**: One-to-one relationship for audio visualization data
 
 ### Cascade Behaviors
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
@@ -7,7 +8,6 @@ import '../widgets/text/app_text.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/app_bar/app_app_bar.dart';
-import 'playlist_screen.dart';
 
 /// Category view screen that displays books and podcasts for a specific category
 /// Shows content grouped by type (Books and Podcasts) with filtering options
@@ -153,11 +153,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
         return ContentTile(
           content: item,
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PlaylistScreen(content: item),
-              ),
-            );
+            context.go('/home/playlist/${item.id}');
           },
         );
       },

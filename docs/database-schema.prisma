@@ -192,11 +192,28 @@ model Chapter {
   narratorId      String?
   notes           Note[]
   recentlyPlayed  RecentlyPlayed[]
+  waveform        Waveform?
 
   @@unique([contentId, chapterNumber])
   @@unique([contentId, slug])
   @@index([contentId, chapterNumber])
   @@map("chapters")
+}
+
+model Waveform {
+  id           String   @id @default(cuid())
+  chapterId    String   @unique
+  peaks        Float[]  // Array of normalized peak values for visualization
+  sampleRate   Int      @default(44100) // Sample rate used for analysis
+  resolution   Int      @default(1000)  // Number of data points per second
+  channels     Int      @default(1)     // Number of audio channels
+  processedAt  DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@map("waveforms")
 }
 
 model Author {

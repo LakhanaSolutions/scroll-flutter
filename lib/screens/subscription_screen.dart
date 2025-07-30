@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
@@ -8,8 +9,6 @@ import '../widgets/buttons/app_buttons.dart';
 import '../widgets/dialogs/app_dialogs.dart';
 import 'subscription_history_screen.dart';
 import 'upgrade_plan_screen.dart';
-import 'terms_of_service_screen.dart';
-import 'privacy_policy_screen.dart';
 
 enum SubscriptionType { trial, basic, premium, family }
 
@@ -172,11 +171,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const TermsOfServiceScreen(),
-                          ),
-                        );
+                        context.go('/home/terms-of-service');
                       },
                       child: AppCaptionText(
                         'Terms of Service',
@@ -186,11 +181,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     const SizedBox(width: AppSpacing.medium),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const PrivacyPolicyScreen(),
-                          ),
-                        );
+                        context.go('/home/privacy-policy');
                       },
                       child: AppCaptionText(
                         'Privacy Policy',

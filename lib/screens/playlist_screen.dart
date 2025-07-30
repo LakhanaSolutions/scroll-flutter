@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
@@ -7,8 +8,6 @@ import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
-import 'chapter_screen.dart';
-import 'narrator_screen.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -438,11 +437,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           color: colorScheme.primary,
           tooltip: 'View Narrator',
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NarratorScreen(narrator: narrator),
-              ),
-            );
+            context.go('/home/narrator/${narrator.id}');
           },
         ),
       ],
@@ -486,11 +481,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   color: colorScheme.primary,
                   tooltip: 'View Narrator',
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => NarratorScreen(narrator: narrator),
-                      ),
-                    );
+                    context.go('/home/narrator/${narrator.id}');
                   },
                 ),
               ],
@@ -557,11 +548,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     color: colorScheme.primary,
                     tooltip: 'View Narrator',
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NarratorScreen(narrator: narrator),
-                        ),
-                      );
+                      context.go('/home/narrator/${narrator.id}');
                     },
                   ),
                 ],
@@ -616,14 +603,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     _ChapterTile(
                       chapter: chapter,
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ChapterScreen(
-                              chapter: chapter,
-                              content: widget.content,
-                            ),
-                          ),
-                        );
+                        context.go('/home/chapter/${chapter.id}/${widget.content.id}');
                       },
                     ),
                     // Add divider between chapters (except after the last one)

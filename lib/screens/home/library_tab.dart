@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
@@ -7,9 +8,6 @@ import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/dialogs/app_dialogs.dart';
-import '../author_screen.dart';
-import '../narrator_screen.dart';
-import '../note_screen.dart' as note_screen;
 
 enum NoteType { personal, highlight, thought }
 
@@ -268,11 +266,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 contentLabel: 'narrations',
                 isFollowing: narrator.isFollowing,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NarratorScreen(narrator: narrator),
-                    ),
-                  );
+                  context.go('/home/narrator/${narrator.id}');
                 },
                 onFollowToggle: () {
                   debugPrint('${narrator.isFollowing ? "Unfollowed" : "Followed"} narrator: ${narrator.name}');
@@ -300,11 +294,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 contentLabel: 'books',
                 isFollowing: author.isFollowing,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => AuthorScreen(author: author),
-                    ),
-                  );
+                  context.go('/home/author/${author.id}');
                 },
                 onFollowToggle: () {
                   debugPrint('${author.isFollowing ? "Unfollowed" : "Followed"} author: ${author.name}');
@@ -434,44 +424,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
       isBookmarked: false,
     );
 
-    // Convert the library note to the note screen format
-    // Map NoteType from library to note screen
-    note_screen.NoteType noteScreenType;
-    switch (note.type) {
-      case NoteType.personal:
-        noteScreenType = note_screen.NoteType.personal;
-        break;
-      case NoteType.highlight:
-        noteScreenType = note_screen.NoteType.highlight;
-        break;
-      case NoteType.thought:
-        noteScreenType = note_screen.NoteType.thought;
-        break;
-    }
-
-    final editableNote = note_screen.NoteItem(
-      id: note.id,
-      title: note.title,
-      content: note.content,
-      contentTitle: note.contentTitle,
-      author: note.author,
-      createdAt: note.createdAt,
-      modifiedAt: note.modifiedAt,
-      type: noteScreenType,
-      timestamp: note.timestamp,
-    );
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => note_screen.NoteScreen(
-          chapter: mockChapter,
-          content: mockContent,
-          currentPosition: _parseTimestamp(note.timestamp),
-          existingNote: editableNote,
-          wasAudioPlaying: false, // Not coming from active audio session
-        ),
-      ),
-    );
+    context.go('/home/note/${mockChapter.id}/${mockContent.id}?position=${_parseTimestamp(note.timestamp)}&wasPlaying=false');
   }
 
   double _parseTimestamp(String timestamp) {

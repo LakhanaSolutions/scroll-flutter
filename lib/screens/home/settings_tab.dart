@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siraaj/screens/manage_devices_screen.dart';
-import 'package:siraaj/screens/profile_screen.dart';
-import 'package:siraaj/screens/subscription_screen.dart';
-import 'package:siraaj/screens/theme_demo_screen.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_icons.dart';
 import '../../widgets/text/app_text.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/bottom_sheets/settings_modals.dart';
-import '../privacy_policy_screen.dart';
-import '../terms_of_service_screen.dart';
-import '../help_support_screen.dart';
-import '../send_feedback_screen.dart';
-import '../notifications_screen.dart';
-import '../about_screen.dart';
 
 /// Settings tab content widget
 /// Provides access to app settings, account management, and preferences
@@ -86,13 +77,7 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SubscriptionScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/subscription'),
                 isLast: true,
               ),
             ],
@@ -129,13 +114,7 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.notifications_rounded,
                 title: 'Notifications',
                 subtitle: 'Manage notification preferences',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationsScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/notifications'),
                 isLast: true,
               ),
             ],
@@ -151,26 +130,14 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.cloud_sync_rounded,
                 title: 'Manage Devices',
                 subtitle: 'Manage your devices',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ManageDevicesScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/manage-devices'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.palette_rounded,
                 title: 'Theme Demo',
                 subtitle: 'View design system components',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ThemeDemoScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/theme-demo'),
                 isLast: true,
               ),
             ],
@@ -216,26 +183,14 @@ class SettingsTab extends ConsumerWidget {
                 icon: Icons.help_outline_rounded,
                 title: 'Help & Support',
                 subtitle: 'Get help and contact support',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const HelpSupportScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/help-support'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.feedback_rounded,
                 title: 'Send Feedback',
                 subtitle: 'Share your thoughts with us',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SendFeedbackScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/send-feedback'),
               ),
               _buildListTile(
                 context,
@@ -257,38 +212,20 @@ class SettingsTab extends ConsumerWidget {
                 context,
                 icon: Icons.privacy_tip_rounded,
                 title: 'Privacy Policy',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const PrivacyPolicyScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/privacy-policy'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.description_rounded,
                 title: 'Terms of Service',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const TermsOfServiceScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/terms-of-service'),
               ),
               _buildListTile(
                 context,
                 icon: Icons.info_outline_rounded,
                 title: 'About',
                 subtitle: 'Version 1.0.0',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const AboutScreen(),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/home/about'),
                 isLast: true,
               ),
             ],
@@ -302,7 +239,12 @@ class SettingsTab extends ConsumerWidget {
             child: SizedBox(
               width: double.infinity,
               child: AppSecondaryButton(
-                onPressed: () => debugPrint('Sign out tapped'),
+                onPressed: () async {
+                  await ref.read(authProvider.notifier).logout();
+                  if (context.mounted) {
+                    context.go('/welcome');
+                  }
+                },
                 child: const Text('Sign Out'),
               ),
             ),
@@ -473,13 +415,7 @@ class SettingsTab extends ConsumerWidget {
             color: colorScheme.onSurfaceVariant,
             size: AppSpacing.iconMedium,
           ),
-          onTap: () {
-            Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-          },
+          onTap: () => context.go('/home/profile'),
         ),
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siraaj/screens/narrators_list_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
@@ -8,9 +8,6 @@ import '../../widgets/text/app_text.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/images/app_image.dart';
-import '../category_view_screen.dart';
-import '../authors_list_screen.dart';
-import '../../widgets/buttons/music_player_fab.dart';
 
 /// Categories tab content widget
 /// Displays Islamic categories with icons, item count, listening hours and arrow icons
@@ -85,11 +82,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         end: Alignment.bottomRight,
                       ),
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const AuthorsListScreen(),
-                          ),
-                        );
+                        context.go('/home/authors');
                       },
                     ),
                   ),
@@ -108,11 +101,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         end: Alignment.bottomRight,
                       ),
                        onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const NarratorsListScreen(),
-                          ),
-                        );
+                        context.go('/home/narrators');
                       },
                     ),
                   ),
@@ -142,11 +131,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 return _CategoryTile(
                   category: category,
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CategoryViewScreen(category: category),
-                      ),
-                    );
+                    context.go('/home/category/${category.id}');
                   },
                 );
               }),

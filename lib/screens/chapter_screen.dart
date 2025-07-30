@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
@@ -8,8 +9,6 @@ import '../widgets/buttons/app_buttons.dart';
 import '../widgets/waveform/audio_waveform.dart';
 import '../providers/audio_provider.dart';
 import './home/library_tab.dart';
-import 'narrator_screen.dart';
-import 'note_screen.dart';
 
 /// Chapter screen with audio player interface
 /// Shows book cover, title, narrator, audio controls, and details functionality
@@ -514,22 +513,13 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
               onPressed: () async {
                 // Check if audio was playing before pausing
                 final wasPlaying = ref.read(isPlayingProvider);
-                final navigator = Navigator.of(context);
+                final router = GoRouter.of(context);
                 
                 // Pause audio if playing and remember state
                 await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
                 
                 if (mounted) {
-                  await navigator.push(
-                    MaterialPageRoute(
-                      builder: (context) => NoteScreen(
-                        chapter: widget.chapter,
-                        content: widget.content,
-                        currentPosition: position.inSeconds.toDouble(),
-                        wasAudioPlaying: wasPlaying,
-                      ),
-                    ),
-                  );
+                  router.go('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
                 }
                 
                 // Resume audio if it was playing before navigation
@@ -611,11 +601,7 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
 
   void _showSingleNarratorInfo(NarratorData narrator) {
     Navigator.of(context).pop(); // Close the bottom sheet first
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NarratorScreen(narrator: narrator),
-      ),
-    );
+    context.go('/home/narrator/${narrator.id}');
   }
 
   @override
@@ -970,11 +956,7 @@ class _SpeakersBottomSheet extends StatelessWidget {
                     ),
                     onTap: () {
                       Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NarratorScreen(narrator: speaker),
-                        ),
-                      );
+                      context.go('/home/narrator/${speaker.id}');
                     },
                   );
                 }),

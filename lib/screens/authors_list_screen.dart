@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -6,7 +7,6 @@ import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/images/app_image.dart';
 import '../widgets/app_bar/app_app_bar.dart';
-import 'author_screen.dart';
 
 /// Authors list screen with language tabs
 /// Shows authors categorized by their primary language
@@ -87,11 +87,7 @@ class _AuthorsListScreenState extends State<AuthorsListScreen> with TickerProvid
         return _AuthorTile(
           author: author,
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AuthorScreen(author: author),
-              ),
-            );
+            context.go('/home/author/${author.id}');
           },
         );
       },

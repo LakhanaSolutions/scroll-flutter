@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
-import '../../screens/chapter_screen.dart';
 import '../../providers/audio_provider.dart';
 import 'app_buttons.dart';
 
@@ -15,14 +15,7 @@ class MusicPlayerFab extends ConsumerWidget {
     final mockContent = MockData.getCategoryContent('1').first;
     final mockChapter = mockContent.chapters.first;
     
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChapterScreen(
-          chapter: mockChapter,
-          content: mockContent,
-        ),
-      ),
-    );
+    context.go('/home/chapter/${mockChapter.id}/${mockContent.id}');
   }
 
   @override

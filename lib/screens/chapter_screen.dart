@@ -543,7 +543,7 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
 }
 
 /// Details bottom sheet with timestamps, bookmarks, notes, and narrator info
-class _DetailsBottomSheet extends StatefulWidget {
+class _DetailsBottomSheet extends ConsumerStatefulWidget {
   final ChapterData chapter;
   final ContentItemData content;
   final double currentPosition;
@@ -555,10 +555,10 @@ class _DetailsBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<_DetailsBottomSheet> createState() => _DetailsBottomSheetState();
+  ConsumerState<_DetailsBottomSheet> createState() => _DetailsBottomSheetState();
 }
 
-class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
+class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
   final List<Map<String, String>> _timestamps = [
     {'index': '1', 'title': 'Introduction', 'duration': '5:30'},
     {'index': '2', 'title': 'Key Concepts', 'duration': '7:15'},
@@ -573,7 +573,35 @@ class _DetailsBottomSheetState extends State<_DetailsBottomSheet> {
 
   void _jumpToTimestamp(String timestamp, String title) {
     Navigator.of(context).pop();
-    debugPrint('Jump to timestamp: $timestamp - $title');
+    
+    // Parse the timestamp string (e.g., "5:30" or "1:23:45") to Duration
+    final parts = timestamp.split(':');
+    Duration seekPosition;
+    
+    if (parts.length == 2) {
+      // Format: MM:SS
+      final minutes = int.tryParse(parts[0]) ?? 0;
+      final seconds = int.tryParse(parts[1]) ?? 0;
+      seekPosition = Duration(minutes: minutes, seconds: seconds);
+    } else if (parts.length == 3) {
+      // Format: HH:MM:SS
+      final hours = int.tryParse(parts[0]) ?? 0;
+      final minutes = int.tryParse(parts[1]) ?? 0;
+      final seconds = int.tryParse(parts[2]) ?? 0;
+      seekPosition = Duration(hours: hours, minutes: minutes, seconds: seconds);
+    } else {
+      debugPrint('Invalid timestamp format: $timestamp');
+      return;
+    }
+    
+    // Validate timestamp is within audio duration
+    final duration = ref.read(audioDurationProvider);
+    if (duration != null && seekPosition <= duration) {
+      ref.read(audioPlayerProvider.notifier).seek(seekPosition);
+      debugPrint('Seeking to timestamp: $timestamp ($seekPosition) - $title');
+    } else {
+      debugPrint('Timestamp $timestamp exceeds audio duration ${duration?.toString() ?? 'unknown'}');
+    }
   }
 
 

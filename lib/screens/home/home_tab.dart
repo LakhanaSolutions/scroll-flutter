@@ -10,10 +10,9 @@ import '../../widgets/mood/mood_selector.dart';
 import '../../widgets/premium/premium_content_section.dart';
 import '../../widgets/banners/audiobook_of_week.dart';
 import '../../widgets/text/app_text.dart';
-import '../../widgets/buttons/app_buttons.dart';
 import '../../widgets/images/app_image.dart';
 import '../../theme/app_icons.dart';
-import '../../providers/theme_provider.dart';
+import '../../providers/subscription_provider.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -24,7 +23,7 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final themeState = ref.watch(themeProvider);
+    final shouldShowPremiumAds = ref.watch(shouldShowPremiumAdsProvider);
 
     return Scaffold(
       body: Column(
@@ -52,18 +51,6 @@ class HomeTab extends ConsumerWidget {
               const Expanded(
                 child: AppTitleText('Home'),
               ),
-              AppIconButton(
-                icon: AppIcons.search,
-                onPressed: () => context.go('/home/search'),
-                tooltip: 'Search',
-              ),
-              const SizedBox(width: AppSpacing.small),
-              AppIconButton(
-                icon: themeState.isDark ? AppIcons.lightMode : AppIcons.darkMode,
-                onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
-                tooltip: 'Toggle theme',
-              ),
-              const SizedBox(width: AppSpacing.small),
               // Profile avatar
               GestureDetector(
                 onTap: () => context.go('/home/profile'),
@@ -95,6 +82,45 @@ class HomeTab extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: AppSpacing.medium),
+                
+                // Search card
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+                  child: GestureDetector(
+                    onTap: () => context.go('/home/search'),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                        border: Border.all(
+                          color: colorScheme.outline.withValues(alpha: 0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            AppIcons.search,
+                            color: colorScheme.onSurfaceVariant,
+                            size: AppSpacing.iconMedium,
+                          ),
+                          const SizedBox(width: AppSpacing.medium),
+                          Expanded(
+                            child: AppBodyText(
+                              'Search books, authors, narrators...',
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: AppSpacing.large),
+          
           // Notification area
           NotificationArea(
             notifications: MockData.getNotifications(),
@@ -108,11 +134,12 @@ class HomeTab extends ConsumerWidget {
             },
           ),
           
-          // Premium upgrade banner
-          PremiumBanner(
-            benefits: MockData.getPremiumFeatures().take(3).toList(),
-            onAction: () => context.go('/home/subscription'),
-          ),
+          // Premium upgrade banner (only show to free trial users)
+          if (shouldShowPremiumAds)
+            PremiumBanner(
+              benefits: MockData.getPremiumFeatures().take(3).toList(),
+              onAction: () => context.go('/home/subscription'),
+            ),
           
           // Top shelf books
           BookShelf(
@@ -131,17 +158,19 @@ class HomeTab extends ConsumerWidget {
             },
           ),
           
-          // Premium exclusive content
-          PremiumContentSection(
-            features: MockData.getPremiumFeatures(),
-            onAction: () => context.go('/home/subscription'),
-          ),
+          // Premium exclusive content (only show to free trial users)
+          if (shouldShowPremiumAds)
+            PremiumContentSection(
+              features: MockData.getPremiumFeatures(),
+              onAction: () => context.go('/home/subscription'),
+            ),
           
           // Audiobook of the week
           AudiobookOfWeekBanner(
             book: MockData.getAudiobookOfTheWeek(),
             onAction: () {
-              debugPrint('Listen to audiobook of the week');
+              final audiobook = MockData.getAudiobookOfTheWeek();
+              context.go('/home/playlist/${audiobook.id}');
             },
           ),
           

@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:siraaj/screens/auth/auth_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/theme_demo_screen.dart';
-import '../screens/auth/welcome_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/otp_verification_screen.dart';
 import '../screens/subscription_screen.dart';
@@ -53,7 +53,7 @@ final appRouter = GoRouter(
     // Auth routes
     GoRoute(
       path: '/welcome',
-      builder: (context, state) => const WelcomeScreen(),
+      builder: (context, state) => const AuthScreen(),
     ),
     GoRoute(
       path: '/login',

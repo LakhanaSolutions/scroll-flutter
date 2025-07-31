@@ -64,8 +64,10 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen>
       _otp = otp;
     });
     
-    // Auto-verify when OTP is complete
-    _handleVerifyOTP();
+    // Only auto-verify if OTP is exactly 6 digits
+    if (otp.length == 6 && RegExp(r'^\d{6}$').hasMatch(otp)) {
+      _handleVerifyOTP();
+    }
   }
 
   void _handleVerifyOTP() {

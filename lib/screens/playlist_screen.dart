@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
@@ -10,6 +11,7 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/trial/glimpse_into_premium_stats.dart';
+import '../widgets/reviews/add_review_card.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -85,6 +87,8 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
             _buildNarratorSection(context),
             // Chapters list section
             _buildChaptersSection(context),
+            // Reviews section
+            _buildReviewsSection(context),
           ],
         ),
       ),
@@ -312,6 +316,23 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return const GlimpseIntoPremiumStats();
   }
 
+  Widget _buildReviewsSection(BuildContext context) {
+    final reviewSummary = MockData.getReviewSummary(widget.content.id);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      child: AddReviewCard(
+        contentId: widget.content.id,
+        contentType: 'playlist',
+        contentTitle: widget.content.title,
+        reviewSummary: reviewSummary,
+        onReviewTap: () {
+          context.push('/home/reviews/content/${widget.content.id}');
+        },
+      ),
+    );
+  }
+
   Widget _buildActionsSection(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -327,6 +348,8 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -438,6 +461,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -636,6 +660,8 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return Container(
       margin: const EdgeInsets.fromLTRB(AppSpacing.medium, 0, AppSpacing.medium, AppSpacing.large),
       child: AppCard(
+        // elevation: 0,
+        // gradient: AppGradients.planGradient(colorScheme, 'Glimpse'),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(

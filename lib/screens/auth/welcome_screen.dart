@@ -98,6 +98,7 @@ class WelcomeScreen extends StatelessWidget {
                                 ? screenSize.width * 0.6 
                                 : screenSize.width * 0.8,
                         height: isTablet ? 60 : 56,
+                        
                         onPressed: () => _handleGetStarted(context),
                       ),
                     ),

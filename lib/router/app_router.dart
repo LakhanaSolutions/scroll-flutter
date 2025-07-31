@@ -22,6 +22,7 @@ import '../screens/author_screen.dart';
 import '../screens/note_screen.dart';
 import '../screens/narrators_list_screen.dart';
 import '../screens/authors_list_screen.dart';
+import '../screens/reviews_screen.dart';
 import '../data/mock_data.dart';
 import '../services/token_service.dart';
 
@@ -227,6 +228,54 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'authors',
           builder: (context, state) => const AuthorsListScreen(),
+        ),
+        GoRoute(
+          path: 'reviews/:contentType/:contentId',
+          builder: (context, state) {
+            final contentType = state.pathParameters['contentType']!;
+            final contentId = state.pathParameters['contentId']!;
+            
+            // Get content title based on type and ID
+            String contentTitle = 'Content';
+            
+            switch (contentType) {
+              case 'content':
+                // Get content from all categories
+                final allContent = [
+                  ...MockData.getCategoryContent('1'),
+                  ...MockData.getCategoryContent('2'),
+                  ...MockData.getCategoryContent('3'),
+                ];
+                final content = allContent.firstWhere(
+                  (item) => item.id == contentId,
+                  orElse: () => allContent.first,
+                );
+                contentTitle = content.title;
+                break;
+              case 'author':
+                final authors = MockData.getMockAuthors();
+                final author = authors.firstWhere(
+                  (a) => a.id == contentId,
+                  orElse: () => authors.first,
+                );
+                contentTitle = author.name;
+                break;
+              case 'narrator':
+                final narrators = MockData.getMockNarrators();
+                final narrator = narrators.firstWhere(
+                  (n) => n.id == contentId,
+                  orElse: () => narrators.first,
+                );
+                contentTitle = narrator.name;
+                break;
+            }
+            
+            return ReviewsScreen(
+              contentType: contentType,
+              contentId: contentId,
+              contentTitle: contentTitle,
+            );
+          },
         ),
       ],
     ),

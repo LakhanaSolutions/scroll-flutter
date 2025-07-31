@@ -73,6 +73,7 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
             width: double.infinity,
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: AppCard(
+              elevation: 0,
               gradient: context.surfaceGradient,
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.medium),

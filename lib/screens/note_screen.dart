@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
@@ -7,6 +8,7 @@ import '../widgets/buttons/app_buttons.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/inputs/app_text_field.dart';
 import '../widgets/dialogs/app_dialogs.dart';
+import '../providers/audio_provider.dart';
 
 /// Note colors for categorization
 enum NoteColor {
@@ -54,7 +56,7 @@ class NoteItem {
 }
 
 /// Note screen for adding timestamped notes during audio playback
-class NoteScreen extends StatefulWidget {
+class NoteScreen extends ConsumerStatefulWidget {
   final ChapterData chapter;
   final ContentItemData content;
   final double currentPosition;
@@ -71,10 +73,10 @@ class NoteScreen extends StatefulWidget {
   });
 
   @override
-  State<NoteScreen> createState() => _NoteScreenState();
+  ConsumerState<NoteScreen> createState() => _NoteScreenState();
 }
 
-class _NoteScreenState extends State<NoteScreen> {
+class _NoteScreenState extends ConsumerState<NoteScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   NoteColor _selectedColor = NoteColor.blue;
@@ -135,7 +137,7 @@ class _NoteScreenState extends State<NoteScreen> {
     }
   }
 
-  void _saveNote() {
+  Future<void> _saveNote() async {
     if (_titleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -169,10 +171,17 @@ class _NoteScreenState extends State<NoteScreen> {
       ),
     );
 
-    Navigator.of(context).pop();
+    // Resume audio if it was playing when we navigated here
+    if (widget.wasAudioPlaying) {
+      await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+    }
+    
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
-  void _discardChanges() {
+  Future<void> _discardChanges() async {
     if (_hasUnsavedChanges) {
       AppAlertDialog.show(
         context,
@@ -184,9 +193,17 @@ class _NoteScreenState extends State<NoteScreen> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Close note screen
+              
+              // Resume audio if it was playing when we navigated here
+              if (widget.wasAudioPlaying) {
+                await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+              }
+              
+              if (mounted) {
+                Navigator.of(context).pop(); // Close note screen
+              }
             },
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
@@ -196,7 +213,14 @@ class _NoteScreenState extends State<NoteScreen> {
         ],
       );
     } else {
-      Navigator.of(context).pop();
+      // Resume audio if it was playing when we navigated here
+      if (widget.wasAudioPlaying) {
+        await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
+      }
+      
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -271,6 +295,7 @@ class _NoteScreenState extends State<NoteScreen> {
     );
 
     return AppCard(
+      elevation: 0,
       child: Row(
         children: [
           // Color indicator bar

@@ -5,6 +5,52 @@ import 'package:flutter/material.dart';
 
 enum NotificationType { info, warning, success, error }
 
+/// Review data model for content reviews
+class ReviewData {
+  final String id;
+  final String userId;
+  final String userName;
+  final String userAvatar;
+  final double rating;
+  final String reviewText;
+  final DateTime createdAt;
+  final int upvotes;
+  final int downvotes;
+  final bool isUserUpvoted;
+  final bool isUserDownvoted;
+  final bool isOwnReview;
+
+  ReviewData({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    this.userAvatar = '',
+    required this.rating,
+    required this.reviewText,
+    required this.createdAt,
+    this.upvotes = 0,
+    this.downvotes = 0,
+    this.isUserUpvoted = false,
+    this.isUserDownvoted = false,
+    this.isOwnReview = false,
+  });
+}
+
+/// Review summary data for content
+class ReviewSummaryData {
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution; // rating -> count
+  final ReviewData? userReview;
+
+  ReviewSummaryData({
+    required this.averageRating,
+    required this.totalReviews,
+    required this.ratingDistribution,
+    this.userReview,
+  });
+}
+
 class NotificationData {
   final String id;
   final String title;
@@ -1008,5 +1054,123 @@ class MockData {
     final allAuthors = getMockAuthors();
     // Return authors that are being followed (simulate some being followed)
     return allAuthors.where((author) => author.isFollowing).toList();
+  }
+
+  // Reviews-related mock data
+  static List<ReviewData> getMockReviews(String contentId) {
+    return [
+      ReviewData(
+        id: 'review_1',
+        userId: 'user_1',
+        userName: 'Ahmad Mahmoud',
+        userAvatar: '',
+        rating: 5.0,
+        reviewText: 'Absolutely amazing content! The narrator\'s voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.',
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        upvotes: 15,
+        downvotes: 1,
+        isUserUpvoted: false,
+        isUserDownvoted: false,
+        isOwnReview: false,
+      ),
+      ReviewData(
+        id: 'review_2',
+        userId: 'user_2',  
+        userName: 'Fatima Hassan',
+        userAvatar: '',
+        rating: 4.0,
+        reviewText: 'Very insightful and well-presented. The content is authentic and based on reliable sources. My only minor complaint is that some chapters felt a bit long.',
+        createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        upvotes: 8,
+        downvotes: 0,
+        isUserUpvoted: true,
+        isUserDownvoted: false,
+        isOwnReview: false,
+      ),
+      ReviewData(
+        id: 'review_3',
+        userId: 'current_user',
+        userName: 'You',
+        userAvatar: '',
+        rating: 4.5,
+        reviewText: 'Great collection of Islamic teachings. The audio quality is excellent and the content is very educational. Would love to see more books by this author.',
+        createdAt: DateTime.now().subtract(const Duration(days: 7)),
+        upvotes: 12,
+        downvotes: 0,
+        isUserUpvoted: false,
+        isUserDownvoted: false,
+        isOwnReview: true,
+      ),
+      ReviewData(
+        id: 'review_4',
+        userId: 'user_4',
+        userName: 'Omar Abdullah',
+        userAvatar: '',
+        rating: 3.5,
+        reviewText: 'Good content overall, but I felt some topics could have been explained in more detail. The narrator did a decent job.',
+        createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        upvotes: 5,
+        downvotes: 2,
+        isUserUpvoted: false,
+        isUserDownvoted: false,
+        isOwnReview: false,
+      ),
+      ReviewData(
+        id: 'review_5',
+        userId: 'user_5',
+        userName: 'Aisha Khan',
+        userAvatar: '',
+        rating: 5.0,
+        reviewText: 'Excellent resource for learning! The way complex topics are explained makes it easy to understand. Perfect for both beginners and advanced learners.',
+        createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        upvotes: 20,
+        downvotes: 0,
+        isUserUpvoted: false,
+        isUserDownvoted: false,
+        isOwnReview: false,
+      ),
+    ];
+  }
+
+  static ReviewSummaryData getReviewSummary(String contentId) {
+    final reviews = getMockReviews(contentId);
+    final totalReviews = reviews.length;
+    final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+    
+    // Calculate rating distribution
+    final ratingDistribution = <int, int>{};
+    for (int i = 1; i <= 5; i++) {
+      ratingDistribution[i] = reviews.where((r) => r.rating.floor() == i).length;
+    }
+    
+    // Find user's review if exists
+    final userReview = reviews.where((r) => r.isOwnReview).firstOrNull;
+    
+    return ReviewSummaryData(
+      averageRating: averageRating,
+      totalReviews: totalReviews,
+      ratingDistribution: ratingDistribution,
+      userReview: userReview,
+    );
+  }
+
+  /// Check if user can review content based on listening progress
+  static bool canUserReview(String contentId, double listeningProgress) {
+    // User can only review if they've listened to more than 50% of the content
+    return listeningProgress > 0.5;
+  }
+
+  /// Get listening progress for content (mock data)
+  static double getListeningProgress(String contentId) {
+    // Mock progress data - in real app this would come from user's listening history
+    final mockProgress = <String, double>{
+      'default_1': 0.75, // 75% listened
+      'hadith_1': 0.25, // 25% listened
+      'seerah_1': 0.90, // 90% listened
+      'fiqh_1': 0.30, // 30% listened
+      'aqeedah_1': 0.60, // 60% listened
+    };
+    
+    return mockProgress[contentId] ?? 0.0;
   }
 }

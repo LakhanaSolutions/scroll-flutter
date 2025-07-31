@@ -49,7 +49,23 @@ class _OTPInputFieldState extends State<OTPInputField> {
     super.dispose();
   }
 
+  void clearFields() {
+    for (final controller in _controllers) {
+      controller.clear();
+    }
+    _focusNodes[0].requestFocus();
+  }
+
   void _onChanged(int index, String value) {
+    // Prevent multiple characters from being entered
+    if (value.length > 1) {
+      _controllers[index].text = value[0];
+      _controllers[index].selection = TextSelection.fromPosition(
+        TextPosition(offset: _controllers[index].text.length),
+      );
+      return;
+    }
+    
     if (value.isNotEmpty) {
       if (index < widget.length - 1) {
         _focusNodes[index + 1].requestFocus();
@@ -61,7 +77,8 @@ class _OTPInputFieldState extends State<OTPInputField> {
     final otp = _controllers.map((c) => c.text).join();
     widget.onChanged(otp);
 
-    if (otp.length == widget.length) {
+    // Only trigger completion if we have exactly the required length and all digits
+    if (otp.length == widget.length && RegExp(r'^\d+$').hasMatch(otp)) {
       widget.onCompleted(otp);
     }
   }
@@ -70,6 +87,8 @@ class _OTPInputFieldState extends State<OTPInputField> {
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.backspace) {
       if (_controllers[index].text.isEmpty && index > 0) {
         _focusNodes[index - 1].requestFocus();
+        // Clear the previous field's text to allow overwriting
+        _controllers[index - 1].clear();
       }
     }
   }
@@ -93,7 +112,12 @@ class _OTPInputFieldState extends State<OTPInputField> {
                 borderRadius: BorderRadius.circular(12),
                 border: widget.errorText != null
                     ? Border.all(color: theme.colorScheme.error, width: 1.5)
-                    : Border.all(color: Colors.transparent),
+                    : Border.all(
+                        color: _focusNodes[index].hasFocus 
+                            ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                            : theme.colorScheme.outline.withValues(alpha: 0.2),
+                        width: 1
+                      ),
                 boxShadow: [
                   BoxShadow(
                     color: theme.colorScheme.shadow.withValues(alpha: 0.05),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -8,6 +10,7 @@ import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/images/app_image.dart';
+import '../widgets/reviews/add_review_card.dart';
 
 /// Author profile screen showing detailed information about an author
 /// Displays bio, books, awards, and other relevant information
@@ -75,6 +78,8 @@ class _AuthorScreenState extends State<AuthorScreen> {
             _buildQuoteSection(context),
             // Books by this author
             _buildBooksSection(context),
+            // Reviews section
+            _buildReviewsSection(context),
             const SizedBox(height: AppSpacing.large),
           ],
         ),
@@ -191,6 +196,8 @@ class _AuthorScreenState extends State<AuthorScreen> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(
@@ -273,6 +280,23 @@ class _AuthorScreenState extends State<AuthorScreen> {
     );
   }
 
+  Widget _buildReviewsSection(BuildContext context) {
+    final reviewSummary = MockData.getReviewSummary(widget.author.id);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      child: AddReviewCard(
+        contentId: widget.author.id,
+        contentType: 'author',
+        contentTitle: widget.author.name,
+        reviewSummary: reviewSummary,
+        onReviewTap: () {
+          context.push('/home/reviews/author/${widget.author.id}');
+        },
+      ),
+    );
+  }
+
   Widget _buildAwardsSection(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -280,6 +304,7 @@ class _AuthorScreenState extends State<AuthorScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(
@@ -332,6 +357,7 @@ class _AuthorScreenState extends State<AuthorScreen> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(

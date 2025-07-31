@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../theme/app_spacing.dart';
@@ -78,7 +79,6 @@ class SettingsTab extends ConsumerWidget {
                   ),
                 ),
                 onTap: () => context.push('/home/subscription'),
-                isLast: true,
               ),
             ],
           ),
@@ -115,7 +115,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Notifications',
                 subtitle: 'Manage notification preferences',
                 onTap: () => context.push('/home/notifications'),
-                isLast: true,
               ),
             ],
           ),
@@ -138,7 +137,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Theme Demo',
                 subtitle: 'View design system components',
                 onTap: () => context.push('/home/theme-demo'),
-                isLast: true,
               ),
             ],
           ),
@@ -168,7 +166,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Playback Speed',
                 subtitle: '1.0x',
                 onTap: () => showPlaybackSpeedBottomSheet(context),
-                isLast: true,
               ),
             ],
           ),
@@ -198,7 +195,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'Rate App',
                 subtitle: 'Rate us on the App Store',
                 onTap: () => debugPrint('Rate app tapped'),
-                isLast: true,
               ),
             ],
           ),
@@ -226,7 +222,6 @@ class SettingsTab extends ConsumerWidget {
                 title: 'About',
                 subtitle: 'Version 1.0.0',
                 onTap: () => context.push('/home/about'),
-                isLast: true,
               ),
             ],
           ),
@@ -284,8 +279,18 @@ class SettingsTab extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
           child: AppCard(
             padding: EdgeInsets.zero,
-            child: Column(
-              children: children,
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: children.length,
+              itemBuilder: (context, index) => children[index],
+              separatorBuilder: (context, index) => Divider(
+                height: 1,
+                thickness: 1,
+                color: colorScheme.outline.withOpacity(0.1),
+                indent: AppSpacing.medium,
+                endIndent: AppSpacing.medium,
+              ),
             ),
           ),
         ),
@@ -301,43 +306,33 @@ class SettingsTab extends ConsumerWidget {
     String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
-    bool isLast = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: !isLast ? Border(
-          bottom: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ) : null,
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: colorScheme.onSurfaceVariant,
+        size: AppSpacing.iconMedium,
       ),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: colorScheme.onSurfaceVariant,
-          size: AppSpacing.iconMedium,
-        ),
-        title: AppBodyText(title),
-        subtitle: subtitle != null 
-            ? AppCaptionText(
-                subtitle,
-                color: colorScheme.onSurfaceVariant,
-              )
-            : null,
-        trailing: trailing ?? Icon(
-          Icons.chevron_right_rounded,
-          color: colorScheme.onSurfaceVariant,
-          size: AppSpacing.iconMedium,
-        ),
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.medium,
-          vertical: AppSpacing.small,
-        ),
+      title: AppBodyText(title),
+      subtitle: subtitle != null
+          ? AppCaptionText(
+              subtitle,
+              color: colorScheme.onSurfaceVariant,
+            )
+          : null,
+      trailing: trailing ??
+          Icon(
+            Icons.chevron_right_rounded,
+            color: colorScheme.onSurfaceVariant,
+            size: AppSpacing.iconMedium,
+          ),
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.medium,
+        vertical: AppSpacing.small,
       ),
     );
   }
@@ -350,6 +345,8 @@ class SettingsTab extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
+        gradient: AppGradients.planGradient(colorScheme, 'Scholar'),
         padding: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.all(AppSpacing.medium),
@@ -366,7 +363,7 @@ class SettingsTab extends ConsumerWidget {
               size: AppSpacing.iconLarge,
             ),
           ),
-          title: const AppSubtitleText('Ahmed Al-Rashid'),
+          title: const AppSubtitleText('Mubashir Younus'),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

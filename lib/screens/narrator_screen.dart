@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_extensions.dart';
@@ -8,6 +10,7 @@ import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
 import '../widgets/images/app_image.dart';
+import '../widgets/reviews/add_review_card.dart';
 
 /// Narrator/Speaker profile screen showing detailed information
 /// Displays bio, narrations, awards, voice samples, and other relevant information
@@ -83,6 +86,8 @@ class _NarratorScreenState extends State<NarratorScreen> {
               _buildAwardsSection(context),
             // Narrations/Content
             _buildContentSection(context),
+            // Reviews section
+            _buildReviewsSection(context),
             const SizedBox(height: AppSpacing.large),
           ],
         ),
@@ -203,6 +208,8 @@ class _NarratorScreenState extends State<NarratorScreen> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -321,6 +328,23 @@ class _NarratorScreenState extends State<NarratorScreen> {
     );
   }
 
+  Widget _buildReviewsSection(BuildContext context) {
+    final reviewSummary = MockData.getReviewSummary(widget.narrator.id);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      child: AddReviewCard(
+        contentId: widget.narrator.id,
+        contentType: 'narrator',
+        contentTitle: widget.narrator.name,
+        reviewSummary: reviewSummary,
+        onReviewTap: () {
+          context.push('/home/reviews/narrator/${widget.narrator.id}');
+        },
+      ),
+    );
+  }
+
   Widget _buildVoiceSampleSection(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -328,6 +352,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -397,6 +422,7 @@ class _NarratorScreenState extends State<NarratorScreen> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(

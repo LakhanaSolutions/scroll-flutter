@@ -561,12 +561,12 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
                     // Pause audio if playing and remember state
                     await ref.read(audioPlayerProvider.notifier).pauseForNavigation();
                     
+                    // Wait a moment to ensure the pause completes
+                    await Future.delayed(const Duration(milliseconds: 100));
+                    
                     if (mounted) {
                       router.push('/home/note/${widget.chapter.id}/${widget.content.id}?position=${position.inSeconds.toDouble()}&wasPlaying=$wasPlaying');
                     }
-                    
-                    // Resume audio if it was playing before navigation
-                    await ref.read(audioPlayerProvider.notifier).resumeFromNavigation();
                   },
                   icon: Icon(
                     Icons.note_add_rounded,

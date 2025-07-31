@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/app_gradients.dart';
 import '../../providers/subscription_provider.dart';
 import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
@@ -38,6 +39,8 @@ class GlimpseIntoPremiumStats extends ConsumerWidget {
     return AppCard(
       margin: margin ?? const EdgeInsets.all(AppSpacing.medium),
       padding: padding ?? const EdgeInsets.all(AppSpacing.large),
+      elevation: 0, // Remove shadow
+      gradient: AppGradients.premiumGradient(colorScheme), // Apply premium gradient
       child: isCompact ? _buildCompactLayout(context, trialUsage, colorScheme) : _buildFullLayout(context, trialUsage, colorScheme),
     );
   }
@@ -289,19 +292,27 @@ class GlimpseIntoPremiumStatsFAB extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return FloatingActionButton.extended(
-      onPressed: onPressed,
-      backgroundColor: colorScheme.primaryContainer,
-      foregroundColor: colorScheme.onPrimaryContainer,
-      icon: Icon(
-        Icons.star_rounded,
-        size: AppSpacing.iconSmall,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: AppGradients.premiumGradient(colorScheme),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       ),
-      label: Text(
-        '${trialUsage.remainingMinutes} min left',
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.w600,
+      child: FloatingActionButton.extended(
+        onPressed: onPressed,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.amber.shade800,
+        elevation: 0, // Remove shadow
+        icon: Icon(
+          Icons.star_rounded,
+          size: AppSpacing.iconSmall,
+          color: Colors.amber.shade800,
+        ),
+        label: Text(
+          '${trialUsage.remainingMinutes} min left',
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: Colors.amber.shade800,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

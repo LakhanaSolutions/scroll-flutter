@@ -60,55 +60,55 @@ class AppColors {
     surfaceTint: Color(0xFF6750A4),
   );
 
-  /// Dark color scheme following Material You 3 design tokens
+  /// Dark color scheme following the provided CSS dark theme variables
   static const ColorScheme darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
     
-    // Primary colors
-    primary: Color(0xFF9A8CBF),
-    onPrimary: Color(0xFF381E72),
-    primaryContainer: Color(0xFF4F378A),
-    onPrimaryContainer: Color(0xFFE9DDFF),
+    // Primary colors - based on CSS --primary: #e05d38 (orange)
+    primary: Color(0xFFe05d38),
+    onPrimary: Color(0xFFffffff), // CSS --primary-foreground
+    primaryContainer: Color(0xFFb8472a), // Darker variant of primary
+    onPrimaryContainer: Color(0xFFffffff),
     
-    // Secondary colors
-    secondary: Color(0xFFCBC2DB),
-    onSecondary: Color(0xFF332D41),
-    secondaryContainer: Color(0xFF4A4458),
-    onSecondaryContainer: Color(0xFFE8DEF8),
+    // Secondary colors - based on CSS --secondary: #2a303e
+    secondary: Color(0xFF2a303e),
+    onSecondary: Color(0xFFe5e5e5), // CSS --secondary-foreground
+    secondaryContainer: Color(0xFF2a3656), // CSS --accent
+    onSecondaryContainer: Color(0xFFbfdbfe), // CSS --accent-foreground
     
-    // Tertiary colors
-    tertiary: Color(0xFFF2B7C4),
-    onTertiary: Color(0xFF4B2532),
-    tertiaryContainer: Color(0xFF643B48),
-    onTertiaryContainer: Color(0xFFFFD9E3),
+    // Tertiary colors - using chart colors for variety
+    tertiary: Color(0xFF86a7c8), // CSS --chart-1
+    onTertiary: Color(0xFF1a1a1a),
+    tertiaryContainer: Color(0xFF5a7ca6), // CSS --chart-3
+    onTertiaryContainer: Color(0xFFffffff),
     
-    // Error colors
-    error: Color(0xFFFFB4AB),
-    onError: Color(0xFF690005),
-    errorContainer: Color(0xFF93000A),
-    onErrorContainer: Color(0xFFFFDAD6),
+    // Error colors - based on CSS --destructive: #ef4444
+    error: Color(0xFFef4444),
+    onError: Color(0xFFffffff), // CSS --destructive-foreground
+    errorContainer: Color(0xFFdc2626), // Darker variant
+    onErrorContainer: Color(0xFFffffff),
     
-    // Background colors
-    surface: Color(0xFF141218),
-    onSurface: Color(0xFFE6E0E9),
-    surfaceContainerLowest: Color(0xFF0F0D13),
-    surfaceContainerLow: Color(0xFF1C1B1E),
-    surfaceContainer: Color(0xFF201F22),
-    surfaceContainerHigh: Color(0xFF2B2930),
-    surfaceContainerHighest: Color(0xFF36343B),
-    onSurfaceVariant: Color(0xFFCAC4CF),
+    // Background colors - based on CSS variables
+    surface: Color(0xFF1c2433), // CSS --background
+    onSurface: Color(0xFFe5e5e5), // CSS --foreground
+    surfaceContainerLowest: Color(0xFF161e2b), // Darker than background
+    surfaceContainerLow: Color(0xFF2a3040), // CSS --card
+    surfaceContainer: Color(0xFF2a303e), // CSS --muted/secondary
+    surfaceContainerHigh: Color(0xFF262b38), // CSS --popover
+    surfaceContainerHighest: Color(0xFF2a3656), // CSS --accent
+    onSurfaceVariant: Color(0xFFa3a3a3), // CSS --muted-foreground
     
-    // Outline colors
-    outline: Color(0xFF948F99),
-    outlineVariant: Color(0xFF49454E),
+    // Outline colors - based on CSS --border and ring
+    outline: Color(0xFF3d4354), // CSS --border/input
+    outlineVariant: Color(0xFF2a303e), // Subtle variant
     
     // Other colors
     shadow: Color(0xFF000000),
     scrim: Color(0xFF000000),
-    inverseSurface: Color(0xFFE6E0E9),
-    onInverseSurface: Color(0xFF313033),
-    inversePrimary: Color(0xFF6750A4),
-    surfaceTint: Color(0xFFCFBCFF),
+    inverseSurface: Color(0xFFe5e5e5),
+    onInverseSurface: Color(0xFF1c2433),
+    inversePrimary: Color(0xFFe05d38),
+    surfaceTint: Color(0xFFe05d38), // CSS --ring
   );
 
   // ====== iOS System Colors ======
@@ -129,19 +129,19 @@ class AppColors {
   static const Color iosLightBackground = Color(0xFFF8F9FB);
   static const Color iosLightSystemBackground = Color(0xFFF2F2F7);
   
-  /// iOS system colors for dark mode
-  static const Color iosBackgroundDark = Color(0xFF000000);
-  static const Color iosSystemBackgroundDark = Color(0xFF1C1C1E);
-  static const Color iosLabelDark = Color(0xFFFFFFFF);
-  static const Color iosSecondaryLabelDark = Color(0xFF99999D);
-  static const Color iosTertiaryLabelDark = Color(0xFF62626A);
-  static const Color iosQuaternaryLabelDark = Color(0xFF484850);
-  static const Color iosSeparatorDark = Color(0xFF545458);
-  static const Color iosOpaqueSeparatorDark = Color(0xFF38383A);
+  /// iOS system colors for dark mode - updated to match new CSS theme
+  static const Color iosBackgroundDark = Color(0xFF1c2433); // CSS --background
+  static const Color iosSystemBackgroundDark = Color(0xFF2a3040); // CSS --card
+  static const Color iosLabelDark = Color(0xFFe5e5e5); // CSS --foreground
+  static const Color iosSecondaryLabelDark = Color(0xFFe5e5e5); // CSS --popover-foreground
+  static const Color iosTertiaryLabelDark = Color(0xFFa3a3a3); // CSS --muted-foreground
+  static const Color iosQuaternaryLabelDark = Color(0xFFe5e5e5); // CSS --sidebar-foreground
+  static const Color iosSeparatorDark = Color(0xFF3d4354); // CSS --border
+  static const Color iosOpaqueSeparatorDark = Color(0xFF2a303e); // CSS --secondary/muted
   
-  /// iOS-inspired background colors for dark mode
-  static const Color iosDarkBackground = Color(0xFF000000);
-  static const Color iosDarkSystemBackground = Color(0xFF1C1C1E);
+  /// iOS-inspired background colors for dark mode - updated to match new CSS theme
+  static const Color iosDarkBackground = Color(0xFF1c2433); // CSS --background
+  static const Color iosDarkSystemBackground = Color(0xFF2a3040); // CSS --card
 
   // ====== Semantic Color Tokens ======
   
@@ -180,15 +180,15 @@ class AppColors {
 
   // ====== Brand Colors ======
   
-  /// Primary brand color - Siraaj purple
-  static const Color brandPrimary = Color(0xFF6750A4);
-  static const Color brandPrimaryLight = Color(0xFF8B7DB8);
-  static const Color brandPrimaryDark = Color(0xFF4F378A);
+  /// Primary brand color - Updated to match new CSS theme
+  static const Color brandPrimary = Color(0xFFe05d38); // CSS --primary (orange)
+  static const Color brandPrimaryLight = Color(0xFFe6a08f); // CSS --chart-2 (lighter orange)
+  static const Color brandPrimaryDark = Color(0xFFb8472a); // Darker variant of primary
   
-  /// Secondary brand color - Complementary gold
-  static const Color brandSecondary = Color(0xFFFFC107);
-  static const Color brandSecondaryLight = Color(0xFFFFD54F);
-  static const Color brandSecondaryDark = Color(0xFFF57C00);
+  /// Secondary brand color - Blue accent from chart colors
+  static const Color brandSecondary = Color(0xFF86a7c8); // CSS --chart-1 (blue)
+  static const Color brandSecondaryLight = Color(0xFFbfdbfe); // Light blue
+  static const Color brandSecondaryDark = Color(0xFF5a7ca6); // CSS --chart-3 (darker blue)
 
   // ====== Gradient Colors ======
   
@@ -197,28 +197,28 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFF6750A4),
-      Color(0xFF8B7DB8),
+      Color(0xFFe05d38), // CSS --primary (orange)
+      Color(0xFFe6a08f), // CSS --chart-2 (lighter orange)
     ],
   );
   
-  /// Secondary gradient for highlights
+  /// Secondary gradient for highlights - blue theme
   static const LinearGradient secondaryGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Color(0xFFFFC107),
-      Color(0xFFFFD54F),
+      Color(0xFF86a7c8), // CSS --chart-1 (blue)
+      Color(0xFF5a7ca6), // CSS --chart-3 (darker blue)
     ],
   );
   
-  /// Dark mode primary gradient
+  /// Dark mode primary gradient - orange to blue
   static const LinearGradient primaryGradientDark = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFFCFBCFF),
-      Color(0xFF9A82DB),
+      Color(0xFFe05d38), // CSS --primary (orange)
+      Color(0xFF86a7c8), // CSS --chart-1 (blue)
     ],
   );
 

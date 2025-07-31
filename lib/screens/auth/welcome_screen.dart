@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:glowy_borders/glowy_borders.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/welcome_content.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/primary_button.dart';
+import '../../theme/app_gradients.dart';
+import '../../widgets/bottom_sheets/settings_modals.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width > 600;
     final isDesktop = screenSize.width > 1200;
     
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: LayoutBuilder(
+      body: Container(
+        height: screenSize.height,
+        width: screenSize.width,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          image: DecorationImage(
+            image: const AssetImage('assets/background/library1.jpg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withValues(alpha: 0.6),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Main content
+              LayoutBuilder(
           builder: (context, constraints) {
             return Center(
               child: Container(
@@ -34,11 +55,14 @@ class WelcomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Spacer to push content towards center
-                    const Spacer(flex: 2),
                     
-                    // App Logo
-                    AppLogo(
-                      size: isTablet ? 140 : 120,
+                    // Lottie Animation
+                    Lottie.asset(
+                      'assets/lottie/brokenMic.json',
+                      width: isTablet ? 200 : 160,
+                      height: isTablet ? 200 : 160,
+                      repeat: false,
+                      animate: true,
                     ),
                     
                     SizedBox(height: isTablet ? 32 : 24),
@@ -49,12 +73,12 @@ class WelcomeScreen extends StatelessWidget {
                       style: theme.textTheme.headlineLarge?.copyWith(
                         fontSize: isTablet ? 36 : 28,
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     
-                    SizedBox(height: isTablet ? 16 : 12),
+                    SizedBox(height: isTablet ? 25 : 20),
                     
                     // Description
                     Container(
@@ -66,7 +90,7 @@ class WelcomeScreen extends StatelessWidget {
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontSize: isTablet ? 18 : 16,
                           height: 1.4,
-                          color: theme.colorScheme.onSurface,
+                          color: Colors.grey.shade300,
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -80,27 +104,47 @@ class WelcomeScreen extends StatelessWidget {
                     // Get Started Button with Glowy Border
                     AnimatedGradientBorder(
                       borderSize: 1,
-                      glowSize: 4,
+                      glowSize: 2,
+                      animationTime: 5,
                       gradientColors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.secondary,
-                        theme.colorScheme.tertiary,
-                        theme.colorScheme.primary,
+                        Colors.red,
+                        Colors.blue,
                       ],
                       borderRadius: BorderRadius.circular(
                         (isTablet ? 60 : 56) / 2,
                       ),
-                      child: PrimaryButton(
-                        text: WelcomeContent.defaultContent.buttonText,
-                        width: isDesktop 
-                            ? 300 
-                            : isTablet 
-                                ? screenSize.width * 0.6 
-                                : screenSize.width * 0.8,
+                      child: Container(
+                        width: isDesktop ? 300 : isTablet ? screenSize.width * 0.6 : screenSize.width * 0.8,
                         height: isTablet ? 60 : 56,
-                        
-                        onPressed: () => _handleGetStarted(context),
+                        // padding: EdgeInsets.all(1),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF2a303e),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                          
+                          onPressed: () => _handleGetStarted(context),
+                          child: Text(WelcomeContent.defaultContent.buttonText, style: theme.textTheme.bodyLarge?.copyWith(
+                            fontSize: isTablet ? 18 : 16,
+                            height: 1.4,
+                            color: Colors.grey.shade300,
+                          ),),
+                        ),
                       ),
+                      // child: PrimaryButton(
+                      //   text: WelcomeContent.defaultContent.buttonText,
+                      //   width: isDesktop 
+                      //       ? 300 
+                      //       : isTablet 
+                      //           ? screenSize.width * 0.6 
+                      //           : screenSize.width * 0.8,
+                      //   height: isTablet ? 60 : 56,
+                        
+                      //   onPressed: () => _handleGetStarted(context),
+                      // ),
                     ),
                     
                     SizedBox(height: isTablet ? 32 : 24),
@@ -109,6 +153,26 @@ class WelcomeScreen extends StatelessWidget {
               ),
             );
           },
+        ),
+        
+        // Theme toggle button (top-right)
+        Positioned(
+          top: 16,
+          right: 16,
+          child: IconButton(
+            onPressed: () => showThemeModeBottomSheet(context, ref),
+                        icon: Icon(
+              CupertinoIcons.paintbrush,
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.black.withValues(alpha: 0.2),
+              padding: const EdgeInsets.all(12),
+            ),
+          ),
+        ),
+            ],
+          ),
         ),
       ),
     );

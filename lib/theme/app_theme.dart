@@ -318,7 +318,7 @@ class AppTheme {
       
       // Dialog Theme
       dialogTheme: DialogThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.darkColorScheme.surfaceContainerHigh,
         surfaceTintColor: Colors.transparent,
         elevation: 6,
         shape: RoundedRectangleBorder(

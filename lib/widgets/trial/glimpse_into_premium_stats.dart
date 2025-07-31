@@ -40,7 +40,7 @@ class GlimpseIntoPremiumStats extends ConsumerWidget {
       margin: margin ?? const EdgeInsets.all(AppSpacing.medium),
       padding: padding ?? const EdgeInsets.all(AppSpacing.large),
       elevation: 0, // Remove shadow
-      gradient: AppGradients.premiumGradient(colorScheme), // Apply premium gradient
+      gradient: AppGradients.planGradient(colorScheme, 'Premium'), // Apply premium gradient
       child: isCompact ? _buildCompactLayout(context, trialUsage, colorScheme) : _buildFullLayout(context, trialUsage, colorScheme),
     );
   }
@@ -294,7 +294,7 @@ class GlimpseIntoPremiumStatsFAB extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: AppGradients.premiumGradient(colorScheme),
+        gradient: AppGradients.planGradient(colorScheme, 'Premium'),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
       ),
       child: FloatingActionButton.extended(

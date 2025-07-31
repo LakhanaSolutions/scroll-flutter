@@ -179,6 +179,8 @@ class _ThemeModeBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: onTap,
       child: ListTile(
         leading: Icon(
@@ -232,6 +234,8 @@ class _TextSizeBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
         // TODO: Implement text size setting
         Navigator.pop(context);
@@ -297,6 +301,8 @@ class _LanguageBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
         // TODO: Implement language setting
         Navigator.pop(context);
@@ -370,6 +376,8 @@ class _AudioQualityBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
         if (isPremium) {
           // Show premium required dialog
@@ -461,6 +469,8 @@ class _DownloadQualityBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
         // TODO: Implement download quality setting
         Navigator.pop(context);
@@ -533,6 +543,8 @@ class _PlaybackSpeedBottomSheet extends _BaseBottomSheet {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
         // TODO: Implement playback speed setting
         Navigator.pop(context);

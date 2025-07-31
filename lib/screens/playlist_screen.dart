@@ -349,7 +349,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
       margin: const EdgeInsets.all(AppSpacing.medium),
       child: AppCard(
         elevation: 0,
-        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
+        backgroundColor: colorScheme.surfaceContainerLow,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -462,6 +462,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
         elevation: 0,
+        backgroundColor: colorScheme.surfaceContainerLow,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(

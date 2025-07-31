@@ -278,6 +278,8 @@ class SettingsTab extends ConsumerWidget {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
           child: AppCard(
+            elevation: 0,
+            backgroundColor: colorScheme.surfaceContainer,
             padding: EdgeInsets.zero,
             child: ListView.separated(
               shrinkWrap: true,

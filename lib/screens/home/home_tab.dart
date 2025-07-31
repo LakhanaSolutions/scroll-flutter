@@ -13,6 +13,7 @@ import '../../widgets/text/app_text.dart';
 import '../../widgets/images/app_image.dart';
 import '../../theme/app_icons.dart';
 import '../../providers/subscription_provider.dart';
+import '../../widgets/cards/app_card.dart';
 
 /// Home tab content widget
 /// Displays the main home feed with notifications, banners, book shelves, and featured content
@@ -86,35 +87,24 @@ class HomeTab extends ConsumerWidget {
                 // Search card
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
-                  child: GestureDetector(
+                  child: AppCardFlat(
                     onTap: () => context.push('/home/search'),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(AppSpacing.medium),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-                        border: Border.all(
-                          color: colorScheme.outline.withValues(alpha: 0.2),
-                          width: 1,
+                    backgroundColor: colorScheme.surfaceContainerLow,
+                    child: Row(
+                      children: [
+                        Icon(
+                          AppIcons.search,
+                          color: colorScheme.onSurfaceVariant,
+                          size: AppSpacing.iconMedium,
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            AppIcons.search,
+                        const SizedBox(width: AppSpacing.medium),
+                        Expanded(
+                          child: AppBodyText(
+                            'Search books, authors, narrators...',
                             color: colorScheme.onSurfaceVariant,
-                            size: AppSpacing.iconMedium,
                           ),
-                          const SizedBox(width: AppSpacing.medium),
-                          Expanded(
-                            child: AppBodyText(
-                              'Search books, authors, narrators...',
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

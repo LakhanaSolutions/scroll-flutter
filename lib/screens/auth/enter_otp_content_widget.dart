@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import '../../widgets/otp_input_field.dart';
 
 class EnterOtpContentWidget extends StatelessWidget {
   final bool isTablet;
@@ -11,6 +11,9 @@ class EnterOtpContentWidget extends StatelessWidget {
   final List<TextEditingController> otpControllers;
   final List<FocusNode> otpFocusNodes;
   final VoidCallback onOtpComplete;
+  final String? errorMessage;
+  final ValueChanged<String>? onOtpChanged;
+  final bool animateLottie;
 
   const EnterOtpContentWidget({
     super.key,
@@ -22,6 +25,9 @@ class EnterOtpContentWidget extends StatelessWidget {
     required this.otpControllers,
     required this.otpFocusNodes,
     required this.onOtpComplete,
+    this.errorMessage,
+    this.onOtpChanged,
+    this.animateLottie = true,
   });
 
   @override
@@ -36,7 +42,7 @@ class EnterOtpContentWidget extends StatelessWidget {
           width: isTablet ? 200 : 160,
           height: isTablet ? 200 : 160,
           repeat: false,
-          animate: true,
+          animate: animateLottie,
         ),
         
         SizedBox(height: isTablet ? 32 : 24),
@@ -74,77 +80,25 @@ class EnterOtpContentWidget extends StatelessWidget {
         
         SizedBox(height: isTablet ? 32 : 24),
         
-        // OTP Input Fields
+        // OTP Input Field
         Container(
           constraints: BoxConstraints(
             maxWidth: isDesktop ? 400 : screenSize.width * 0.85,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(6, (index) {
-              return SizedBox(
-                width: isTablet ? 50 : 45,
-                height: isTablet ? 60 : 55,
-                child: TextField(
-                  controller: otpControllers[index],
-                  focusNode: otpFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  maxLength: 1,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: isTablet ? 24 : 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  decoration: InputDecoration(
-                    counterText: '',
-                    filled: true,
-                    fillColor: Colors.black.withOpacity(0.3),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade600,
-                        width: 1,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade600,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Colors.blue,
-                        width: 2,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 12,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value.isNotEmpty && index < 5) {
-                      otpFocusNodes[index + 1].requestFocus();
-                    } else if (value.isEmpty && index > 0) {
-                      otpFocusNodes[index - 1].requestFocus();
-                    }
-                    
-                    // Check if all fields are filled
-                    bool allFilled = otpControllers.every((controller) => controller.text.isNotEmpty);
-                    if (allFilled) {
-                      onOtpComplete();
-                    }
-                  },
-                ),
-              );
-            }),
+          child: OTPInputField(
+            onChanged: (otp) {
+              // Update the individual controllers to maintain compatibility
+              for (int i = 0; i < otpControllers.length && i < otp.length; i++) {
+                otpControllers[i].text = otp[i];
+              }
+              // Clear remaining controllers if OTP is shorter
+              for (int i = otp.length; i < otpControllers.length; i++) {
+                otpControllers[i].clear();
+              }
+              onOtpChanged?.call(otp);
+            },
+            onCompleted: (otp) => onOtpComplete(),
+            errorText: errorMessage,
           ),
         ),
         

@@ -7,6 +7,7 @@ class RequestOtpContentWidget extends StatelessWidget {
   final Size screenSize;
   final ThemeData theme;
   final String email;
+  final bool animateLottie;
 
   const RequestOtpContentWidget({
     super.key,
@@ -15,6 +16,7 @@ class RequestOtpContentWidget extends StatelessWidget {
     required this.screenSize,
     required this.theme,
     required this.email,
+    this.animateLottie = true,
   });
 
   @override
@@ -29,7 +31,7 @@ class RequestOtpContentWidget extends StatelessWidget {
           width: isTablet ? 200 : 160,
           height: isTablet ? 200 : 160,
           repeat: false,
-          animate: true,
+          animate: animateLottie,
         ),
         
         SizedBox(height: isTablet ? 32 : 24),

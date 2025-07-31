@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../widgets/email_input_field.dart';
 
 class LoginContentWidget extends StatelessWidget {
   final bool isTablet;
@@ -8,6 +9,9 @@ class LoginContentWidget extends StatelessWidget {
   final ThemeData theme;
   final TextEditingController emailController;
   final VoidCallback onEmailSubmit;
+  final String? errorMessage;
+  final ValueChanged<String>? onEmailChanged;
+  final bool animateLottie;
 
   const LoginContentWidget({
     super.key,
@@ -17,6 +21,9 @@ class LoginContentWidget extends StatelessWidget {
     required this.theme,
     required this.emailController,
     required this.onEmailSubmit,
+    this.errorMessage,
+    this.onEmailChanged,
+    this.animateLottie = true,
   });
 
   @override
@@ -31,7 +38,7 @@ class LoginContentWidget extends StatelessWidget {
           width: isTablet ? 200 : 160,
           height: isTablet ? 200 : 160,
           repeat: false,
-          animate: true,
+          animate: animateLottie,
         ),
         
         SizedBox(height: isTablet ? 32 : 24),
@@ -74,48 +81,14 @@ class LoginContentWidget extends StatelessWidget {
           constraints: BoxConstraints(
             maxWidth: isDesktop ? 400 : screenSize.width * 0.85,
           ),
-          child: TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: isTablet ? 18 : 16,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Enter your email',
-              hintStyle: TextStyle(
-                color: Colors.grey.shade400,
-                fontSize: isTablet ? 18 : 16,
-              ),
-              filled: true,
-              fillColor: Colors.black.withOpacity(0.3),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade600,
-                  width: 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade600,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Colors.blue,
-                  width: 2,
-                ),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: isTablet ? 16 : 14,
-              ),
-            ),
+          child: EmailInputField(
+            initialValue: emailController.text,
+            onChanged: (value) {
+              emailController.text = value;
+              onEmailChanged?.call(value);
+            },
             onSubmitted: (_) => onEmailSubmit(),
+            errorText: errorMessage,
           ),
         ),
         

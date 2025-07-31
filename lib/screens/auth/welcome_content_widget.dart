@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:glowy_borders/glowy_borders.dart';
 import 'package:lottie/lottie.dart';
 import '../../models/welcome_content.dart';
-import 'auth_screen.dart';
 
 
 class WelcomeContentWidget extends StatelessWidget {
@@ -12,6 +8,7 @@ class WelcomeContentWidget extends StatelessWidget {
   final bool isDesktop;
   final Size screenSize;
   final ThemeData theme;
+  final bool animateLottie;
 
   const WelcomeContentWidget({
     super.key,
@@ -19,6 +16,7 @@ class WelcomeContentWidget extends StatelessWidget {
     required this.isDesktop,
     required this.screenSize,
     required this.theme,
+    this.animateLottie = false,
   });
 
   @override
@@ -33,7 +31,7 @@ class WelcomeContentWidget extends StatelessWidget {
           width: isTablet ? 200 : 160,
           height: isTablet ? 200 : 160,
           repeat: false,
-          animate: true,
+          animate: animateLottie,
         ),
         
         SizedBox(height: isTablet ? 32 : 24),

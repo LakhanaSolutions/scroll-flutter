@@ -36,13 +36,15 @@ final appRouter = GoRouter(
                          state.matchedLocation.startsWith('/login') ||
                          state.matchedLocation.startsWith('/verify-otp');
     
+    final isOnPublicRoute = state.matchedLocation == '/about';
+    
     // If user has token and is on auth route, redirect to home
     if (hasToken && isOnAuthRoute) {
       return '/home';
     }
     
-    // If user has no token and is not on auth route, redirect to welcome
-    if (!hasToken && !isOnAuthRoute) {
+    // If user has no token and is not on auth route or public route, redirect to welcome
+    if (!hasToken && !isOnAuthRoute && !isOnPublicRoute) {
       return '/welcome';
     }
     
@@ -62,6 +64,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/verify-otp',
       builder: (context, state) => const OTPVerificationScreen(),
+    ),
+    
+    // Public routes (accessible without authentication)
+    GoRoute(
+      path: '/about',
+      builder: (context, state) => const AboutScreen(),
     ),
     
     // Main app routes
@@ -108,10 +116,6 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'terms-of-service',
           builder: (context, state) => const TermsOfServiceScreen(),
-        ),
-        GoRoute(
-          path: 'about',
-          builder: (context, state) => const AboutScreen(),
         ),
         GoRoute(
           path: 'search',

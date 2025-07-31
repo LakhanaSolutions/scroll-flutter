@@ -10,6 +10,8 @@ import 'package:siraaj/screens/auth/login_content_widget.dart';
 import 'package:siraaj/screens/auth/request_otp_content_widget.dart';
 import 'package:siraaj/screens/auth/enter_otp_content_widget.dart';
 import '../../widgets/bottom_sheets/settings_modals.dart';
+import '../../models/auth_state_model.dart';
+import '../../providers/auth_provider.dart';
 
 enum AuthMode { welcome, email, requestOtp, enterOtp }
 
@@ -30,6 +32,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   late AnimationController _animationController;
   late Animation<double> _blurAnimation;
   AuthMode _currentMode = AuthMode.welcome;
+  bool _animateLottie = false;
   
   // Controllers for form inputs
   final TextEditingController _emailController = TextEditingController();
@@ -51,6 +54,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+    
+    // Initialize auth provider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authProvider.notifier).initialize();
+    });
   }
 
   @override
@@ -71,34 +79,49 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       case AuthMode.welcome:
         setState(() {
           _currentMode = AuthMode.email;
+          _animateLottie = true;
         });
         _animationController.forward();
         break;
       case AuthMode.email:
-        if (_emailController.text.isNotEmpty) {
-          _userEmail = _emailController.text;
-          setState(() {
-            _currentMode = AuthMode.requestOtp;
-          });
+        if (_emailController.text.trim().isEmpty) {
+          // Handle email validation error - this will be shown via the auth provider
+          return;
         }
+        _userEmail = _emailController.text.trim();
+        ref.read(authProvider.notifier).submitEmail(_userEmail);
         break;
       case AuthMode.requestOtp:
-        setState(() {
-          _currentMode = AuthMode.enterOtp;
-        });
+        ref.read(authProvider.notifier).sendOTP();
         break;
       case AuthMode.enterOtp:
-        _verifyOtp();
+        String otp = _otpControllers.map((controller) => controller.text).join();
+        if (otp.length == 6) {
+          ref.read(authProvider.notifier).verifyOTP(otp);
+        }
         break;
     }
   }
 
   void _handleSecondaryButton(BuildContext context) {
     switch (_currentMode) {
-      case AuthMode.requestOtp:
-      case AuthMode.enterOtp:
+      case AuthMode.welcome:
+        context.push('/about');
+        break;
+      case AuthMode.email:
         setState(() {
           _currentMode = AuthMode.welcome;
+          _animateLottie = false;
+          _emailController.clear();
+        });
+        _animationController.reverse();
+        break;
+      case AuthMode.requestOtp:
+      case AuthMode.enterOtp:
+        ref.read(authProvider.notifier).logout();
+        setState(() {
+          _currentMode = AuthMode.welcome;
+          _animateLottie = false;
           _userEmail = '';
           _emailController.clear();
           for (var controller in _otpControllers) {
@@ -107,45 +130,48 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         });
         _animationController.reverse();
         break;
-      default:
-        break;
     }
   }
   
-  void _verifyOtp() {
-    String otp = _otpControllers.map((controller) => controller.text).join();
-    if (otp.length == 6) {
-      // TODO: Implement OTP verification logic
-      context.push('/login');
-    }
-  }
-  
-  String _getPrimaryButtonText() {
+  String _getPrimaryButtonText(AuthState authState) {
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContent.defaultContent.buttonText;
       case AuthMode.email:
-        return 'Login / Signup';
+        if (authState.status == AuthStatus.loading) {
+          return 'Checking...';
+        }
+        return 'Continue';
       case AuthMode.requestOtp:
-        return 'Send OTP';
+        if (authState.status == AuthStatus.loading) {
+          return 'Sending...';
+        }
+        if (authState.user?.isNew == true) {
+          return 'Send Verification Code';
+        } else {
+          return 'Send Verification Code';
+        }
       case AuthMode.enterOtp:
-        return 'Verify OTP';
+        if (authState.status == AuthStatus.otpVerifying) {
+          return 'Verifying...';
+        }
+        return 'Verify Code';
     }
   }
   
   String? _getSecondaryButtonText() {
     switch (_currentMode) {
       case AuthMode.welcome:
-        return null; // Hide secondary button
+        return 'Learn More about Siraaj';
       case AuthMode.email:
-        return null; // No secondary button
+        return 'Go back';
       case AuthMode.requestOtp:
       case AuthMode.enterOtp:
         return 'Logout';
     }
   }
   
-  Widget _buildCurrentContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme) {
+  Widget _buildCurrentContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme, AuthState authState) {
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContentWidget(
@@ -154,6 +180,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           isDesktop: isDesktop,
           screenSize: screenSize,
           theme: theme,
+          animateLottie: _animateLottie,
         );
       case AuthMode.email:
         return LoginContentWidget(
@@ -164,6 +191,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           theme: theme,
           emailController: _emailController,
           onEmailSubmit: () => _handlePrimaryButton(context),
+          errorMessage: authState.hasError ? authState.errorMessage : null,
+          onEmailChanged: (email) {
+            // Clear errors when user starts typing
+            if (authState.hasError) {
+              ref.read(authProvider.notifier).clearError();
+            }
+          },
+          animateLottie: _animateLottie,
         );
       case AuthMode.requestOtp:
         return RequestOtpContentWidget(
@@ -173,6 +208,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           screenSize: screenSize,
           theme: theme,
           email: _userEmail,
+          animateLottie: _animateLottie,
         );
       case AuthMode.enterOtp:
         return EnterOtpContentWidget(
@@ -185,6 +221,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           otpControllers: _otpControllers,
           otpFocusNodes: _otpFocusNodes,
           onOtpComplete: () => _handlePrimaryButton(context),
+          errorMessage: authState.hasError ? authState.errorMessage : null,
+          onOtpChanged: (otp) {
+            // Clear errors when user starts typing
+            if (authState.hasError) {
+              ref.read(authProvider.notifier).clearError();
+            }
+          },
+          animateLottie: _animateLottie,
         );
     }
   }
@@ -195,6 +239,33 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width > 600;
     final isDesktop = screenSize.width > 1200;
+    
+    final authState = ref.watch(authProvider);
+    final isLoading = ref.watch(isLoadingProvider);
+
+    // Listen for authentication state changes
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.status == AuthStatus.authenticated) {
+        // Navigate based on user status
+        if (next.user?.isNew == true) {
+          context.push('/finish-profile');
+        } else {
+          context.push('/home');
+        }
+      } else if (next.status == AuthStatus.userDetected) {
+        // Move to requestOtp mode
+        setState(() {
+          _currentMode = AuthMode.requestOtp;
+          _userEmail = next.email ?? '';
+          _emailController.text = _userEmail;
+        });
+      } else if (next.status == AuthStatus.otpSent) {
+        // Move to enterOtp mode
+        setState(() {
+          _currentMode = AuthMode.enterOtp;
+        });
+      }
+    });
     
     return Scaffold(
       body: Container(
@@ -247,7 +318,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         duration: const Duration(milliseconds: 500),
                         child: Column(
                           children: [
-                            _buildCurrentContent(isTablet, isDesktop, screenSize, theme),
+                            _buildCurrentContent(isTablet, isDesktop, screenSize, theme, authState),
                                   Spacer(),
 
         // Get Started Button with Glowy Border
@@ -273,15 +344,24 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   borderRadius: BorderRadius.circular(28),
                 ),
               ),
-              onPressed: () => _handlePrimaryButton(context),
-              child: Text(
-                _getPrimaryButtonText(),
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: isTablet ? 18 : 16,
-                  height: 1.4,
-                  color: Colors.grey.shade300,
-                ),
-              ),
+              onPressed: isLoading ? null : () => _handlePrimaryButton(context),
+              child: isLoading
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.grey.shade300,
+                      ),
+                    )
+                  : Text(
+                      _getPrimaryButtonText(authState),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontSize: isTablet ? 18 : 16,
+                        height: 1.4,
+                        color: Colors.grey.shade300,
+                      ),
+                    ),
             ),
           ),
         ),

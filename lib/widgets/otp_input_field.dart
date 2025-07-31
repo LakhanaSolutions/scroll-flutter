@@ -108,7 +108,7 @@ class _OTPInputFieldState extends State<OTPInputField> {
               width: isTablet ? 56 : 48,
               height: isTablet ? 64 : 56,
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                // color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: widget.errorText != null
                     ? Border.all(color: theme.colorScheme.error, width: 1.5)

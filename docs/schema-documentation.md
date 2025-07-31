@@ -88,7 +88,7 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 - **Purpose**: Content creators and book authors with rich profile information
 - Stores biographical data, nationality, birth year, awards
 - Social media links and external website connections
-- Follower system for user engagement
+- Follower system for user engagement (uses `followersCount` field)
 - Genre specialization and book count tracking
 
 **Narrators Table**
@@ -97,6 +97,7 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 - Rating system for narrator quality assessment
 - Genre specialization and narration portfolio
 - Social links and verification status
+- Follower system (uses `followersCount` field)
 
 **Categories Table**
 - **Purpose**: Hierarchical content organization system (genres, topics, themes)
@@ -171,13 +172,23 @@ This document describes the comprehensive database schema for the Siraaj audiobo
 - **Purpose**: User rating and review system for content quality assessment
 - 1-5 star rating system with optional written reviews
 - Public/private visibility controls for user privacy
+- One review per user per content item (unique constraint)
 - Aggregated ratings used for content recommendation algorithms
+- Connected to ReviewVote table for community feedback
+
+**Review Votes Table**
+- **Purpose**: Community voting system for reviews (upvotes/downvotes)
+- Users can vote on any review except their own
+- One vote per user per review (unique constraint)
+- Supports UPVOTE and DOWNVOTE vote types
+- Enables community-driven review quality assessment
 
 **Notes Table**
 - **Purpose**: Personal annotation system for timestamped notes during listening
 - Timestamp-based annotations linked to specific audio positions
 - Multiple note types: personal thoughts, highlights, bookmarks
 - Private note system for individual learning and reference
+- Uses `noteContent` field to store the actual note text (renamed to avoid naming conflicts)
 
 ## Subscription & Payment System
 

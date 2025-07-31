@@ -18,6 +18,7 @@ TRUNCATE TABLE subscription_history CASCADE;
 TRUNCATE TABLE subscriptions CASCADE;
 TRUNCATE TABLE subscription_plans CASCADE;
 TRUNCATE TABLE notes CASCADE;
+TRUNCATE TABLE review_votes CASCADE;
 TRUNCATE TABLE reviews CASCADE;
 TRUNCATE TABLE bookmarks CASCADE;
 TRUNCATE TABLE downloads CASCADE;
@@ -403,10 +404,57 @@ INSERT INTO reviews (id, user_id, content_id, rating, title, comment, is_public,
 ('rev_yasmin_001', 'user_prem_monthly_1', 'content_ghunyatu_talibeen', 5, 'Masterpiece of Sufi Literature', 'This work by Ghous-e-Azam is absolutely transformative. The narrator''s voice is perfect and the content is life-changing. Highly recommended for anyone on the spiritual path.', true, NOW() - INTERVAL '10 days', NOW() - INTERVAL '10 days'),
 ('rev_zainab_001', 'user_prem_annual_1', 'content_masnavi_rumi', 5, 'Timeless Wisdom', 'Rumi''s Masnavi never fails to inspire. The Persian poetry is beautifully rendered in this audiobook format. Perfect for research and personal growth.', true, NOW() - INTERVAL '8 days', NOW() - INTERVAL '8 days'),
 ('rev_ahmed_001', 'user_trial_ahmed', 'content_qasida_burda', 5, 'Most Beautiful Na''at', 'The Qasida Burda is simply the most beautiful praise of Prophet Muhammad (PBUH). The recitation brings tears to my eyes every time.', true, NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days'),
-('rev_muhammad_001', 'user_prem_annual_2', 'content_kanz_iman', 4, 'Excellent Quranic Translation', 'Imam Ahmed Raza Khan''s translation is scholarly and spiritually uplifting. The Urdu language used is beautiful and accessible.', true, NOW() - INTERVAL '25 days', NOW() - INTERVAL '25 days');
+('rev_muhammad_001', 'user_prem_annual_2', 'content_kanz_iman', 4, 'Excellent Quranic Translation', 'Imam Ahmed Raza Khan''s translation is scholarly and spiritually uplifting. The Urdu language used is beautiful and accessible.', true, NOW() - INTERVAL '25 days', NOW() - INTERVAL '25 days'),
+('rev_ibrahim_001', 'user_prem_monthly_2', 'content_ghunyatu_talibeen', 4, 'Profound Spiritual Guidance', 'Deep spiritual insights that have helped me in my role as an imam. The teachings are authentic and well-presented.', true, NOW() - INTERVAL '15 days', NOW() - INTERVAL '15 days'),
+('rev_aisha_001', 'user_prem_annual_3', 'content_masnavi_rumi', 5, 'Essential for Research', 'As a PhD student, this audiobook has been invaluable. The narration quality is excellent and the content is profound.', true, NOW() - INTERVAL '12 days', NOW() - INTERVAL '12 days'),
+('rev_omar_001', 'user_trial_omar', 'content_kanz_iman', 5, 'Beautiful Translation', 'Alahazrat''s translation is unmatched. Perfect for students like me who want to understand the Quran deeply.', true, NOW() - INTERVAL '18 days', NOW() - INTERVAL '18 days'),
+('rev_fatima_001', 'user_trial_fatima', 'content_ninety_nine_names', 4, 'Great Learning Resource', 'Helped me understand the beautiful names of Allah. Perfect for beginners in Islamic studies.', true, NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days');
+
+-- ============================================================================
+-- REVIEW VOTES - Community feedback on reviews
+-- ============================================================================
+
+INSERT INTO review_votes (id, user_id, review_id, vote_type, created_at, updated_at) VALUES
+-- Votes on Yasmin's review of Ghunyatu Talibeen
+('vote_001', 'user_prem_annual_1', 'rev_yasmin_001', 'UPVOTE', NOW() - INTERVAL '9 days', NOW() - INTERVAL '9 days'),
+('vote_002', 'user_prem_annual_2', 'rev_yasmin_001', 'UPVOTE', NOW() - INTERVAL '8 days', NOW() - INTERVAL '8 days'),
+('vote_003', 'user_trial_ahmed', 'rev_yasmin_001', 'UPVOTE', NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days'),
+('vote_004', 'user_prem_monthly_2', 'rev_yasmin_001', 'UPVOTE', NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days'),
+
+-- Votes on Zainab's review of Masnavi
+('vote_005', 'user_prem_monthly_1', 'rev_zainab_001', 'UPVOTE', NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days'),
+('vote_006', 'user_prem_annual_2', 'rev_zainab_001', 'UPVOTE', NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days'),
+('vote_007', 'user_prem_annual_3', 'rev_zainab_001', 'UPVOTE', NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
+
+-- Votes on Ahmed's review of Qasida Burda
+('vote_008', 'user_prem_monthly_1', 'rev_ahmed_001', 'UPVOTE', NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
+('vote_009', 'user_prem_annual_1', 'rev_ahmed_001', 'UPVOTE', NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days'),
+('vote_010', 'user_trial_fatima', 'rev_ahmed_001', 'UPVOTE', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days'),
+('vote_011', 'user_trial_omar', 'rev_ahmed_001', 'UPVOTE', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days'),
+
+-- Votes on Muhammad's review of Kanz Iman
+('vote_012', 'user_prem_monthly_1', 'rev_muhammad_001', 'UPVOTE', NOW() - INTERVAL '20 days', NOW() - INTERVAL '20 days'),
+('vote_013', 'user_prem_annual_1', 'rev_muhammad_001', 'UPVOTE', NOW() - INTERVAL '19 days', NOW() - INTERVAL '19 days'),
+('vote_014', 'user_trial_ahmed', 'rev_muhammad_001', 'DOWNVOTE', NOW() - INTERVAL '18 days', NOW() - INTERVAL '18 days'),
+
+-- Votes on Ibrahim's review
+('vote_015', 'user_prem_annual_1', 'rev_ibrahim_001', 'UPVOTE', NOW() - INTERVAL '14 days', NOW() - INTERVAL '14 days'),
+('vote_016', 'user_prem_annual_3', 'rev_ibrahim_001', 'UPVOTE', NOW() - INTERVAL '13 days', NOW() - INTERVAL '13 days'),
+
+-- Votes on Aisha's review
+('vote_017', 'user_prem_monthly_1', 'rev_aisha_001', 'UPVOTE', NOW() - INTERVAL '11 days', NOW() - INTERVAL '11 days'),
+('vote_018', 'user_prem_annual_2', 'rev_aisha_001', 'UPVOTE', NOW() - INTERVAL '10 days', NOW() - INTERVAL '10 days'),
+
+-- Votes on Omar's review
+('vote_019', 'user_trial_ahmed', 'rev_omar_001', 'UPVOTE', NOW() - INTERVAL '17 days', NOW() - INTERVAL '17 days'),
+('vote_020', 'user_trial_fatima', 'rev_omar_001', 'UPVOTE', NOW() - INTERVAL '16 days', NOW() - INTERVAL '16 days'),
+
+-- Votes on Fatima's review
+('vote_021', 'user_trial_ahmed', 'rev_fatima_001', 'UPVOTE', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days'),
+('vote_022', 'user_trial_omar', 'rev_fatima_001', 'UPVOTE', NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days');
 
 -- Notes
-INSERT INTO notes (id, user_id, content_id, chapter_id, title, content, type, timestamp, is_private, created_at, updated_at) VALUES
+INSERT INTO notes (id, user_id, content_id, chapter_id, title, note_content, type, timestamp, is_private, created_at, updated_at) VALUES
 ('note_yasmin_001', 'user_prem_monthly_1', 'content_ghunyatu_talibeen', 'chapter_ghunyatu_001', 'Key Teaching', 'The spiritual path requires both knowledge and practice - very important point for my research', 'PERSONAL', 360, false, NOW() - INTERVAL '8 days', NOW() - INTERVAL '8 days'),
 ('note_zainab_001', 'user_prem_annual_1', 'content_masnavi_rumi', 'chapter_masnavi_001', 'Beautiful Metaphor', 'The reed flute metaphor represents the soul''s longing to return to its source. Profound!', 'HIGHLIGHT', 480, false, NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
 ('note_ahmed_001', 'user_trial_ahmed', 'content_qasida_burda', 'chapter_burda_001', 'Personal Reflection', 'This verse always makes me emotional - such beautiful praise of our beloved Prophet', 'THOUGHT', 420, true, NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days');
@@ -497,12 +545,12 @@ WHERE id IN (SELECT DISTINCT category_id FROM content_categories);
 -- Update author statistics
 UPDATE authors SET 
   total_books = (SELECT COUNT(*) FROM content_authors WHERE author_id = authors.id),
-  followers = (SELECT COUNT(*) FROM user_author_follows WHERE author_id = authors.id);
+  followers_count = (SELECT COUNT(*) FROM user_author_follows WHERE author_id = authors.id);
 
 -- Update narrator statistics  
 UPDATE narrators SET 
   total_narrations = (SELECT COUNT(*) FROM content_narrators WHERE narrator_id = narrators.id),
-  followers = (SELECT COUNT(*) FROM user_narrator_follows WHERE narrator_id = narrators.id);
+  followers_count = (SELECT COUNT(*) FROM user_narrator_follows WHERE narrator_id = narrators.id);
 
 -- ============================================================================
 -- DATA VERIFICATION QUERIES (Optional - for testing)
@@ -551,6 +599,7 @@ UPDATE narrators SET
 -- ✅ 15+ Chapters (Detailed content structure)
 -- ✅ Multiple Languages (Arabic, Urdu, English, Persian, Turkish)
 -- ✅ Complete User Interactions (Recently played, downloads, bookmarks, reviews, notes)
+-- ✅ Review System (User reviews with community voting - upvotes/downvotes)
 -- ✅ Trial Usage Tracking (15-minute monthly limits with session details)
 -- ✅ Subscription Management (Active subscriptions with billing history)
 -- ✅ User Preferences (Theme, language, audio settings)

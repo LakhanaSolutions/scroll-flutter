@@ -4,6 +4,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -49,6 +50,7 @@ model User {
   followingNarrators    UserNarratorFollow[]
   bookmarks             Bookmark[]
   reviews               Review[]
+  reviewVotes           ReviewVote[]
   searchHistory         SearchHistory[]
   feedbackSubmissions   Feedback[]
   trialUsage            TrialUsage?
@@ -251,7 +253,7 @@ model Author {
   genres        String[]
   awards        String[]
   totalBooks    Int      @default(0)
-  followers     Int      @default(0)
+  followersCount Int     @default(0)
   
   // Status
   isActive      Boolean  @default(true)
@@ -292,7 +294,7 @@ model Narrator {
   
   // Metadata
   totalNarrations Int      @default(0)
-  followers       Int      @default(0)
+  followersCount  Int      @default(0)
   rating          Float    @default(0)
   ratingCount     Int      @default(0)
   
@@ -578,12 +580,33 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Relationships
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  votes   ReviewVote[]
 
   @@unique([userId, contentId])
   @@index([contentId, rating])
   @@map("reviews")
+}
+
+// Review voting system for community feedback on reviews
+// Enables users to upvote or downvote reviews (except their own)
+model ReviewVote {
+  id       String   @id @default(cuid())
+  userId   String
+  reviewId String
+  voteType VoteType // UPVOTE or DOWNVOTE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reviewId])
+  @@index([reviewId, voteType])
+  @@map("review_votes")
 }
 
 // ============================================================================
@@ -600,7 +623,7 @@ model Note {
   
   // Note content
   title       String?
-  content     String
+  noteContent String
   type        NoteType @default(PERSONAL)
   
   // Position in content
@@ -1069,4 +1092,9 @@ enum FeedbackPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
 }

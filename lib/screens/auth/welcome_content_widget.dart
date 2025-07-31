@@ -12,7 +12,6 @@ class WelcomeContentWidget extends StatelessWidget {
   final bool isDesktop;
   final Size screenSize;
   final ThemeData theme;
-  final VoidCallback onGetStarted;
 
   const WelcomeContentWidget({
     super.key,
@@ -20,7 +19,6 @@ class WelcomeContentWidget extends StatelessWidget {
     required this.isDesktop,
     required this.screenSize,
     required this.theme,
-    required this.onGetStarted,
   });
 
   @override
@@ -68,45 +66,6 @@ class WelcomeContentWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        
-        // Empty space as specified in structure
-        const Spacer(flex: 3),
-        
-        // Get Started Button with Glowy Border
-        AnimatedGradientBorder(
-          borderSize: 1,
-          glowSize: 2,
-          animationTime: 5,
-          gradientColors: [
-            Colors.red,
-            Colors.blue,
-          ],
-          borderRadius: BorderRadius.circular(
-            (isTablet ? 60 : 56) / 2,
-          ),
-          child: Container(
-            width: isDesktop ? 300 : isTablet ? screenSize.width * 0.6 : screenSize.width * 0.8,
-            height: isTablet ? 60 : 56,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2a303e),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
-                ),
-              ),
-              onPressed: onGetStarted,
-              child: Text(
-                WelcomeContent.defaultContent.buttonText,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: isTablet ? 18 : 16,
-                  height: 1.4,
-                  color: Colors.grey.shade300,
-                ),
-              ),
-            ),
           ),
         ),
         

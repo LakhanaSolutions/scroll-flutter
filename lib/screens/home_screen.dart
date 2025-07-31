@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
@@ -80,7 +81,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (!didPop) {
           final shouldPop = _onWillPop();
           if (shouldPop) {
-            Navigator.of(context).pop();
+            // Use SystemNavigator.pop() to properly exit the app on Android
+            SystemNavigator.pop();
           }
         }
       },

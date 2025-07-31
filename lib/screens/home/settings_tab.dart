@@ -242,7 +242,7 @@ class SettingsTab extends ConsumerWidget {
                 onPressed: () async {
                   await ref.read(authProvider.notifier).logout();
                   if (context.mounted) {
-                    context.push('/welcome');
+                    context.go('/welcome');
                   }
                 },
                 child: const Text('Sign Out'),

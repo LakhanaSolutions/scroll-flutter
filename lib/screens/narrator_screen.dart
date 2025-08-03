@@ -9,7 +9,6 @@ import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
-import '../widgets/images/app_image.dart';
 import '../widgets/reviews/add_review_card.dart';
 
 /// Narrator/Speaker profile screen showing detailed information

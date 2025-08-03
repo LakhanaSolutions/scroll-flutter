@@ -110,8 +110,6 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: const AppAppBar(
@@ -226,8 +224,6 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
   }
 
   Widget _buildPlanBenefits(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.medium),

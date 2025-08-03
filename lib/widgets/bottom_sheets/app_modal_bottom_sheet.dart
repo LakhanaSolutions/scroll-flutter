@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
@@ -217,7 +215,6 @@ class AppActionModalBottomSheet {
     bool showCancel,
   ) {
     final theme = Theme.of(context);
-    final appTheme = context.appTheme;
     
     return Material(
       color: theme.colorScheme.surface,

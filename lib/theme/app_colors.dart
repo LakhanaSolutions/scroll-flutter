@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 /// Comprehensive color system for the Siraaj app
 /// Implements Material You 3 color tokens and iOS system colors

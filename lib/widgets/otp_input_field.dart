@@ -7,6 +7,7 @@ class OTPInputField extends StatefulWidget {
   final String? errorText;
   final bool enabled;
   final int length;
+  final bool clearOnError;
 
   const OTPInputField({
     super.key,
@@ -15,6 +16,7 @@ class OTPInputField extends StatefulWidget {
     this.errorText,
     this.enabled = true,
     this.length = 6,
+    this.clearOnError = true,
   });
 
   @override
@@ -24,6 +26,7 @@ class OTPInputField extends StatefulWidget {
 class _OTPInputFieldState extends State<OTPInputField> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
+  String? _previousErrorText;
 
   @override
   void initState() {
@@ -36,6 +39,29 @@ class _OTPInputFieldState extends State<OTPInputField> {
       widget.length,
       (index) => FocusNode(),
     );
+    _previousErrorText = widget.errorText;
+  }
+
+  @override
+  void didUpdateWidget(OTPInputField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Check if we got a new error and should clear the fields
+    // Like a disappointed teacher erasing the blackboard after a wrong answer 📚
+    // Only clear if we got a NEW error (not the same one persisting)
+    if (widget.clearOnError && 
+        widget.errorText != null && 
+        widget.errorText != _previousErrorText &&
+        _previousErrorText == null) {
+      // New error appeared - clear all fields after a short delay for better UX
+      // Give users a moment to read the error before dramatically clearing everything
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          clearFields();
+        }
+      });
+    }
+    _previousErrorText = widget.errorText;
   }
 
   @override
@@ -54,6 +80,8 @@ class _OTPInputFieldState extends State<OTPInputField> {
       controller.clear();
     }
     _focusNodes[0].requestFocus();
+    // Notify parent about the cleared OTP
+    widget.onChanged('');
   }
 
   void _onChanged(int index, String value) {

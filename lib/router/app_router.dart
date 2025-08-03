@@ -23,6 +23,8 @@ import '../screens/note_screen.dart';
 import '../screens/narrators_list_screen.dart';
 import '../screens/authors_list_screen.dart';
 import '../screens/reviews_screen.dart';
+import '../screens/mood_screen.dart';
+import '../screens/finish_profile_screen.dart';
 import '../data/mock_data.dart';
 import '../services/token_service.dart';
 
@@ -34,7 +36,8 @@ final appRouter = GoRouter(
     
     final isOnAuthRoute = state.matchedLocation.startsWith('/welcome') ||
                          state.matchedLocation.startsWith('/login') ||
-                         state.matchedLocation.startsWith('/verify-otp');
+                         state.matchedLocation.startsWith('/verify-otp') ||
+                         state.matchedLocation.startsWith('/finish-profile');
     
     final isOnPublicRoute = state.matchedLocation == '/about';
     
@@ -64,6 +67,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/verify-otp',
       builder: (context, state) => const OTPVerificationScreen(),
+    ),
+    GoRoute(
+      path: '/finish-profile',
+      builder: (context, state) => const FinishProfileScreen(),
     ),
     
     // Public routes (accessible without authentication)
@@ -279,6 +286,21 @@ final appRouter = GoRouter(
               contentId: contentId,
               contentTitle: contentTitle,
             );
+          },
+        ),
+        GoRoute(
+          path: 'mood/:moodId',
+          builder: (context, state) {
+            final moodId = state.pathParameters['moodId']!;
+            
+            // Get mood category from mock data
+            final moodCategories = MockData.getMoodCategories();
+            final moodCategory = moodCategories.firstWhere(
+              (mood) => mood.id == moodId,
+              orElse: () => moodCategories.first,
+            );
+            
+            return MoodScreen(moodCategory: moodCategory);
           },
         ),
       ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
-import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';

@@ -140,11 +140,12 @@ class HomeTab extends ConsumerWidget {
             },
           ),
           
-          // Mood selector
+          // Mood selector - because sometimes you need to match your playlist to your feelings
+          // Like a spiritual DJ for your soul 🎧
           MoodSelector(
             categories: MockData.getMoodCategories(),
             onMoodTap: (category) {
-              debugPrint('Mood selected: ${category.name}');
+              context.push('/home/mood/${category.id}');
             },
           ),
           

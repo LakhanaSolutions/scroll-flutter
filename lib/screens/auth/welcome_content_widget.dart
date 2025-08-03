@@ -32,6 +32,7 @@ class WelcomeContentWidget extends StatelessWidget {
           height: isTablet ? 200 : 160,
           repeat: false,
           animate: animateLottie,
+          reverse: !animateLottie,
         ),
         
         SizedBox(height: isTablet ? 32 : 24),

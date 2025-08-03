@@ -35,7 +35,6 @@ class _ThemeDemoScreenState extends ConsumerState<ThemeDemoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final appTheme = context.appTheme;
     final themeState = ref.watch(themeProvider);
 

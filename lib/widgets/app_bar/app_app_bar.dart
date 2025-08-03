@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siraaj/theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
-import '../text/app_text.dart';
 
 /// Reusable AppBar widget for consistent navigation across the app
 /// Follows platform conventions and design system guidelines
@@ -74,7 +72,6 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget _buildTitle(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final appTheme = context.appTheme;
 
     if (subtitle != null) {
       return Column(

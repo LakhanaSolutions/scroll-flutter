@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siraaj/theme/app_gradients.dart';
 import '../../theme/app_spacing.dart';
 import '../../data/mock_data.dart';
 import '../text/app_text.dart';

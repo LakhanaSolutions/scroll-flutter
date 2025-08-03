@@ -5,6 +5,7 @@ import '../text/app_text.dart';
 
 /// Mood selector widget with horizontally scrollable tiles
 /// Shows different mood categories that users can select to find matching content
+/// Think of it as your emotional GPS - helping you navigate to the right audio destination 🧭
 class MoodSelector extends StatelessWidget {
   final String title;
   final List<MoodCategory> categories;
@@ -57,6 +58,7 @@ class MoodSelector extends StatelessWidget {
 }
 
 /// Individual mood tile widget
+/// Each tile is basically a portal to your desired emotional state 🚪✨
 class _MoodTile extends StatelessWidget {
   final MoodCategory category;
   final VoidCallback? onTap;

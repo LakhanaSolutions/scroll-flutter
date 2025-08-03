@@ -179,6 +179,17 @@ class AppIcons {
   static const IconData refresh = CupertinoIcons.refresh;
   static const IconData reload = CupertinoIcons.arrow_clockwise;
 
+  // Arrow Icons
+  static const IconData arrowDown = CupertinoIcons.chevron_down;
+  static const IconData arrowUp = CupertinoIcons.chevron_up;
+
+  // Gift Icons
+  static const IconData gift = CupertinoIcons.gift_fill;
+  static const IconData giftOutlined = CupertinoIcons.gift;
+
+  // Logout Icons
+  static const IconData logout = CupertinoIcons.square_arrow_right;
+
   // Location Icons
   static const IconData location = CupertinoIcons.location_fill;
   static const IconData locationOutlined = CupertinoIcons.location;

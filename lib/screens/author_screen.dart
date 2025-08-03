@@ -3,13 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:siraaj/theme/app_gradients.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
-import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/books/content_tile.dart';
-import '../widgets/images/app_image.dart';
 import '../widgets/reviews/add_review_card.dart';
 
 /// Author profile screen showing detailed information about an author

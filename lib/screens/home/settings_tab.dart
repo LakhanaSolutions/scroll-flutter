@@ -289,7 +289,7 @@ class SettingsTab extends ConsumerWidget {
               separatorBuilder: (context, index) => Divider(
                 height: 1,
                 thickness: 1,
-                color: colorScheme.outline.withOpacity(0.1),
+                color: colorScheme.outline.withValues(alpha: 0.1),
                 indent: AppSpacing.medium,
                 endIndent: AppSpacing.medium,
               ),

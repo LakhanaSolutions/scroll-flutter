@@ -37,7 +37,7 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
       return;
     }
 
-    // TODO: Implement profile submission functionality
+    // TODO-013: Implement profile submission functionality
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profile completed successfully')),
     );
@@ -47,7 +47,7 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
   }
 
   void _logout() {
-    // TODO: Implement logout functionality
+    // TODO-014: Implement logout functionality
     context.go('/welcome');
   }
 

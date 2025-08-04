@@ -237,7 +237,7 @@ class _TextSizeBottomSheet extends _BaseBottomSheet {
       elevation: 0,
       backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
-        // TODO: Implement text size setting
+        // TODO-001: Implement text size setting
         Navigator.pop(context);
       },
       child: ListTile(
@@ -253,7 +253,7 @@ class _TextSizeBottomSheet extends _BaseBottomSheet {
           value: size,
           groupValue: 14.0, // Default size
           onChanged: (value) {
-            // TODO: Implement text size setting
+            // TODO-001: Implement text size setting
             Navigator.pop(context);
           },
         ),
@@ -304,7 +304,7 @@ class _LanguageBottomSheet extends _BaseBottomSheet {
       elevation: 0,
       backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
-        // TODO: Implement language setting
+        // TODO-003: Implement language setting
         Navigator.pop(context);
       },
       child: ListTile(
@@ -383,7 +383,7 @@ class _AudioQualityBottomSheet extends _BaseBottomSheet {
           // Show premium required dialog
           return;
         }
-        // TODO: Implement audio quality setting
+        // TODO-004: Implement audio quality setting
         Navigator.pop(context);
       },
       child: ListTile(
@@ -417,7 +417,7 @@ class _AudioQualityBottomSheet extends _BaseBottomSheet {
           value: name,
           groupValue: isSelected ? name : null,
           onChanged: isPremium ? null : (value) {
-            // TODO: Implement audio quality setting
+            // TODO-004: Implement audio quality setting
             Navigator.pop(context);
           },
         ),
@@ -472,7 +472,7 @@ class _DownloadQualityBottomSheet extends _BaseBottomSheet {
       elevation: 0,
       backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
-        // TODO: Implement download quality setting
+        // TODO-006: Implement download quality setting
         Navigator.pop(context);
       },
       child: ListTile(
@@ -494,7 +494,7 @@ class _DownloadQualityBottomSheet extends _BaseBottomSheet {
           value: name,
           groupValue: isSelected ? name : null,
           onChanged: (value) {
-            // TODO: Implement download quality setting
+            // TODO-006: Implement download quality setting
             Navigator.pop(context);
           },
         ),
@@ -546,7 +546,7 @@ class _PlaybackSpeedBottomSheet extends _BaseBottomSheet {
       elevation: 0,
       backgroundColor: colorScheme.surfaceContainer,
       onTap: () {
-        // TODO: Implement playback speed setting
+        // TODO-008: Implement playback speed setting
         Navigator.pop(context);
       },
       child: ListTile(
@@ -560,7 +560,7 @@ class _PlaybackSpeedBottomSheet extends _BaseBottomSheet {
           value: speed,
           groupValue: isSelected ? speed : null,
           onChanged: (value) {
-            // TODO: Implement playback speed setting
+            // TODO-008: Implement playback speed setting
             Navigator.pop(context);
           },
         ),

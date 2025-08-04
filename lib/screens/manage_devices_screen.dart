@@ -202,7 +202,7 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Implement device logout
+              // TODO-025: Implement device logout
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Logged out from ${device.name}'),
@@ -236,7 +236,7 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Implement logout all devices
+              // TODO-026: Implement logout all devices
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Logged out from all other devices'),

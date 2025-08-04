@@ -59,7 +59,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
         _error = null;
       });
 
-      // TODO: Replace with actual API call
+      // TODO-015: Replace with actual API call
       // For now, using mock FAQ data
       await Future.delayed(const Duration(milliseconds: 800));
       
@@ -323,7 +323,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        // TODO: Open email client
+                        // TODO-016: Open email client
                         debugPrint('Email support');
                       },
                       icon: const Icon(Icons.email_rounded),
@@ -334,7 +334,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        // TODO: Open chat or phone
+                        // TODO-017: Open chat or phone
                         debugPrint('Live chat');
                       },
                       icon: const Icon(Icons.chat_rounded),

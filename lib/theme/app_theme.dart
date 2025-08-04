@@ -131,7 +131,7 @@ class AppTheme {
           color: AppColors.lightColorScheme.onSurfaceVariant,
         ),
         hintStyle: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.lightColorScheme.onSurfaceVariant.withOpacity(0.6),
+          color: AppColors.lightColorScheme.onSurfaceVariant.withValues(alpha: 0.6),
         ),
       ),
       
@@ -312,7 +312,7 @@ class AppTheme {
           color: AppColors.darkColorScheme.onSurfaceVariant,
         ),
         hintStyle: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.darkColorScheme.onSurfaceVariant.withOpacity(0.6),
+          color: AppColors.darkColorScheme.onSurfaceVariant.withValues(alpha: 0.6),
         ),
       ),
       

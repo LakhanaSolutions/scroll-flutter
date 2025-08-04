@@ -11,6 +11,7 @@ import '../widgets/cards/app_card.dart';
 import '../widgets/buttons/app_buttons.dart';
 import '../widgets/trial/glimpse_into_premium_stats.dart';
 import '../widgets/reviews/add_review_card.dart';
+import '../widgets/social/social_listening_stats.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -221,6 +222,14 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                       colorScheme.onSurfaceVariant,
                     ),
                   ],
+                ),
+                const SizedBox(height: AppSpacing.medium),
+                // Social stats
+                SocialListeningStats(
+                  contentId: widget.content.id,
+                  isCompact: true,
+                  showBookmarks: true,
+                  showMonthlyStats: true,
                 ),
               ],
             ),

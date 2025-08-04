@@ -293,7 +293,7 @@ class AppTextButton extends StatelessWidget {
           horizontal: AppSpacing.medium,
           vertical: AppSpacing.extraSmall,
         ),
-        minSize: 0,
+        minimumSize: Size.zero,
         child: DefaultTextStyle(
           style: AppTextStyles.iosBody.copyWith(
             color: theme.colorScheme.primary,
@@ -400,7 +400,7 @@ class AppIconButton extends StatelessWidget {
       return CupertinoButton(
         onPressed: effectiveOnPressed,
         padding: EdgeInsets.zero,
-        minSize: effectiveSize + 8,
+        minimumSize: Size(effectiveSize + 8, effectiveSize + 8),
         child: Icon(
           icon,
           size: effectiveSize,

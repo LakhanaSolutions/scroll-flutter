@@ -118,7 +118,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Future<void> _savePreferences() async {
-    // TODO: Implement saving notification preferences
+    // TODO-022: Implement saving notification preferences
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Notification preferences saved'),
@@ -322,7 +322,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       color: colorScheme.onSurfaceVariant,
                     ),
                     onTap: () {
-                      // TODO: Show time picker for quiet hours
+                      // TODO-023: Show time picker for quiet hours
                       debugPrint('Configure quiet hours');
                     },
                     contentPadding: EdgeInsets.zero,

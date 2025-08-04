@@ -31,7 +31,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
         _error = null;
       });
 
-      // TODO: Replace with actual API call
+      // TODO-021: Replace with actual API call
       // For now, using mock HTML content
       await Future.delayed(const Duration(seconds: 1));
       

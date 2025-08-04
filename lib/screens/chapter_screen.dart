@@ -10,6 +10,7 @@ import '../widgets/waveform/audio_waveform.dart';
 import '../providers/audio_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../widgets/trial/glimpse_into_premium_stats.dart';
+import '../widgets/social/social_listening_stats.dart';
 import './home/library_tab.dart';
 
 /// Chapter screen with audio player interface
@@ -235,6 +236,9 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
             // Chapter info
             _buildChapterInfo(context),
             const SizedBox(height: AppSpacing.large),
+            // Social listening stats
+            _buildSocialStats(context),
+            const SizedBox(height: AppSpacing.large),
             // Progress bar
             _buildProgressBar(context),
             const SizedBox(height: AppSpacing.large),
@@ -331,6 +335,17 @@ class _ChapterScreenState extends ConsumerState<ChapterScreen>
           overflow: TextOverflow.ellipsis,
         ),
       ],
+    );
+  }
+
+  Widget _buildSocialStats(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      child: SocialListeningStats(
+        chapterId: widget.chapter.id,
+        contentId: widget.content.id,
+        isCompact: true,
+      ),
     );
   }
 
@@ -781,6 +796,10 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
                   _buildTimestampsSection(context),
                   _buildSectionDivider(context),
                                     
+                  // Community Activity section
+                  _buildCommunityActivitySection(context),
+                  _buildSectionDivider(context),
+
                   // View Notes section
                   _buildViewNotesSection(context),
                   _buildSectionDivider(context),
@@ -985,6 +1004,16 @@ class _DetailsBottomSheetState extends ConsumerState<_DetailsBottomSheet> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCommunityActivitySection(BuildContext context) {
+    return SocialListeningStats(
+      chapterId: widget.chapter.id,
+      contentId: widget.content.id,
+      isCompact: false,
+      showBookmarks: true,
+      showMonthlyStats: true,
     );
   }
 

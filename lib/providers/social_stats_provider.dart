@@ -27,34 +27,28 @@ class SocialStatsNotifier extends StateNotifier<SocialStats> {
     recentListenerAvatars: [],
   ));
 
-  /// Get real-time social stats for a chapter
-  SocialStats getChapterStats(String chapterId, String contentId) {
+  /// Generate real-time social stats for a chapter (without modifying state)
+  SocialStats generateChapterStats(String chapterId, String contentId) {
     // Mock data - in real app this would come from API
-    final mockStats = SocialStats(
+    return SocialStats(
       currentListeners: _generateRandomListeners(),
       totalBookmarks: _generateRandomBookmarks(),
       monthlyListeners: _generateRandomMonthlyListeners(),
       dailyListeners: _generateRandomDailyListeners(),
       recentListenerAvatars: _generateMockAvatars(),
     );
-    
-    state = mockStats;
-    return mockStats;
   }
 
-  /// Get social stats for a playlist/content
-  SocialStats getPlaylistStats(String contentId) {
+  /// Generate social stats for a playlist/content (without modifying state)
+  SocialStats generatePlaylistStats(String contentId) {
     // Mock data - in real app this would come from API
-    final mockStats = SocialStats(
+    return SocialStats(
       currentListeners: _generateRandomListeners(isPlaylist: true),
       totalBookmarks: _generateRandomBookmarks(isPlaylist: true),
       monthlyListeners: _generateRandomMonthlyListeners(isPlaylist: true),
       dailyListeners: _generateRandomDailyListeners(isPlaylist: true),
       recentListenerAvatars: _generateMockAvatars(),
     );
-    
-    state = mockStats;
-    return mockStats;
   }
 
   int _generateRandomListeners({bool isPlaylist = false}) {
@@ -101,11 +95,11 @@ final socialStatsProvider = StateNotifierProvider<SocialStatsNotifier, SocialSta
 /// Provider for chapter-specific social stats
 final chapterSocialStatsProvider = Provider.family<SocialStats, Map<String, String>>((ref, params) {
   final notifier = ref.read(socialStatsProvider.notifier);
-  return notifier.getChapterStats(params['chapterId']!, params['contentId']!);
+  return notifier.generateChapterStats(params['chapterId']!, params['contentId']!);
 });
 
 /// Provider for playlist-specific social stats
 final playlistSocialStatsProvider = Provider.family<SocialStats, String>((ref, contentId) {
   final notifier = ref.read(socialStatsProvider.notifier);
-  return notifier.getPlaylistStats(contentId);
+  return notifier.generatePlaylistStats(contentId);
 });

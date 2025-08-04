@@ -25,6 +25,9 @@ import '../screens/authors_list_screen.dart';
 import '../screens/reviews_screen.dart';
 import '../screens/mood_screen.dart';
 import '../screens/finish_profile_screen.dart';
+import '../screens/bookmarks_screen.dart';
+import '../screens/downloads_screen.dart';
+import '../screens/following_screen.dart';
 import '../data/mock_data.dart';
 import '../services/token_service.dart';
 
@@ -99,6 +102,18 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'subscription',
           builder: (context, state) => const SubscriptionScreen(),
+        ),
+        GoRoute(
+          path: 'bookmarks',
+          builder: (context, state) => const BookmarksScreen(),
+        ),
+        GoRoute(
+          path: 'downloads',
+          builder: (context, state) => const DownloadsScreen(),
+        ),
+        GoRoute(
+          path: 'following',
+          builder: (context, state) => const FollowingScreen(),
         ),
         GoRoute(
           path: 'manage-devices',

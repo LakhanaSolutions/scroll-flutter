@@ -5,6 +5,7 @@ import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../providers/subscription_provider.dart';
+import '../providers/bookmarks_provider.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
@@ -29,7 +30,6 @@ class PlaylistScreen extends ConsumerStatefulWidget {
 
 class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
   String _selectedNarratorId = '';
-  bool _isBookmarked = false;
 
   @override
   void initState() {
@@ -37,13 +37,13 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     _selectedNarratorId = widget.content.narrators.isNotEmpty 
         ? widget.content.narrators.first.id 
         : '';
-    _isBookmarked = widget.content.isBookmarked;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isBookmarked = ref.watch(isBookmarkedProvider(widget.content.id));
 
     return Scaffold(
       floatingActionButton: const MusicPlayerFab(),
@@ -53,13 +53,11 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-              color: _isBookmarked ? colorScheme.primary : colorScheme.onSurfaceVariant,
+              isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+              color: isBookmarked ? colorScheme.primary : colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
-              setState(() {
-                _isBookmarked = !_isBookmarked;
-              });
+              ref.read(bookmarksProvider.notifier).toggleBookmark(widget.content.id);
             },
           ),
           IconButton(

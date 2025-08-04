@@ -59,7 +59,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 4, 
+      length: 3, 
       vsync: this,
       initialIndex: widget.initialTabIndex,
     );
@@ -149,8 +149,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
                 dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(text: 'Recent'),
-                  Tab(text: 'Downloads'),
-                  Tab(text: 'Following'),
+                  Tab(text: 'Saved'),
                   Tab(text: 'Notes'),
                 ],
               ),
@@ -164,8 +163,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
             controller: _tabController,
             children: [
               _buildRecentlyPlayedTab(),
-              _buildDownloadsTab(),
-              _buildFollowingTab(),
+              _buildSavedTab(),
               _buildNotesTab(),
             ],
           ),
@@ -198,6 +196,40 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
           },
         );
       },
+    );
+  }
+
+  Widget _buildSavedTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.medium),
+      children: [
+        // Bookmarks tile
+        _SavedMenuItem(
+          icon: Icons.bookmark_rounded,
+          title: 'Bookmarks',
+          subtitle: 'Your saved playlists and books',
+          onTap: () => context.push('/home/bookmarks'),
+        ),
+        const SizedBox(height: AppSpacing.medium),
+        // Downloads tile
+        _SavedMenuItem(
+          icon: Icons.download_rounded,
+          title: 'Downloads',
+          subtitle: 'Offline content for listening',
+          onTap: () => context.push('/home/downloads'),
+        ),
+        const SizedBox(height: AppSpacing.medium),
+        // Following tile
+        _SavedMenuItem(
+          icon: Icons.person_add_rounded,
+          title: 'Following',
+          subtitle: 'Authors and narrators you follow',
+          onTap: () => context.push('/home/following'),
+        ),
+      ],
     );
   }
 
@@ -1407,6 +1439,78 @@ class _NoteTypeFilterChip extends StatelessWidget {
                     : colorScheme.onSurfaceVariant,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Saved menu item widget for the Saved tab
+class _SavedMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _SavedMenuItem({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return AppCard(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.medium),
+        child: Row(
+          children: [
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              ),
+              child: Icon(
+                icon,
+                color: colorScheme.onPrimaryContainer,
+                size: AppSpacing.iconMedium,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.medium),
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppSubtitleText(
+                    title,
+                    color: colorScheme.onSurface,
+                  ),
+                  const SizedBox(height: AppSpacing.extraSmall),
+                  AppCaptionText(
+                    subtitle,
+                    color: colorScheme.onSurfaceVariant,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            // Arrow
+            Icon(
+              Icons.chevron_right_rounded,
+              color: colorScheme.onSurfaceVariant,
+              size: AppSpacing.iconMedium,
             ),
           ],
         ),

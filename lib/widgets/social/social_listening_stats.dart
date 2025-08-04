@@ -266,6 +266,7 @@ class SocialListeningStats extends ConsumerWidget {
               child: Stack(
                 children: stats.recentListenerAvatars
                     .take(5)
+                    .toList()
                     .asMap()
                     .entries
                     .map((entry) {

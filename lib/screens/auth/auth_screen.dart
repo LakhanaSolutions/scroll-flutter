@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glowy_borders/glowy_borders.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:siraaj/models/welcome_content.dart';
 import 'package:siraaj/screens/auth/welcome_content_widget.dart';
 import 'package:siraaj/screens/auth/login_content_widget.dart';
@@ -170,6 +171,83 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         return 'Logout';
     }
   }
+
+  String _getTitle() {
+    switch (_currentMode) {
+      case AuthMode.welcome:
+        return WelcomeContent.defaultContent.title;
+      case AuthMode.email:
+        return 'Welcome Back';
+      case AuthMode.requestOtp:
+        return 'Verify Your Email';
+      case AuthMode.enterOtp:
+        return 'Enter Verification Code';
+    }
+  }
+
+  String _getDescription() {
+    switch (_currentMode) {
+      case AuthMode.welcome:
+        return WelcomeContent.defaultContent.description;
+      case AuthMode.email:
+        return 'Enter your email to continue your journey';
+      case AuthMode.requestOtp:
+        return 'We\'ll send a verification code to\n$_userEmail';
+      case AuthMode.enterOtp:
+        return 'Enter the 6-digit code sent to\n$_userEmail';
+    }
+  }
+
+  Widget _buildHeaderContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme) {
+    return Column(
+      children: [
+        // Lottie Animation
+        Lottie.asset(
+          'assets/lottie/brokenMic.json',
+          width: isTablet ? 200 : 160,
+          height: isTablet ? 200 : 160,
+          repeat: false,
+          animate: _animateLottie,
+          reverse: _currentMode == AuthMode.welcome ? !_animateLottie : false,
+        ),
+        
+        SizedBox(height: isTablet ? 32 : 24),
+        
+        // Title
+        Text(
+          _getTitle(),
+          style: theme.textTheme.headlineLarge?.copyWith(
+            fontSize: isTablet ? 36 : 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        
+        SizedBox(height: isTablet ? 25 : 20),
+        
+        // Description
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: isDesktop ? 400 : screenSize.width * 0.85,
+          ),
+          child: Text(
+            _getDescription(),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontSize: isTablet ? 18 : 16,
+              height: 1.4,
+              color: Colors.grey.shade300,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        
+        SizedBox(height: isTablet ? 32 : 24),
+      ],
+    );
+  }
   
   Widget _buildCurrentContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme, AuthState authState) {
     switch (_currentMode) {
@@ -180,7 +258,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           isDesktop: isDesktop,
           screenSize: screenSize,
           theme: theme,
-          animateLottie: _animateLottie,
         );
       case AuthMode.email:
         return LoginContentWidget(
@@ -198,7 +275,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               ref.read(authProvider.notifier).clearError();
             }
           },
-          animateLottie: _animateLottie,
         );
       case AuthMode.requestOtp:
         return RequestOtpContentWidget(
@@ -207,8 +283,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           isDesktop: isDesktop,
           screenSize: screenSize,
           theme: theme,
-          email: _userEmail,
-          animateLottie: _animateLottie,
         );
       case AuthMode.enterOtp:
         return EnterOtpContentWidget(
@@ -217,7 +291,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           isDesktop: isDesktop,
           screenSize: screenSize,
           theme: theme,
-          email: _userEmail,
           otpControllers: _otpControllers,
           otpFocusNodes: _otpFocusNodes,
           onOtpComplete: () => _handlePrimaryButton(context),
@@ -228,7 +301,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               ref.read(authProvider.notifier).clearError();
             }
           },
-          animateLottie: _animateLottie,
         );
     }
   }
@@ -318,6 +390,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         duration: const Duration(milliseconds: 500),
                         child: Column(
                           children: [
+                            _buildHeaderContent(isTablet, isDesktop, screenSize, theme),
                             _buildCurrentContent(isTablet, isDesktop, screenSize, theme, authState),
                                   Spacer(),
 

@@ -139,6 +139,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen>
         // Navigate back to login screen
         context.push('/login');
       }
+      // Don't navigate on error - just stay on this screen and show the error
     });
 
     // If we don't have the required state, redirect to login

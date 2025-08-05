@@ -18,10 +18,12 @@ import '../widgets/social/social_listening_stats.dart';
 /// Shows description, actions, narrator selection, and chapters list
 class PlaylistScreen extends ConsumerStatefulWidget {
   final ContentItemData content;
+  final double? progress;
 
   const PlaylistScreen({
     super.key,
     required this.content,
+    this.progress,
   });
 
   @override
@@ -51,6 +53,36 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
         title: widget.content.title,
         backgroundColor: colorScheme.surface,
         actions: [
+          if (widget.progress != null && widget.progress! > 0)
+            Container(
+              margin: const EdgeInsets.only(right: AppSpacing.small),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.small,
+                vertical: AppSpacing.extraSmall,
+              ),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.schedule_rounded,
+                    color: colorScheme.onPrimaryContainer,
+                    size: AppSpacing.iconExtraSmall,
+                  ),
+                  const SizedBox(width: AppSpacing.extraSmall),
+                  Text(
+                    '${(widget.progress! * 100).toInt()}%',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           IconButton(
             icon: Icon(
               isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,

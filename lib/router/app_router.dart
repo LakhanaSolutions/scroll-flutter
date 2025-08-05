@@ -166,6 +166,8 @@ final appRouter = GoRouter(
           path: 'playlist/:contentId',
           builder: (context, state) {
             final contentId = state.pathParameters['contentId']!;
+            final progressParam = state.uri.queryParameters['progress'];
+            final progress = progressParam != null ? double.tryParse(progressParam) : null;
             
             // Get mock data - in real app, fetch from API
             final content = MockData.getCategoryContent('1').firstWhere(
@@ -173,7 +175,7 @@ final appRouter = GoRouter(
               orElse: () => MockData.getCategoryContent('1').first,
             );
             
-            return PlaylistScreen(content: content);
+            return PlaylistScreen(content: content, progress: progress);
           },
         ),
         GoRoute(

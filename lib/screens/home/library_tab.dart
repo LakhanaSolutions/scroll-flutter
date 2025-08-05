@@ -192,7 +192,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
         return _RecentlyPlayedTile(
           book: book,
           onTap: () {
-            debugPrint('Recently played book tapped: ${book.title}');
+            context.push('/home/playlist/${book.id}?progress=${book.progress}');
           },
         );
       },
@@ -775,6 +775,8 @@ class _RecentlyPlayedTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
       onTap: onTap,
       child: Row(
@@ -857,7 +859,7 @@ class _RecentlyPlayedTile extends StatelessWidget {
                   // Progress bar
                   LinearProgressIndicator(
                     value: book.progress,
-                    backgroundColor: colorScheme.surfaceContainer,
+                    backgroundColor: colorScheme.surfaceContainerLow,
                     valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                   ),
                 ],
@@ -1148,6 +1150,8 @@ class _NoteTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       margin: const EdgeInsets.only(bottom: AppSpacing.small),
       child: Row(
         children: [
@@ -1467,6 +1471,8 @@ class _SavedMenuItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      elevation: 0,
+      backgroundColor: colorScheme.surfaceContainer,
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),

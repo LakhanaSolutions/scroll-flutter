@@ -54,13 +54,6 @@ class _EmailInputFieldState extends State<EmailInputField> {
       children: [
         Container(
           height: isTablet ? 60 : 56,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: widget.errorText != null
-                ? Border.all(color: theme.colorScheme.error, width: 1.5)
-                : Border.all(color: Colors.transparent),
-          ),
           child: TextField(
             controller: _controller,
             enabled: widget.enabled,

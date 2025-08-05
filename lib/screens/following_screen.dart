@@ -21,7 +21,6 @@ class FollowingScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppAppBar(
         title: 'Following',
-        backgroundColor: colorScheme.surface,
       ),
       body: (followedNarrators.isEmpty && followedAuthors.isEmpty)
           ? _buildEmptyState(context)

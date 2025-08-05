@@ -27,6 +27,7 @@ class _OTPInputFieldState extends State<OTPInputField> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
   String? _previousErrorText;
+  bool _hasSubmitted = false;
 
   @override
   void initState() {
@@ -46,20 +47,22 @@ class _OTPInputFieldState extends State<OTPInputField> {
   void didUpdateWidget(OTPInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
     
-    // Check if we got a new error and should clear the fields
-    // Like a disappointed teacher erasing the blackboard after a wrong answer 📚
-    // Only clear if we got a NEW error (not the same one persisting)
-    if (widget.clearOnError && 
-        widget.errorText != null && 
-        widget.errorText != _previousErrorText &&
-        _previousErrorText == null) {
-      // New error appeared - clear all fields after a short delay for better UX
-      // Give users a moment to read the error before dramatically clearing everything
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          clearFields();
-        }
-      });
+    // Reset submission flag when error text changes (error cleared or new error)
+    if (widget.errorText != _previousErrorText) {
+      _hasSubmitted = false;
+      
+      // Only clear fields if we got a new error and clearOnError is true
+      // Don't clear on every error state change
+      if (widget.clearOnError && 
+          widget.errorText != null && 
+          _previousErrorText == null) {
+        // New error appeared - clear all fields after a short delay for better UX
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            clearFields();
+          }
+        });
+      }
     }
     _previousErrorText = widget.errorText;
   }
@@ -80,6 +83,7 @@ class _OTPInputFieldState extends State<OTPInputField> {
       controller.clear();
     }
     _focusNodes[0].requestFocus();
+    _hasSubmitted = false;
     // Notify parent about the cleared OTP
     widget.onChanged('');
   }
@@ -105,8 +109,9 @@ class _OTPInputFieldState extends State<OTPInputField> {
     final otp = _controllers.map((c) => c.text).join();
     widget.onChanged(otp);
 
-    // Only trigger completion if we have exactly the required length and all digits
-    if (otp.length == widget.length && RegExp(r'^\d+$').hasMatch(otp)) {
+    // Only trigger completion if we have exactly the required length, all digits, and haven't submitted yet
+    if (otp.length == widget.length && RegExp(r'^\d+$').hasMatch(otp) && !_hasSubmitted) {
+      _hasSubmitted = true;
       widget.onCompleted(otp);
     }
   }
@@ -117,6 +122,11 @@ class _OTPInputFieldState extends State<OTPInputField> {
         _focusNodes[index - 1].requestFocus();
         // Clear the previous field's text to allow overwriting
         _controllers[index - 1].clear();
+        // Reset submission flag when user starts modifying OTP
+        _hasSubmitted = false;
+      } else if (_controllers[index].text.isNotEmpty) {
+        // Reset submission flag when user modifies current field
+        _hasSubmitted = false;
       }
     }
   }
@@ -134,9 +144,9 @@ class _OTPInputFieldState extends State<OTPInputField> {
           children: List.generate(widget.length, (index) {
             return Container(
               width: isTablet ? 56 : 48,
-              height: isTablet ? 64 : 56,
+              height: isTablet ? 64 : 50,
               decoration: BoxDecoration(
-                // color: theme.colorScheme.surface,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: widget.errorText != null
                     ? Border.all(color: theme.colorScheme.error, width: 1.5)
@@ -146,13 +156,7 @@ class _OTPInputFieldState extends State<OTPInputField> {
                             : theme.colorScheme.outline.withValues(alpha: 0.2),
                         width: 1
                       ),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-                    blurRadius: 2,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
+                
               ),
               child: KeyboardListener(
                 focusNode: FocusNode(),

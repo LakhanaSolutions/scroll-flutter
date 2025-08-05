@@ -270,7 +270,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void clearError() {
     if (state.hasError) {
       AuthStatus newStatus;
-      if (state.user != null) {
+      if (state.user != null && _currentOTP != null) {
+        // If we're in OTP verification mode, stay in otpSent state
+        newStatus = AuthStatus.otpSent;
+      } else if (state.user != null) {
         newStatus = AuthStatus.userDetected;
       } else if (state.email != null) {
         newStatus = AuthStatus.emailInput;

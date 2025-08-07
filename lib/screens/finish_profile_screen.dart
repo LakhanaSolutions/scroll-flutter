@@ -93,7 +93,7 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
           _buildFormField(
             label: 'Full Name',
             controller: _fullNameController,
-            icon: AppIcons.person,
+            iconPath: 'assets/icons/icons8-users-100.png', // Previous icon: AppIcons.person
             isRequired: true,
           ),
           const SizedBox(height: AppSpacing.medium),
@@ -102,7 +102,7 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
           _buildFormField(
             label: 'Referral Code (Optional)',
             controller: _referralCodeController,
-            icon: AppIcons.gift,
+            iconPath: AppIcons.giftPath, // Previous icon: AppIcons.gift
             isRequired: false,
           ),
           const SizedBox(height: AppSpacing.large),
@@ -176,7 +176,8 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
   Widget _buildFormField({
     required String label,
     required TextEditingController controller,
-    required IconData icon,
+    IconData? icon,
+    String? iconPath,
     required bool isRequired,
     TextInputType? keyboardType,
   }) {
@@ -204,7 +205,14 @@ class _FinishProfileScreenState extends State<FinishProfileScreen> {
         AppTextField(
           controller: controller,
           hintText: 'Enter your ${label.toLowerCase()}',
-          prefixIcon: Icon(icon),
+          prefixIcon: iconPath != null
+            ? Image.asset(
+                iconPath,
+                width: 24,
+                height: 24,
+                color: colorScheme.onSurfaceVariant,
+              )
+            : Icon(icon), // Previous icon: icon parameter
           keyboardType: keyboardType,
           fillColor: colorScheme.surfaceContainerLow,
         ),

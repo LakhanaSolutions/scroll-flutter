@@ -184,8 +184,10 @@ class AppIcons {
   static const IconData arrowUp = CupertinoIcons.chevron_up;
 
   // Gift Icons
-  static const IconData gift = CupertinoIcons.gift_fill;
-  static const IconData giftOutlined = CupertinoIcons.gift;
+  // Previous icons: CupertinoIcons.gift_fill, CupertinoIcons.gift
+  static const String giftPath = 'assets/icons/icons8-gift-100.png';
+  static const IconData gift = CupertinoIcons.gift_fill; // Fallback
+  static const IconData giftOutlined = CupertinoIcons.gift; // Fallback
 
   // Logout Icons
   static const IconData logout = CupertinoIcons.square_arrow_right;

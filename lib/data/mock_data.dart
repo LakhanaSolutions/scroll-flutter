@@ -112,7 +112,8 @@ class MoodCategory {
 class CategoryData {
   final String id;
   final String name;
-  final IconData icon;
+  final IconData? icon;
+  final String? iconPath; // Path to PNG icon asset
   final String? imageUrl;
   final int itemCount;
   final String listeningHours;
@@ -121,7 +122,8 @@ class CategoryData {
   CategoryData({
     required this.id,
     required this.name,
-    required this.icon,
+    this.icon, // Made optional to support iconPath
+    this.iconPath, // PNG icon path
     this.imageUrl,
     required this.itemCount,
     required this.listeningHours,
@@ -427,7 +429,8 @@ class MockData {
       CategoryData(
         id: '1',
         name: 'Fiqh',
-        icon: Icons.balance_rounded,
+        // Previous icon: Icons.balance_rounded
+        iconPath: 'assets/icons/icons8-allah-100.png',
         itemCount: 48,
         listeningHours: '156h',
         description: 'Islamic jurisprudence and legal rulings',
@@ -435,7 +438,8 @@ class MockData {
       CategoryData(
         id: '2',
         name: 'Aqeedah',
-        icon: Icons.star_rounded,
+        // Previous icon: Icons.star_rounded
+        iconPath: 'assets/icons/icons8-islam-100.png',
         itemCount: 32,
         listeningHours: '98h',
         description: 'Islamic creed and beliefs',
@@ -443,7 +447,8 @@ class MockData {
       CategoryData(
         id: '3',
         name: 'Quran',
-        icon: Icons.menu_book_rounded,
+        // Previous icon: Icons.menu_book_rounded
+        iconPath: 'assets/icons/icons8-quran-100.png',
         itemCount: 67,
         listeningHours: '234h',
         description: 'Quran recitation and tafseer',
@@ -451,7 +456,8 @@ class MockData {
       CategoryData(
         id: '4',
         name: 'Kids',
-        icon: Icons.child_care_rounded,
+        // Previous icon: Icons.child_care_rounded
+        iconPath: 'assets/icons/icons8-lotus-100.png',
         itemCount: 25,
         listeningHours: '45h',
         description: 'Islamic content for children',
@@ -459,7 +465,8 @@ class MockData {
       CategoryData(
         id: '5',
         name: 'Women',
-        icon: Icons.female_rounded,
+        // Previous icon: Icons.female_rounded
+        iconPath: 'assets/icons/icons8-muslim-woman-100.png',
         itemCount: 19,
         listeningHours: '67h',
         description: 'Content specifically for Muslim women',
@@ -467,7 +474,8 @@ class MockData {
       CategoryData(
         id: '6',
         name: 'Hadith',
-        icon: Icons.format_quote_rounded,
+        // Previous icon: Icons.format_quote_rounded
+        iconPath: 'assets/icons/icons8-letter-100.png',
         itemCount: 41,
         listeningHours: '123h',
         description: 'Prophetic traditions and sayings',
@@ -475,7 +483,8 @@ class MockData {
       CategoryData(
         id: '7',
         name: 'Seerah',
-        icon: Icons.person_rounded,
+        // Previous icon: Icons.person_rounded
+        iconPath: 'assets/icons/icons8-dome-100.png',
         itemCount: 28,
         listeningHours: '89h',
         description: 'Biography of Prophet Muhammad (PBUH)',
@@ -483,7 +492,8 @@ class MockData {
       CategoryData(
         id: '8',
         name: 'Dua & Dhikr',
-        icon: Icons.favorite_rounded,
+        // Previous icon: Icons.favorite_rounded
+        iconPath: 'assets/icons/icons8-prayer-100.png',
         itemCount: 15,
         listeningHours: '32h',
         description: 'Supplications and remembrance',

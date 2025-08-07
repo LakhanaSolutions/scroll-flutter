@@ -88,11 +88,19 @@ class _CategoryViewScreenState extends State<CategoryViewScreen> with TickerProv
                         color: colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                       ),
-                      child: Icon(
-                        widget.category.icon,
-                        color: colorScheme.onPrimaryContainer,
-                        size: AppSpacing.iconMedium,
-                      ),
+                      child: widget.category.iconPath != null
+                        ? Image.asset(
+                            widget.category.iconPath!,
+                            width: AppSpacing.iconMedium,
+                            height: AppSpacing.iconMedium,
+                            color: colorScheme.onPrimaryContainer,
+                          )
+                        : Icon(
+                            // Previous icon: widget.category.icon (when using IconData)
+                            widget.category.icon,
+                            color: colorScheme.onPrimaryContainer,
+                            size: AppSpacing.iconMedium,
+                          ),
                     ),
                     const SizedBox(width: AppSpacing.medium),
                     // Description text

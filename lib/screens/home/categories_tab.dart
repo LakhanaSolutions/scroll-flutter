@@ -72,7 +72,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                     child: _ExploreCard(
                       title: 'Explore Authors',
                       subtitle: 'Discover amazing writers',
-                      icon: Icons.edit_rounded,
+                      // Previous icon: Icons.edit_rounded
+                      iconPath: 'assets/icons/icons8-pen-tip-100.png',
                       gradient: const LinearGradient(
                         colors: [
                           Color(0xFF2196F3), // Blue
@@ -91,7 +92,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                     child: _ExploreCard(
                       title: 'Explore Narrators',
                       subtitle: 'Find amazing voices',
-                      icon: Icons.mic_rounded,
+                      // Previous icon: Icons.mic_rounded
+                      iconPath: 'assets/icons/icons8-users-100.png',
                       gradient: const LinearGradient(
                         colors: [
                           Color(0xFF00BCD4), // Cyan
@@ -446,26 +448,41 @@ class _CategoryTile extends StatelessWidget {
             top: -5,
             child: Opacity(
               opacity: 0.03,
-              child: Icon(
-                category.icon,
-                size: 60,
-                color: colorScheme.onSurface,
-              ),
+              child: category.iconPath != null
+                ? Image.asset(
+                    category.iconPath!,
+                    width: 60,
+                    height: 60,
+                    color: colorScheme.onSurface,
+                  )
+                : Icon(
+                    // Previous icon: category.icon (when using IconData)
+                    category.icon,
+                    size: 60,
+                    color: colorScheme.onSurface,
+                  ),
             ),
           ),
           // Main content
           Row(
             children: [
               // Category icon/image
-              AppImage(
-                imageUrl: category.imageUrl,
-                fallbackIcon: category.icon,
-                width: AppSpacing.iconLarge + AppSpacing.medium,
-                height: AppSpacing.iconLarge + AppSpacing.medium,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                backgroundColor: colorScheme.primaryContainer,
-                iconColor: colorScheme.onPrimaryContainer,
-                iconSize: AppSpacing.iconLarge,
+              category.iconPath != null
+                ? Image.asset(
+                    category.iconPath!,
+                    width: AppSpacing.iconLarge + AppSpacing.medium,
+                    height: AppSpacing.iconLarge + AppSpacing.medium,
+                  )
+                : AppImage(
+                    imageUrl: category.imageUrl,
+                    // Previous fallback icon: category.icon (when using IconData)
+                    fallbackIcon: category.icon!,
+                    width: AppSpacing.iconLarge + AppSpacing.medium,
+                    height: AppSpacing.iconLarge + AppSpacing.medium,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    backgroundColor: colorScheme.primaryContainer,
+                    iconColor: colorScheme.onPrimaryContainer,
+                    iconSize: AppSpacing.iconLarge,
               ),
               const SizedBox(width: AppSpacing.medium),
               // Category info
@@ -518,14 +535,16 @@ class _CategoryTile extends StatelessWidget {
 class _ExploreCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final IconData? icon;
+  final String? iconPath; // Path to PNG icon asset
   final Gradient gradient;
   final VoidCallback? onTap;
 
   const _ExploreCard({
     required this.title,
     required this.subtitle,
-    required this.icon,
+    this.icon, // Made optional to support iconPath
+    this.iconPath, // PNG icon path
     required this.gradient,
     this.onTap,
   });
@@ -558,11 +577,19 @@ class _ExploreCard extends StatelessWidget {
               top: -10,
               child: Opacity(
                 opacity: 0.1,
-                child: Icon(
-                  icon,
-                  size: 80,
-                  color: Colors.white,
-                ),
+                child: iconPath != null
+                  ? Image.asset(
+                      iconPath!,
+                      width: 80,
+                      height: 80,
+                      color: Colors.white,
+                    )
+                  : Icon(
+                      // Previous icon: icon parameter
+                      icon,
+                      size: 80,
+                      color: Colors.white,
+                    ),
               ),
             ),
             // Content
@@ -580,12 +607,23 @@ class _ExploreCard extends StatelessWidget {
                       color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                     ),
-                    child: Icon(
-                      icon,
-                      color: Colors.white,
-                      size: AppSpacing.iconMedium,
+                    child: iconPath != null
+                      ? Padding(
+                        padding: const EdgeInsets.all(AppSpacing.small),
+                        child: Image.asset(
+                            iconPath!,
+                            width: AppSpacing.iconMedium,
+                            height: AppSpacing.iconMedium,
+                            color: Colors.white,
+                          ),
+                      )
+                      : Icon(
+                          // Previous icon: icon parameter
+                          icon,
+                          color: Colors.white,
+                          size: AppSpacing.iconMedium,
+                        ),
                     ),
-                  ),
                   // Text
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

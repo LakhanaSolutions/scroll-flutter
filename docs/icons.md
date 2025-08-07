@@ -224,6 +224,8 @@ This document lists all icons used in the Siraaj Flutter app for creating custom
 - **Reload** - `CupertinoIcons.arrow_clockwise` - Reload content
 - **Gift (Filled)** - `CupertinoIcons.gift_fill` - Gifts/rewards
 - **Gift (Outlined)** - `CupertinoIcons.gift` - Gift outline
+- **Gift PNG** - `assets/icons/icons8-gift-100.png` - PNG gift icon
+  - *Previous icon:* `CupertinoIcons.gift_fill` / `CupertinoIcons.gift`
 - **Logout** - `CupertinoIcons.square_arrow_right` - Sign out
 
 ## Location Icons
@@ -296,15 +298,23 @@ Each icon should be designed as a custom SVG with consistent styling that matche
 
 The following icons are used in the mock data for categories and content organization:
 
-### Islamic Category Icons
-- **Balance** - `Icons.balance_rounded` - Fiqh (Islamic Law) category icon
-- **Star** - `Icons.star_rounded` - Aqeedah (Creed/Beliefs) category icon  
-- **Menu Book** - `Icons.menu_book_rounded` - Quran category icon
-- **Child Care** - `Icons.child_care_rounded` - Kids/Children's content category icon
-- **Female** - `Icons.female_rounded` - Women's Islamic content category icon
-- **Format Quote** - `Icons.format_quote_rounded` - Hadith (Prophetic Sayings) category icon
-- **Person** - `Icons.person_rounded` - Seerah (Prophet's Biography) category icon
-- **Favorite** - `Icons.favorite_rounded` - Dua & Dhikr (Supplications) category icon
+### Islamic Category Icons (Updated with PNG Assets)
+- **Kaaba** - `assets/icons/icons8-kaaba-100.png` - Fiqh (Islamic Law) category icon
+  - *Previous icon:* `Icons.balance_rounded`
+- **Dome** - `assets/icons/icons8-dome-100.png` - Aqeedah (Creed/Beliefs) category icon
+  - *Previous icon:* `Icons.star_rounded`
+- **Quran** - `assets/icons/icons8-quran-100.png` - Quran category icon
+  - *Previous icon:* `Icons.menu_book_rounded`
+- **Graduation Cap** - `assets/icons/icons8-graduation-cap-100.png` - Kids/Children's content category icon
+  - *Previous icon:* `Icons.child_care_rounded`
+- **Muslim Woman** - `assets/icons/icons8-muslim-woman-100.png` - Women's Islamic content category icon
+  - *Previous icon:* `Icons.female_rounded`
+- **Letter** - `assets/icons/icons8-letter-100.png` - Hadith (Prophetic Sayings) category icon
+  - *Previous icon:* `Icons.format_quote_rounded`
+- **Users** - `assets/icons/icons8-users-100.png` - Seerah (Prophet's Biography) category icon
+  - *Previous icon:* `Icons.person_rounded`
+- **Prayer** - `assets/icons/icons8-prayer-100.png` - Dua & Dhikr (Supplications) category icon
+  - *Previous icon:* `Icons.favorite_rounded`
 
 ### Mood Category Emojis
 These emojis are used in the mood selector feature:
@@ -341,6 +351,55 @@ Mock audio files used for testing:
 ### Lottie Animations
 - **brokenMic.json** - Lottie animation for microphone error states
 
+## Added PNG Icons
+
+The following PNG icons have been added to the `assets/icons/` directory and integrated into the app:
+
+### Islamic & Religious Icons
+- **icons8-allah-100.png** - Allah symbol
+- **icons8-dome-100.png** - Islamic dome (replaces star icon for Aqeedah category)
+- **icons8-islam-100.png** - General Islam symbol
+- **icons8-kaaba-100.png** - Kaaba icon (replaces balance icon for Fiqh category)
+- **icons8-kaaba-location-100.png** - Kaaba with location
+- **icons8-monotheism-100.png** - Monotheism symbol
+- **icons8-moon-and-stars-100.png** - Islamic moon and stars
+- **icons8-mosque-100.png** - Mosque icon
+- **icons8-muslim-woman-100.png** - Muslim woman icon (replaces female icon)
+- **icons8-prayer-100.png** - Prayer icon (replaces favorite icon for Dua & Dhikr)
+- **icons8-quran-100.png** - Quran book icon (replaces menu book icon)
+- **icons8-wudhu-100.png** - Wudhu (ablution) icon
+- **wudhu.png** - Alternative wudhu icon
+
+### Educational & Learning Icons
+- **icons8-graduation-cap-100.png** - Graduation cap (replaces child care icon for Kids category)
+- **icons8-users-100.png** - Users/people icon (replaces person icon for Seerah category)
+
+### Communication & Content Icons
+- **icons8-letter-100.png** - Letter icon (replaces format quote for Hadith category)
+- **icons8-pen-tip-100.png** - Writing/pen tip icon
+
+### UI & Utility Icons
+- **icons8-gift-100.png** - Gift icon (replaces Cupertino gift icons)
+- **icons8-easel-100.png** - Easel/presentation icon
+- **icons8-front-desk-100.png** - Front desk/service icon
+- **icons8-halal-sign-100.png** - Halal certification icon
+- **icons8-oil-lamp-100.png** - Traditional oil lamp icon
+- **icons8-sunflower-100.png** - Sunflower/nature icon
+- **icons8-torch-100.png** - Torch/light icon
+
+### Architecture & Monuments
+- **icons8-monument-100.png** - Monument icon
+- **icons8-mountain-100.png** - Mountain landscape icon
+- **icons8-tower-100.png** - Tower structure icon
+
+### Security & Technology Icons
+- **icons8-cloud-lock-100.png** - Cloud security icon
+- **icons8-internet-100.png** - Internet connectivity icon
+- **icons8-secure-data-100.png** - Data security icon
+
+### Nature & Spiritual Icons
+- **icons8-lotus-100.png** - Lotus flower (spiritual symbol)
+
 ## Updated Total Icon Count
 
-With the addition of mock content category icons, the comprehensive list now contains **195 unique icons** used throughout the Siraaj app, covering all major functionality areas including navigation, media controls, user interactions, content management, system features, and content categorization.
+With the addition of PNG icons and mock content category icons, the comprehensive list now contains **195+ unique icons** used throughout the Siraaj app, covering all major functionality areas including navigation, media controls, user interactions, content management, system features, content categorization, and Islamic-themed iconography.

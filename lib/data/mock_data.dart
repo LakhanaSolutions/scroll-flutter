@@ -220,6 +220,7 @@ class NarratorData {
   final int experienceYears;
   final String voiceDescription;
   final int totalNarrations;
+  final String gender;
 
   NarratorData({
     required this.id,
@@ -234,6 +235,7 @@ class NarratorData {
     required this.experienceYears,
     required this.voiceDescription,
     required this.totalNarrations,
+    required this.gender,
   });
 }
 
@@ -276,6 +278,7 @@ class ContentItemData {
   final List<NarratorData> narrators;
   final List<ChapterData> chapters;
   final bool isBookmarked;
+  final String language;
 
   ContentItemData({
     required this.id,
@@ -292,6 +295,7 @@ class ContentItemData {
     required this.narrators,
     required this.chapters,
     this.isBookmarked = false,
+    required this.language,
   });
 }
 
@@ -635,6 +639,7 @@ class MockData {
         voiceDescription: 'Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation',
         totalNarrations: 85,
         isFollowing: true,
+        gender: 'Male',
       ),
       NarratorData(
         id: 'narrator_2',
@@ -648,6 +653,7 @@ class MockData {
         voiceDescription: 'Gentle, compassionate, and deeply moving with clear articulation',
         totalNarrations: 120,
         isFollowing: true,
+        gender: 'Male',
       ),
       NarratorData(
         id: 'narrator_3',
@@ -660,6 +666,7 @@ class MockData {
         experienceYears: 40,
         voiceDescription: 'Scholarly, authoritative, and eloquent with multi-lingual expertise',
         totalNarrations: 95,
+        gender: 'Male',
       ),
       NarratorData(
         id: 'narrator_4',
@@ -672,11 +679,12 @@ class MockData {
         experienceYears: 45,
         voiceDescription: 'Spiritually profound, melodious, and deeply contemplative',
         totalNarrations: 75,
+        gender: 'Male',
       ),
       NarratorData(
         id: 'narrator_5',
-        name: 'Qari Muhammad Tayyab Qasmi',
-        bio: 'Qari Muhammad Tayyab Qasmi is a renowned Quranic reciter and Islamic scholar known for his beautiful recitation of the Holy Quran and his expertise in Quranic sciences.',
+        name: 'Qaria Fatima Al-Zahra',
+        bio: 'Qaria Fatima Al-Zahra is a renowned female Quranic reciter and Islamic scholar known for her beautiful recitation of the Holy Quran and her expertise in Quranic sciences.',
         languages: ['Arabic', 'Urdu'],
         genres: ['Quranic Recitation', 'Tajweed', 'Quranic Sciences'],
         awards: ['International Quranic Recitation Award', 'Master of Tajweed'],
@@ -684,6 +692,7 @@ class MockData {
         experienceYears: 25,
         voiceDescription: 'Beautiful, melodious Quranic recitation with perfect Tajweed',
         totalNarrations: 60,
+        gender: 'Female',
       ),
     ];
   }
@@ -843,6 +852,7 @@ class MockData {
             description: 'A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.',
             narrators: [narrators[0]],
             chapters: getMockChapters('fiqh_1', narrators[0].id),
+            language: 'Arabic',
           ),
           ContentItemData(
             id: 'fiqh_2',
@@ -858,6 +868,7 @@ class MockData {
             description: 'Essential guidelines for performing the five daily prayers correctly according to Islamic teachings.',
             narrators: [narrators[0], narrators[1]], // Multiple speakers for podcast
             chapters: getMockChapters('fiqh_2', narrators[0].id),
+            language: 'English',
           ),
           ContentItemData(
             id: 'fiqh_3',
@@ -876,6 +887,7 @@ class MockData {
               ...getMockChapters('fiqh_3', narrators[1].id),
               ...getMockChapters('fiqh_3', narrators[2].id),
             ],
+            language: 'Urdu',
           ),
         ];
       case '2': // Aqeedah
@@ -894,6 +906,7 @@ class MockData {
             description: 'Detailed explanation of the six fundamental pillars of Islamic faith and belief.',
             narrators: [narrators[1]],
             chapters: getMockChapters('aqeedah_1', narrators[1].id),
+            language: 'Arabic',
           ),
           ContentItemData(
             id: 'aqeedah_2',
@@ -909,6 +922,7 @@ class MockData {
             description: 'Deep dive into the concept of Tawheed (monotheism) in Islamic theology.',
             narrators: [narrators[0], narrators[2]], // Multiple speakers for podcast
             chapters: getMockChapters('aqeedah_2', narrators[0].id),
+            language: 'English',
           ),
         ];
       case '3': // Quran
@@ -927,6 +941,7 @@ class MockData {
             description: 'Complete commentary and interpretation of the Holy Quran by the renowned scholar Ibn Kathir.',
             narrators: [narrators[2]],
             chapters: getMockChapters('quran_1', narrators[2].id),
+            language: 'Arabic',
           ),
           ContentItemData(
             id: 'quran_2',
@@ -942,6 +957,7 @@ class MockData {
             description: 'Collection of beautiful Quranic recitations by various renowned Qaris.',
             narrators: narrators, // Multiple reciters
             chapters: getMockChapters('quran_2', narrators[0].id),
+            language: 'Arabic',
           ),
         ];
       default:
@@ -960,6 +976,7 @@ class MockData {
             description: 'General Islamic knowledge covering various aspects of faith and practice.',
             narrators: [narrators[0]],
             chapters: getMockChapters('default_1', narrators[0].id),
+            language: 'English',
           ),
         ];
     }

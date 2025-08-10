@@ -6,6 +6,7 @@ import '../theme/theme_extensions.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/cards/app_card.dart';
 import '../widgets/app_bar/app_app_bar.dart';
+import '../widgets/states/app_empty_state.dart';
 
 /// Notifications list screen that displays actual notifications
 /// Shows all notifications with action buttons and dismissal functionality
@@ -74,32 +75,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
   }
 
   Widget _buildEmptyState() {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.large),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.notifications_none_rounded,
-              size: AppSpacing.iconHero,
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: AppSpacing.large),
-            const AppTitleText('No Notifications'),
-            const SizedBox(height: AppSpacing.small),
-            AppBodyText(
-              'When you have new updates, they\'ll appear here.',
-              textAlign: TextAlign.center,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
+    return const AppEmptyState.notifications();
   }
 
   Widget _buildNotificationsList() {

@@ -450,10 +450,12 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
           voiceDescription: 'Clear voice',
           totalNarrations: 10,
           isFollowing: false,
+          gender: 'Male',
         ),
       ],
       chapters: [mockChapter],
       isBookmarked: false,
+      language: 'Arabic',
     );
 
     context.push('/home/note/${mockChapter.id}/${mockContent.id}?position=${_parseTimestamp(note.timestamp)}&wasPlaying=false');

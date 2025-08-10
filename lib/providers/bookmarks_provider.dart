@@ -74,6 +74,7 @@ class BookmarksNotifier extends StateNotifier<Set<String>> {
         narrators: content.narrators,
         chapters: content.chapters,
         isBookmarked: true,
+        language: content.language,
       );
     }).toList();
   }

@@ -173,7 +173,7 @@ class HomeTab extends ConsumerWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () => context.push('/home/notifications-list'),
+          onTap: () => context.push('/home/notifications'),
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(

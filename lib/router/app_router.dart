@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:siraaj/screens/auth/auth_screen.dart';
-import 'package:siraaj/screens/notifications_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/theme_demo_screen.dart';
@@ -8,6 +7,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/otp_verification_screen.dart';
 import '../screens/subscription_screen.dart';
 import '../screens/manage_devices_screen.dart';
+import '../screens/notifications_screen.dart';
 import '../screens/notifications_list_screen.dart';
 import '../screens/help_support_screen.dart';
 import '../screens/send_feedback_screen.dart';
@@ -121,11 +121,11 @@ final appRouter = GoRouter(
           builder: (context, state) => const ManageDevicesScreen(),
         ),
         GoRoute(
-          path: 'notifications-list',
+          path: 'notifications',
           builder: (context, state) => const NotificationsListScreen(),
         ),
         GoRoute(
-          path: 'notifications',
+          path: 'notification-settings',
           builder: (context, state) => const NotificationsScreen(),
         ),
         GoRoute(

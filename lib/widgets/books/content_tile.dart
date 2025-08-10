@@ -3,6 +3,7 @@ import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../cards/app_card.dart';
+import '../indicators/app_badges.dart';
 
 /// Reusable content tile widget for books and podcasts
 /// Similar to audiobook_of_week.dart but more compact and versatile
@@ -25,15 +26,29 @@ class ContentTile extends StatelessWidget {
       margin: margin ?? const EdgeInsets.only(bottom: AppSpacing.small),
       elevation: AppSpacing.elevationNone,
       onTap: onTap,
-      child: Row(
+      child: Stack(
         children: [
-          // Content cover
-          _buildContentCover(context),
-          const SizedBox(width: AppSpacing.medium),
-          // Content info
-          Expanded(
-            child: _buildContentInfo(context),
+          Row(
+            children: [
+              // Content cover
+              _buildContentCover(context),
+              const SizedBox(width: AppSpacing.medium),
+              // Content info
+              Expanded(
+                child: _buildContentInfo(context),
+              ),
+            ],
           ),
+          // Premium badge in top right corner
+          if (content.availability == AvailabilityType.premium)
+            Positioned(
+              top: AppSpacing.small,
+              right: AppSpacing.small,
+              child: AppAvailabilityBadge(
+                availability: content.availability,
+                fontSize: 8,
+              ),
+            ),
         ],
       ),
     );
@@ -84,74 +99,12 @@ class ContentTile extends StatelessWidget {
                 ),
               ),
             ),
-            // Availability badge
-            Positioned(
-              top: AppSpacing.extraSmall,
-              right: AppSpacing.extraSmall,
-              child: _buildAvailabilityBadge(context),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAvailabilityBadge(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    Color badgeColor;
-    String badgeText;
-    IconData badgeIcon;
-
-    switch (content.availability) {
-      case AvailabilityType.free:
-        badgeColor = colorScheme.tertiary;
-        badgeText = 'FREE';
-        badgeIcon = Icons.check_circle;
-        break;
-      case AvailabilityType.premium:
-        badgeColor = colorScheme.secondary;
-        badgeText = 'PRO';
-        badgeIcon = Icons.star_rounded;
-        break;
-      case AvailabilityType.trial:
-        badgeColor = colorScheme.error;
-        badgeText = 'TRIAL';
-        badgeIcon = Icons.access_time_rounded;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.extraSmall,
-        vertical: 2,
-      ),
-      decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            badgeIcon,
-            color: colorScheme.onSecondary,
-            size: 8,
-          ),
-          const SizedBox(width: 2),
-          Text(
-            badgeText,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSecondary,
-              fontSize: 8,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildContentInfo(BuildContext context) {
     final theme = Theme.of(context);
@@ -193,6 +146,9 @@ class ContentTile extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        const SizedBox(height: AppSpacing.extraSmall),
+        // Narrator with gender
+        _buildNarratorInfo(context),
         const SizedBox(height: AppSpacing.small),
         // Chapter count, duration, and rating
         Row(
@@ -233,7 +189,92 @@ class ContentTile extends StatelessWidget {
               content.duration,
               color: colorScheme.onSurfaceVariant,
             ),
+            const SizedBox(width: AppSpacing.medium),
+            Icon(
+              Icons.language_rounded,
+              color: colorScheme.onSurfaceVariant,
+              size: AppSpacing.iconExtraSmall,
+            ),
+            const SizedBox(width: AppSpacing.extraSmall),
+            AppCaptionText(
+              content.language,
+              color: colorScheme.onSurfaceVariant,
+            ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNarratorInfo(BuildContext context) {
+    if (content.narrators.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Show up to 2 narrators to avoid clutter
+    final displayNarrators = content.narrators.take(2).toList();
+    final hasMore = content.narrators.length > 2;
+
+    return Row(
+      children: [
+        Icon(
+          Icons.mic_rounded,
+          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+          size: AppSpacing.iconExtraSmall,
+        ),
+        const SizedBox(width: AppSpacing.extraSmall),
+        Expanded(
+          child: Wrap(
+            spacing: AppSpacing.extraSmall,
+            runSpacing: 2,
+            children: [
+              ...displayNarrators.map((narrator) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      narrator.name,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 11,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 3,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        narrator.gender == 'Male' ? 'M' : 'F',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                          fontSize: 7,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              if (hasMore)
+                Text(
+                  '+${content.narrators.length - 2} more',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                    fontSize: 10,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+            ],
+          ),
         ),
       ],
     );

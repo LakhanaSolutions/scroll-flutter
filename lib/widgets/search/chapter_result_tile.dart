@@ -36,6 +36,7 @@ class ChapterResultTile extends StatelessWidget {
       narrators: parentContent.narrators,
       chapters: parentContent.chapters,
       isBookmarked: parentContent.isBookmarked,
+      language: parentContent.language,
     );
 
     return Padding(

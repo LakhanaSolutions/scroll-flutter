@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
-import '../../widgets/notifications/notification_area.dart';
 import '../../widgets/banners/premium_banner.dart';
 import '../../widgets/books/book_shelf.dart';
 import '../../widgets/mood/mood_selector.dart';
@@ -52,6 +51,9 @@ class HomeTab extends ConsumerWidget {
               const Expanded(
                 child: AppTitleText('Home'),
               ),
+              // Notifications icon with badge
+              _buildNotificationButton(context),
+              const SizedBox(width: AppSpacing.medium),
               // Profile avatar
               GestureDetector(
                 onTap: () => context.push('/home/profile'),
@@ -111,19 +113,6 @@ class HomeTab extends ConsumerWidget {
                 
                 const SizedBox(height: AppSpacing.large),
           
-          // Notification area
-          NotificationArea(
-            notifications: MockData.getNotifications(),
-            onDismiss: (id) {
-              // Handle notification dismissal
-              debugPrint('Dismissed notification: $id');
-            },
-            onAction: (notification) {
-              // Handle notification action - navigate to subscriptions page
-              context.push('/home/subscription');
-            },
-          ),
-          
           // Premium upgrade banner (only show to free trial users)
           if (shouldShowPremiumAds)
             PremiumBanner(
@@ -172,6 +161,58 @@ class HomeTab extends ConsumerWidget {
       ),
       ],
       ),
+    );
+  }
+
+  Widget _buildNotificationButton(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final notifications = MockData.getNotifications();
+    final notificationCount = notifications.length;
+
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => context.push('/home/notifications-list'),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colorScheme.surfaceContainerLow,
+            ),
+            child: Icon(
+              Icons.notifications_outlined,
+              color: colorScheme.onSurfaceVariant,
+              size: 20,
+            ),
+          ),
+        ),
+        if (notificationCount > 0)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: colorScheme.error,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 18,
+                minHeight: 18,
+              ),
+              child: Text(
+                notificationCount > 99 ? '99+' : notificationCount.toString(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onError,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

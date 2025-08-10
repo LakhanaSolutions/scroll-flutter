@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../text/app_text.dart';
 import '../cards/app_card.dart';
+import '../images/app_image.dart';
 
 /// Author search result tile widget
 /// Displays author information in search results with avatar, name, bio, and statistics
@@ -25,29 +27,19 @@ class AuthorResultTile extends StatelessWidget {
 
     return AppCard(
       margin: margin ?? const EdgeInsets.only(bottom: AppSpacing.small),
+      gradient: context.surfaceGradient,
+      elevation: AppSpacing.elevationNone,
       onTap: onTap,
       child: Row(
         children: [
           // Author avatar
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.primaryContainer,
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.person_rounded,
-              color: colorScheme.onPrimaryContainer,
-              size: AppSpacing.iconMedium,
-            ),
+          AppCircularImage(
+            imageUrl: author.imageUrl,
+            fallbackIcon: Icons.person_rounded,
+            size: 60,
+            backgroundColor: colorScheme.primaryContainer,
+            iconColor: colorScheme.onPrimaryContainer,
+            iconSize: AppSpacing.iconLarge,
           ),
           const SizedBox(width: AppSpacing.medium),
           // Author info
@@ -55,7 +47,7 @@ class AuthorResultTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Type indicator
+                // Author type indicator
                 Row(
                   children: [
                     Icon(
@@ -68,6 +60,27 @@ class AuthorResultTile extends StatelessWidget {
                       'Author',
                       color: colorScheme.primary,
                     ),
+                    if (author.isFollowing) ...[ 
+                      const SizedBox(width: AppSpacing.small),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.extraSmall,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                        ),
+                        child: Text(
+                          'FOLLOWING',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: AppSpacing.extraSmall),
@@ -87,7 +100,7 @@ class AuthorResultTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.small),
-                // Statistics
+                // Stats
                 Row(
                   children: [
                     Icon(
@@ -100,23 +113,27 @@ class AuthorResultTile extends StatelessWidget {
                       '${author.totalBooks} books',
                       color: colorScheme.onSurfaceVariant,
                     ),
-                    if (author.awards.isNotEmpty) ...[
-                      const SizedBox(width: AppSpacing.medium),
-                      Icon(
-                        Icons.emoji_events_rounded,
-                        color: colorScheme.secondary,
-                        size: AppSpacing.iconExtraSmall,
-                      ),
-                      const SizedBox(width: AppSpacing.extraSmall),
-                      AppCaptionText(
-                        '${author.awards.length} awards',
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
+                    const SizedBox(width: AppSpacing.medium),
+                    Icon(
+                      Icons.public_rounded,
+                      color: colorScheme.onSurfaceVariant,
+                      size: AppSpacing.iconExtraSmall,
+                    ),
+                    const SizedBox(width: AppSpacing.extraSmall),
+                    AppCaptionText(
+                      author.nationality,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ],
                 ),
               ],
             ),
+          ),
+          // Arrow icon
+          Icon(
+            Icons.chevron_right_rounded,
+            color: colorScheme.onSurfaceVariant,
+            size: AppSpacing.iconMedium,
           ),
         ],
       ),

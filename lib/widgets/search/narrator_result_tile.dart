@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../text/app_text.dart';
 import '../cards/app_card.dart';
+import '../images/app_image.dart';
 
 /// Narrator search result tile widget
 /// Displays narrator information in search results with avatar, name, voice description, and statistics
@@ -25,29 +27,19 @@ class NarratorResultTile extends StatelessWidget {
 
     return AppCard(
       margin: margin ?? const EdgeInsets.only(bottom: AppSpacing.small),
+      gradient: context.surfaceGradient,
+      elevation: AppSpacing.elevationNone,
       onTap: onTap,
       child: Row(
         children: [
           // Narrator avatar
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.secondaryContainer,
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.mic_rounded,
-              color: colorScheme.onSecondaryContainer,
-              size: AppSpacing.iconMedium,
-            ),
+          AppCircularImage(
+            imageUrl: narrator.imageUrl,
+            fallbackIcon: Icons.mic_rounded,
+            size: 60,
+            backgroundColor: colorScheme.secondaryContainer,
+            iconColor: colorScheme.onSecondaryContainer,
+            iconSize: AppSpacing.iconLarge,
           ),
           const SizedBox(width: AppSpacing.medium),
           // Narrator info
@@ -55,19 +47,40 @@ class NarratorResultTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Type indicator
+                // Narrator type indicator
                 Row(
                   children: [
                     Icon(
                       Icons.record_voice_over_rounded,
-                      color: colorScheme.primary,
+                      color: colorScheme.secondary,
                       size: AppSpacing.iconExtraSmall,
                     ),
                     const SizedBox(width: AppSpacing.extraSmall),
                     AppCaptionText(
                       'Narrator',
-                      color: colorScheme.primary,
+                      color: colorScheme.secondary,
                     ),
+                    if (narrator.isFollowing) ...[
+                      const SizedBox(width: AppSpacing.small),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.extraSmall,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                        ),
+                        child: Text(
+                          'FOLLOWING',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSecondaryContainer,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: AppSpacing.extraSmall),
@@ -87,7 +100,7 @@ class NarratorResultTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.small),
-                // Statistics
+                // Stats
                 Row(
                   children: [
                     Icon(
@@ -102,7 +115,7 @@ class NarratorResultTile extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSpacing.medium),
                     Icon(
-                      Icons.access_time_rounded,
+                      Icons.schedule_rounded,
                       color: colorScheme.onSurfaceVariant,
                       size: AppSpacing.iconExtraSmall,
                     ),
@@ -113,8 +126,38 @@ class NarratorResultTile extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: AppSpacing.extraSmall),
+                // Languages
+                Wrap(
+                  spacing: AppSpacing.extraSmall,
+                  children: narrator.languages.take(3).map((language) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.small,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainer,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                      ),
+                      child: Text(
+                        language,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: 9,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ],
             ),
+          ),
+          // Arrow icon
+          Icon(
+            Icons.chevron_right_rounded,
+            color: colorScheme.onSurfaceVariant,
+            size: AppSpacing.iconMedium,
           ),
         ],
       ),

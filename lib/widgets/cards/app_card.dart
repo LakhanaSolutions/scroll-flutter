@@ -47,7 +47,7 @@ class AppCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: margin ?? const EdgeInsets.all(AppSpacing.extraSmall),
+      margin: margin ?? const EdgeInsets.all(AppSpacing.small),
       child: Material(
         color: gradient != null ? Colors.transparent : (backgroundColor ?? colorScheme.surface),
         borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),

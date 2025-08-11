@@ -34,7 +34,7 @@ class AppAvailabilityBadge extends StatelessWidget {
         badgeText = 'FREE';
         break;
       case AvailabilityType.premium:
-        badgeColor = colorScheme.secondary;
+        badgeColor = colorScheme.primary;
         badgeIcon = Icons.star_rounded;
         badgeText = 'PREMIUM';
         break;
@@ -45,6 +45,31 @@ class AppAvailabilityBadge extends StatelessWidget {
         break;
     }
 
+    // For premium content, show only icon similar to "Most Popular" badge
+    if (availability == AvailabilityType.premium) {
+      return Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.small,
+        ),
+        decoration: BoxDecoration(
+          color: colorScheme.primary,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(AppSpacing.radiusSmall),
+            bottomRight: Radius.circular(AppSpacing.radiusSmall),
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
+          ),
+        ),
+        child: Icon(
+          badgeIcon,
+          color: colorScheme.onPrimary,
+          size: AppSpacing.iconExtraSmall,
+        ),
+      );
+    }
+
+    // For other availability types, show icon + text
     return Container(
       padding: padding ?? const EdgeInsets.symmetric(
         horizontal: AppSpacing.small,

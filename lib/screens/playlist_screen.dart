@@ -495,6 +495,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
+        elevation: 0,
         gradient: AppGradients.subtleSurfaceGradient(colorScheme),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
@@ -562,17 +563,11 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-        border: Border.all(
-          color: colorScheme.tertiary.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
+    return AppCard(
+      elevation: 0,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       padding: const EdgeInsets.all(AppSpacing.medium),
-      margin: const EdgeInsets.all(AppSpacing.extraSmall),
+      margin: const EdgeInsets.all(AppSpacing.elevationNone),
       child: Row(
         children: [
           SizedBox(
@@ -645,24 +640,11 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
       // For podcasts, show all speakers with consistent design
       return Column(
         children: widget.content.narrators.map((narrator) {
-          return Container(
-            margin: const EdgeInsets.only(bottom: AppSpacing.small),
+          return AppCard(
+            elevation: 0,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
             padding: const EdgeInsets.all(AppSpacing.medium),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  colorScheme.surfaceContainerLow,
-                  colorScheme.surface,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-              border: Border.all(
-                color: const Color(0xFF00838F).withValues(alpha: 0.2),
-                width: 1,
-              ),
-            ),
+            margin: const EdgeInsets.only(bottom: AppSpacing.small),
             child: Row(
               children: [
                 Container(
@@ -753,18 +735,14 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                 _selectedNarratorId = narrator.id;
               });
             },
-            child: Container(
-              margin: const EdgeInsets.only(bottom: AppSpacing.small),
+            child: AppCard(
+              margin: const EdgeInsets.only(bottom: AppSpacing.medium),
               padding: const EdgeInsets.all(AppSpacing.medium),
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? colorScheme.surfaceContainerHigh 
-                    : colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                border: isSelected 
-                    ? Border.all(color: colorScheme.outline, width: 1)
-                    : Border.all(color: colorScheme.outline.withValues(alpha: 0.1), width: 1),
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+              elevation: isSelected ? AppSpacing.elevationMax : AppSpacing.elevationNone,
+              backgroundColor: isSelected ? colorScheme.surfaceContainerLowest : colorScheme.surfaceContainerLow,
+              // borderColor: isSelected ? colorScheme.outline : colorScheme.outline.withValues(alpha: 0.1),
+              // borderWidth: 1,
               child: Row(
                 children: [
                   Container(

@@ -1032,86 +1032,43 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
+    return Row(
+      children: [
+        // Size info
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppCaptionText(
+                'Size',
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 2),
+              AppSubtitleText(
+                _getEstimatedStorageSize(),
+                color: colorScheme.onSurface,
+              ),
+            ],
+          ),
         ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-      ),
-      padding: const EdgeInsets.all(AppSpacing.medium),
-      margin: const EdgeInsets.all(AppSpacing.extraSmall),
-      child: Row(
-        children: [
-          // Storage icon
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.small),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-            ),
-            child: Icon(
-              Icons.storage_rounded,
-              color: colorScheme.onPrimaryContainer,
-              size: AppSpacing.iconMedium,
-            ),
+        // Listening Time info
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              AppCaptionText(
+                'Listening Time',
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 2),
+              AppSubtitleText(
+                widget.content.duration,
+                color: colorScheme.onSurface,
+              ),
+            ],
           ),
-          const SizedBox(width: AppSpacing.medium),
-          // Storage info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Size',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  _getEstimatedStorageSize(),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Offline badge
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.small,
-              vertical: AppSpacing.extraSmall,
-            ),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.offline_bolt_rounded,
-                  size: 14,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Offline',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
   
@@ -1444,7 +1401,7 @@ class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
     final colorScheme = theme.colorScheme;
     
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.9,
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(
@@ -1472,267 +1429,277 @@ class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
                 Icon(
                   Icons.download_rounded,
                   color: colorScheme.primary,
+                  size: AppSpacing.iconExtraSmall,
                 ),
                 const SizedBox(width: AppSpacing.small),
-                AppTitleText('Download Content'),
+                AppBodyText('Download Content'),
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(
                     Icons.close_rounded,
                     color: colorScheme.onSurfaceVariant,
+                    size: AppSpacing.iconExtraSmall,
                   ),
                 ),
               ],
             ),
           ),
           
-          const SizedBox(height: AppSpacing.medium),
-          
-          // Content info
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
-            child: AppCard(
-              child: Row(
+          // Scrollable content area
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: AppCard(
-                      padding: EdgeInsets.zero,
-                      margin: EdgeInsets.zero,
-                      gradient: widget.content.type == ContentType.book 
-                          ? AppGradients.primaryGradient(colorScheme)
-                          : AppGradients.warningGradient(colorScheme),
-                      child: Icon(
-                        widget.content.type == ContentType.book 
-                            ? Icons.menu_book_rounded 
-                            : Icons.podcasts_rounded,
-                        color: Colors.white,
-                        size: AppSpacing.iconMedium,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.medium),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: AppSpacing.medium),
+                  
+                  // Compact content info with narrator
+                  AppCard(
+                    margin: const EdgeInsets.all(AppSpacing.elevationNone),
+                    elevation: 0,
+                    backgroundColor: colorScheme.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    child: Row(
                       children: [
-                        AppSubtitleText(
-                          widget.content.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: AppCard(
+                            padding: EdgeInsets.zero,
+                            margin: EdgeInsets.zero,
+                            gradient: widget.content.type == ContentType.book 
+                                ? AppGradients.primaryGradient(colorScheme)
+                                : AppGradients.warningGradient(colorScheme),
+                            child: Icon(
+                              widget.content.type == ContentType.book 
+                                  ? Icons.menu_book_rounded 
+                                  : Icons.podcasts_rounded,
+                              color: Colors.white,
+                              size: AppSpacing.iconExtraSmall,
+                            ),
+                          ),
                         ),
-                        const SizedBox(height: AppSpacing.extraSmall),
-                        AppCaptionText(
-                          'by ${widget.content.author}',
-                          color: colorScheme.onSurfaceVariant,
+                        const SizedBox(width: AppSpacing.small),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppBodyText(
+                                '${widget.content.title} by ${widget.content.author}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              AppLabelText(
+                                _getSelectedNarratorName(),
+                                color: colorScheme.onSurfaceVariant,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
+                  
+                  const SizedBox(height: AppSpacing.large),
+                  
+                  // Selection options
+                  Column(
+                    children: [
+                      // All chapters option
+                      Container(
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface,
+                          border: Border.all(
+                            color: !_isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
+                            width: !_isCustomSelection ? 2 : 1,
+                          ),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _isCustomSelection = false;
+                              _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.medium),
+                            child: Row(
+                              children: [
+                                Radio<bool>(
+                                  value: false,
+                                  groupValue: _isCustomSelection,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isCustomSelection = false;
+                                      _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: AppSpacing.small),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      AppBodyText('All (${_availableChapters.length}) chapters'),
+                                      AppLabelText(
+                                        _getEstimatedStorageSize(_availableChapters.length),
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: AppSpacing.small),
+                      
+                      // Custom selection option
+                      Container(
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface,
+                          border: Border.all(
+                            color: _isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
+                            width: _isCustomSelection ? 2 : 1,
+                          ),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _isCustomSelection = true;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.medium),
+                            child: Row(
+                              children: [
+                                Radio<bool>(
+                                  value: true,
+                                  groupValue: _isCustomSelection,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isCustomSelection = true;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: AppSpacing.small),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      AppBodyText('Select chapters'),
+                                      AppLabelText(
+                                        _isCustomSelection 
+                                            ? '${_selectedChapterIds.length} selected • ${_getEstimatedStorageSize(_selectedChapterIds.length)}'
+                                            : 'Choose specific chapters to download',
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: AppSpacing.large),
+                  
+                  // Chapter list (when custom selection is enabled)
+                  if (_isCustomSelection) ...[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppBodyText('Select Chapters'),
+                        const SizedBox(height: AppSpacing.small),
+                        ...List.generate(_availableChapters.length, (index) {
+                          final chapter = _availableChapters[index];
+                          final isSelected = _selectedChapterIds.contains(chapter.id);
+                          
+                          return Column(
+                            children: [
+                              CheckboxListTile(
+                                value: isSelected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value == true) {
+                                      _selectedChapterIds.add(chapter.id);
+                                    } else {
+                                      _selectedChapterIds.remove(chapter.id);
+                                    }
+                                  });
+                                },
+                                title: AppBodyText(
+                                  chapter.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: AppLabelText(
+                                  'Chapter ${chapter.chapterNumber} • ${chapter.duration} • ${_getChapterSize()}',
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                controlAffinity: ListTileControlAffinity.leading,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                              if (index < _availableChapters.length - 1)
+                                Divider(
+                                  color: colorScheme.outline.withValues(alpha: 0.1),
+                                  thickness: 1,
+                                  height: 1,
+                                ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
+                  
+                  const SizedBox(height: AppSpacing.large),
                 ],
               ),
             ),
           ),
           
-          const SizedBox(height: AppSpacing.large),
-          
-          // Selection options
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
-            child: Column(
-              children: [
-                // All chapters option
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    border: Border.all(
-                      color: !_isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
-                      width: !_isCustomSelection ? 2 : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  ),
-                  margin: const EdgeInsets.all(AppSpacing.extraSmall),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isCustomSelection = false;
-                        _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.medium),
-                      child: Row(
-                        children: [
-                          Radio<bool>(
-                            value: false,
-                            groupValue: _isCustomSelection,
-                            onChanged: (value) {
-                              setState(() {
-                                _isCustomSelection = false;
-                                _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
-                              });
-                            },
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppSubtitleText('All (${_availableChapters.length}) chapters'),
-                                const SizedBox(height: AppSpacing.extraSmall),
-                                AppCaptionText(
-                                  _getEstimatedStorageSize(_availableChapters.length),
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: AppSpacing.small),
-                
-                // Custom selection option
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    border: Border.all(
-                      color: _isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
-                      width: _isCustomSelection ? 2 : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                  ),
-                  margin: const EdgeInsets.all(AppSpacing.extraSmall),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isCustomSelection = true;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.medium),
-                      child: Row(
-                        children: [
-                          Radio<bool>(
-                            value: true,
-                            groupValue: _isCustomSelection,
-                            onChanged: (value) {
-                              setState(() {
-                                _isCustomSelection = true;
-                              });
-                            },
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppSubtitleText('Select chapters'),
-                                const SizedBox(height: AppSpacing.extraSmall),
-                                AppCaptionText(
-                                  _isCustomSelection 
-                                      ? '${_selectedChapterIds.length} selected • ${_getEstimatedStorageSize(_selectedChapterIds.length)}'
-                                      : 'Choose specific chapters to download',
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: AppSpacing.medium),
-          
-          // Chapter list (when custom selection is enabled)
-          if (_isCustomSelection) ...[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppSubtitleText('Select Chapters'),
-                    const SizedBox(height: AppSpacing.small),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _availableChapters.length,
-                        itemBuilder: (context, index) {
-                          final chapter = _availableChapters[index];
-                          final isSelected = _selectedChapterIds.contains(chapter.id);
-                          
-                          return CheckboxListTile(
-                            value: isSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                if (value == true) {
-                                  _selectedChapterIds.add(chapter.id);
-                                } else {
-                                  _selectedChapterIds.remove(chapter.id);
-                                }
-                              });
-                            },
-                            title: AppBodyText(
-                              chapter.title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: AppCaptionText(
-                              'Chapter ${chapter.chapterNumber} • ${chapter.duration}',
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            contentPadding: EdgeInsets.zero,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+          // Fixed Download button at bottom
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.large),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLow,
+              border: Border(
+                top: BorderSide(
+                  color: colorScheme.outline.withValues(alpha: 0.1),
+                  width: 1,
                 ),
               ),
             ),
-          ] else ...[
-            const Spacer(),
-          ],
-          
-          // Download button
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.large),
             child: Column(
               children: [
                 if (_selectedChapterIds.isNotEmpty) ...[
-                  AppCard(
-                    backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.5),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.medium),
+                  Padding(
+                      padding: const EdgeInsets.all(AppSpacing.extraSmall),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppBodyText('Total size:'),
                           AppBodyText(
                             _getEstimatedStorageSize(_selectedChapterIds.length),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.primary,
-                            ),
+                            color: colorScheme.primary,
                           ),
                         ],
                       ),
-                    ),
                   ),
-                  const SizedBox(height: AppSpacing.medium),
+                  const SizedBox(height: AppSpacing.small),
                 ],
                 SizedBox(
                   width: double.infinity,
@@ -1751,7 +1718,7 @@ class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
                       children: [
                         Icon(
                           Icons.download_rounded,
-                          size: AppSpacing.iconSmall,
+                          size: AppSpacing.iconExtraSmall,
                         ),
                         const SizedBox(width: AppSpacing.small),
                         Text('Start Download (${_selectedChapterIds.length})'),
@@ -1759,6 +1726,8 @@ class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
                     ),
                   ),
                 ),
+                const SizedBox(height: AppSpacing.medium),
+                AppCaptionText('Downloading will continue in the background even if you close this page.', color: colorScheme.onSurfaceVariant,),
               ],
             ),
           ),
@@ -1774,5 +1743,17 @@ class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
       return '${(mbSize / 1024).toStringAsFixed(1)} GB';
     }
     return '$mbSize MB';
+  }
+
+  String _getSelectedNarratorName() {
+    final narrator = widget.content.narrators
+        .where((narrator) => narrator.id == widget.selectedNarratorId)
+        .firstOrNull;
+    return narrator?.name ?? 'Unknown';
+  }
+
+  String _getChapterSize() {
+    // Mock calculation for individual chapter size
+    return '15 MB'; // ~15MB per chapter
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-/// Modern Cupertino-style icon constants for the Siraaj app
+/// Modern Cupertino-style icon constants for the Scroll app
 /// Provides consistent, modern iconography throughout the application
 class AppIcons {
   // Prevent instantiation

@@ -1,7 +1,7 @@
 -- ============================================================================
 -- SIRAAJ PLATFORM - COMPREHENSIVE SQL SEED DATA
 -- ============================================================================
--- This file contains complete seed data for all tables in the Siraaj database
+-- This file contains complete seed data for all tables in the Scroll database
 -- Uses only authentic Sunni Barelvi Islamic content from mainstream scholars
 -- Covers all user plan types, languages, and usage scenarios
 -- ============================================================================
@@ -83,8 +83,8 @@ INSERT INTO users (id, email, email_verified, name, image, bio, nationality, is_
 ('user_prem_annual_3', 'aisha.student@example.com', true, 'Aisha Siddiqua', null, 'PhD student researching Barelvi movement and its scholars', 'Australia', false, true, 'PREMIUM', NOW() - INTERVAL '90 days', NOW(), NOW() - INTERVAL '1 day'),
 
 -- Admin Users
-('user_admin_001', 'admin@siraaj.app', true, 'Siraaj Admin', null, 'Platform administrator', 'Global', false, true, 'ADMIN', NOW() - INTERVAL '365 days', NOW(), NOW() - INTERVAL '30 minutes'),
-('user_moderator_001', 'moderator@siraaj.app', true, 'Content Moderator', null, 'Content quality and authenticity moderator', 'Pakistan', false, true, 'MODERATOR', NOW() - INTERVAL '180 days', NOW(), NOW() - INTERVAL '2 hours');
+('user_admin_001', 'admin@scroll.app', true, 'Scroll Admin', null, 'Platform administrator', 'Global', false, true, 'ADMIN', NOW() - INTERVAL '365 days', NOW(), NOW() - INTERVAL '30 minutes'),
+('user_moderator_001', 'moderator@scroll.app', true, 'Content Moderator', null, 'Content quality and authenticity moderator', 'Pakistan', false, true, 'MODERATOR', NOW() - INTERVAL '180 days', NOW(), NOW() - INTERVAL '2 hours');
 
 -- ============================================================================
 -- USER SESSIONS
@@ -231,28 +231,28 @@ INSERT INTO content (id, title, slug, description, cover_url, type, availability
 
 INSERT INTO chapters (id, content_id, title, slug, description, chapter_number, duration, audio_url, file_size, transcript, status, narrator_id, published_at, created_at, updated_at) VALUES
 -- Al-Ghunyatu li Talibi Tariq al-Haqq Chapters
-('chapter_ghunyatu_001', 'content_ghunyatu_talibeen', 'Introduction to the Spiritual Path', 'introduction-spiritual-path', 'Opening chapter explaining the purpose and methodology of spiritual seeking', 1, 720, 'https://audio.siraaj.app/ghunyatu/ch01.mp3', 34567890, 'In the name of Allah, the Most Gracious, the Most Merciful...', 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '30 days', NOW() - INTERVAL '35 days', NOW()),
-('chapter_ghunyatu_002', 'content_ghunyatu_talibeen', 'The Foundations of Faith', 'foundations-of-faith', 'Essential beliefs and practices for the spiritual seeker', 2, 800, 'https://audio.siraaj.app/ghunyatu/ch02.mp3', 38456123, null, 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '29 days', NOW() - INTERVAL '34 days', NOW()),
-('chapter_ghunyatu_003', 'content_ghunyatu_talibeen', 'Purification of the Heart', 'purification-of-heart', 'Methods and practices for spiritual purification', 3, 900, 'https://audio.siraaj.app/ghunyatu/ch03.mp3', 43218765, null, 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '28 days', NOW() - INTERVAL '33 days', NOW()),
+('chapter_ghunyatu_001', 'content_ghunyatu_talibeen', 'Introduction to the Spiritual Path', 'introduction-spiritual-path', 'Opening chapter explaining the purpose and methodology of spiritual seeking', 1, 720, 'https://audio.scroll.app/ghunyatu/ch01.mp3', 34567890, 'In the name of Allah, the Most Gracious, the Most Merciful...', 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '30 days', NOW() - INTERVAL '35 days', NOW()),
+('chapter_ghunyatu_002', 'content_ghunyatu_talibeen', 'The Foundations of Faith', 'foundations-of-faith', 'Essential beliefs and practices for the spiritual seeker', 2, 800, 'https://audio.scroll.app/ghunyatu/ch02.mp3', 38456123, null, 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '29 days', NOW() - INTERVAL '34 days', NOW()),
+('chapter_ghunyatu_003', 'content_ghunyatu_talibeen', 'Purification of the Heart', 'purification-of-heart', 'Methods and practices for spiritual purification', 3, 900, 'https://audio.scroll.app/ghunyatu/ch03.mp3', 43218765, null, 'PUBLISHED', 'narrator_waheed_qasmi', NOW() - INTERVAL '28 days', NOW() - INTERVAL '33 days', NOW()),
 
 -- Fatawa Razawiyyah Chapters
-('chapter_fatawa_001', 'content_fatawa_razawiyyah', 'Principles of Islamic Jurisprudence', 'principles-islamic-jurisprudence', 'Fundamental principles underlying Islamic legal methodology', 1, 900, 'https://audio.siraaj.app/fatawa/ch01.mp3', 43218765, null, 'PUBLISHED', 'narrator_imran_attari', NOW() - INTERVAL '15 days', NOW() - INTERVAL '20 days', NOW()),
-('chapter_fatawa_002', 'content_fatawa_razawiyyah', 'Laws of Ritual Purity', 'laws-ritual-purity', 'Detailed rulings on cleanliness and purification in Islam', 2, 1080, 'https://audio.siraaj.app/fatawa/ch02.mp3', 51876234, null, 'PUBLISHED', 'narrator_imran_attari', NOW() - INTERVAL '14 days', NOW() - INTERVAL '19 days', NOW()),
+('chapter_fatawa_001', 'content_fatawa_razawiyyah', 'Principles of Islamic Jurisprudence', 'principles-islamic-jurisprudence', 'Fundamental principles underlying Islamic legal methodology', 1, 900, 'https://audio.scroll.app/fatawa/ch01.mp3', 43218765, null, 'PUBLISHED', 'narrator_imran_attari', NOW() - INTERVAL '15 days', NOW() - INTERVAL '20 days', NOW()),
+('chapter_fatawa_002', 'content_fatawa_razawiyyah', 'Laws of Ritual Purity', 'laws-ritual-purity', 'Detailed rulings on cleanliness and purification in Islam', 2, 1080, 'https://audio.scroll.app/fatawa/ch02.mp3', 51876234, null, 'PUBLISHED', 'narrator_imran_attari', NOW() - INTERVAL '14 days', NOW() - INTERVAL '19 days', NOW()),
 
 -- Kanz al-Iman Chapters (Shorter chapters due to Quranic structure)
-('chapter_kanz_001', 'content_kanz_iman', 'Surah Al-Fatihah Translation', 'surah-al-fatihah-translation', 'Complete translation and explanation of the opening chapter', 1, 600, 'https://audio.siraaj.app/kanz/ch01.mp3', 28756432, 'All praise is due to Allah, Lord of the worlds...', 'PUBLISHED', 'narrator_owais_qadri', NOW() - INTERVAL '40 days', NOW() - INTERVAL '45 days', NOW()),
-('chapter_kanz_002', 'content_kanz_iman', 'Surah Al-Baqarah - Verses 1-20', 'surah-al-baqarah-verses-1-20', 'Translation of the opening verses of Surah Al-Baqarah', 2, 1200, 'https://audio.siraaj.app/kanz/ch02.mp3', 57654321, null, 'PUBLISHED', 'narrator_owais_qadri', NOW() - INTERVAL '39 days', NOW() - INTERVAL '44 days', NOW()),
+('chapter_kanz_001', 'content_kanz_iman', 'Surah Al-Fatihah Translation', 'surah-al-fatihah-translation', 'Complete translation and explanation of the opening chapter', 1, 600, 'https://audio.scroll.app/kanz/ch01.mp3', 28756432, 'All praise is due to Allah, Lord of the worlds...', 'PUBLISHED', 'narrator_owais_qadri', NOW() - INTERVAL '40 days', NOW() - INTERVAL '45 days', NOW()),
+('chapter_kanz_002', 'content_kanz_iman', 'Surah Al-Baqarah - Verses 1-20', 'surah-al-baqarah-verses-1-20', 'Translation of the opening verses of Surah Al-Baqarah', 2, 1200, 'https://audio.scroll.app/kanz/ch02.mp3', 57654321, null, 'PUBLISHED', 'narrator_owais_qadri', NOW() - INTERVAL '39 days', NOW() - INTERVAL '44 days', NOW()),
 
 -- Masnavi Chapters
-('chapter_masnavi_001', 'content_masnavi_rumi', 'The Reed Flute''s Song', 'reed-flute-song', 'The opening story of the Masnavi about the reed''s lament', 1, 780, 'https://audio.siraaj.app/masnavi/ch01.mp3', 37456789, null, 'PUBLISHED', 'narrator_furqan_qadri', NOW() - INTERVAL '5 days', NOW() - INTERVAL '10 days', NOW()),
-('chapter_masnavi_002', 'content_masnavi_rumi', 'The King and the Handmaiden', 'king-and-handmaiden', 'The story of the king who fell in love with a slave girl', 2, 960, 'https://audio.siraaj.app/masnavi/ch02.mp3', 46123789, null, 'PUBLISHED', 'narrator_furqan_qadri', NOW() - INTERVAL '4 days', NOW() - INTERVAL '9 days', NOW()),
+('chapter_masnavi_001', 'content_masnavi_rumi', 'The Reed Flute''s Song', 'reed-flute-song', 'The opening story of the Masnavi about the reed''s lament', 1, 780, 'https://audio.scroll.app/masnavi/ch01.mp3', 37456789, null, 'PUBLISHED', 'narrator_furqan_qadri', NOW() - INTERVAL '5 days', NOW() - INTERVAL '10 days', NOW()),
+('chapter_masnavi_002', 'content_masnavi_rumi', 'The King and the Handmaiden', 'king-and-handmaiden', 'The story of the king who fell in love with a slave girl', 2, 960, 'https://audio.scroll.app/masnavi/ch02.mp3', 46123789, null, 'PUBLISHED', 'narrator_furqan_qadri', NOW() - INTERVAL '4 days', NOW() - INTERVAL '9 days', NOW()),
 
 -- Qasida Burda Chapters
-('chapter_burda_001', 'content_qasida_burda', 'Opening Verses - Longing for Medina', 'opening-verses-longing-medina', 'The poet''s expression of love and longing for the Prophet''s city', 1, 720, 'https://audio.siraaj.app/burda/ch01.mp3', 34567123, 'A-min tadhakkuri jeeraanin bi-dhee salami...', 'PUBLISHED', 'narrator_abdul_basit', NOW() - INTERVAL '50 days', NOW() - INTERVAL '55 days', NOW()),
+('chapter_burda_001', 'content_qasida_burda', 'Opening Verses - Longing for Medina', 'opening-verses-longing-medina', 'The poet''s expression of love and longing for the Prophet''s city', 1, 720, 'https://audio.scroll.app/burda/ch01.mp3', 34567123, 'A-min tadhakkuri jeeraanin bi-dhee salami...', 'PUBLISHED', 'narrator_abdul_basit', NOW() - INTERVAL '50 days', NOW() - INTERVAL '55 days', NOW()),
 
 -- 99 Names Chapters
-('chapter_names_001', 'content_ninety_nine_names', 'Ar-Rahman and Ar-Raheem', 'ar-rahman-ar-raheem', 'Understanding the Most Gracious and Most Merciful names of Allah', 1, 720, 'https://audio.siraaj.app/names/ch01.mp3', 34567890, null, 'PUBLISHED', 'narrator_mohsin_qadri', NOW() - INTERVAL '70 days', NOW() - INTERVAL '75 days', NOW()),
-('chapter_names_002', 'content_ninety_nine_names', 'Al-Malik and Al-Quddus', 'al-malik-al-quddus', 'The King and The Holy - understanding Allah''s sovereignty and purity', 2, 720, 'https://audio.siraaj.app/names/ch02.mp3', 34567890, null, 'PUBLISHED', 'narrator_mohsin_qadri', NOW() - INTERVAL '69 days', NOW() - INTERVAL '74 days', NOW());
+('chapter_names_001', 'content_ninety_nine_names', 'Ar-Rahman and Ar-Raheem', 'ar-rahman-ar-raheem', 'Understanding the Most Gracious and Most Merciful names of Allah', 1, 720, 'https://audio.scroll.app/names/ch01.mp3', 34567890, null, 'PUBLISHED', 'narrator_mohsin_qadri', NOW() - INTERVAL '70 days', NOW() - INTERVAL '75 days', NOW()),
+('chapter_names_002', 'content_ninety_nine_names', 'Al-Malik and Al-Quddus', 'al-malik-al-quddus', 'The King and The Holy - understanding Allah''s sovereignty and purity', 2, 720, 'https://audio.scroll.app/names/ch02.mp3', 34567890, null, 'PUBLISHED', 'narrator_mohsin_qadri', NOW() - INTERVAL '69 days', NOW() - INTERVAL '74 days', NOW());
 
 -- ============================================================================
 -- WAVEFORM DATA - Audio visualization
@@ -498,7 +498,7 @@ INSERT INTO audio_sessions (id, user_id, content_id, chapter_id, position, durat
 
 INSERT INTO notifications (id, user_id, title, message, type, is_dismissible, action_text, action_url, is_read, is_archived, scheduled_for, created_at, read_at, archived_at) VALUES
 ('notif_001', 'user_trial_ahmed', 'Trial Usage Alert', 'You''ve used 8 out of 15 minutes this month. Upgrade to Premium for unlimited access!', 'PROMOTION', true, 'Upgrade Now', '/home/subscription', false, false, null, NOW() - INTERVAL '2 days', null, null),
-('notif_002', 'user_trial_fatima', 'Welcome to Siraaj!', 'Discover authentic Islamic audiobooks from renowned Sunni scholars. Start with our featured collection.', 'INFO', true, 'Explore', '/home', true, false, null, NOW() - INTERVAL '5 days', NOW() - INTERVAL '4 days', null),
+('notif_002', 'user_trial_fatima', 'Welcome to Scroll!', 'Discover authentic Islamic audiobooks from renowned Sunni scholars. Start with our featured collection.', 'INFO', true, 'Explore', '/home', true, false, null, NOW() - INTERVAL '5 days', NOW() - INTERVAL '4 days', null),
 ('notif_003', 'user_prem_monthly_1', 'New Content Available', 'New audiobook added: "Tafseer-e-Naeemi - Surah Al-Baqarah" by Allama Naeem-ud-Din Muradabadi', 'CONTENT_UPDATE', true, 'Listen Now', '/home/playlist/content_tafseer_naeemi', false, false, null, NOW() - INTERVAL '1 day', null, null),
 ('notif_004', 'user_prem_annual_1', 'Download Complete', 'Your download of "Masnavi Sharif - Book One" is ready for offline listening.', 'SUCCESS', true, 'Play', '/home/playlist/content_masnavi_rumi', true, false, null, NOW() - INTERVAL '4 days', NOW() - INTERVAL '3 days', null),
 ('notif_005', 'user_trial_omar', 'Monthly Reset', 'Your 15-minute trial allowance has been reset for this month. Happy listening!', 'INFO', true, null, null, false, false, null, NOW() - INTERVAL '20 days', null, null);

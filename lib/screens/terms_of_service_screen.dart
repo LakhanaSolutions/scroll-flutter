@@ -40,10 +40,10 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       <p><strong>Last updated:</strong> January 2024</p>
       
       <h2>Acceptance of Terms</h2>
-      <p>By accessing and using Siraaj, you accept and agree to be bound by the terms and provision of this agreement.</p>
+      <p>By accessing and using Scroll, you accept and agree to be bound by the terms and provision of this agreement.</p>
       
       <h2>Description of Service</h2>
-      <p>Siraaj is a premium Islamic audiobook and lecture platform that provides access to high-quality religious content from renowned scholars and speakers.</p>
+      <p>Scroll is a premium Islamic audiobook and lecture platform that provides access to high-quality religious content from renowned scholars and speakers.</p>
       
       <h3>Service Features</h3>
       <ul>
@@ -64,7 +64,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       </ul>
       
       <h2>Subscription Plans</h2>
-      <h3>Free Plan (Siraaj Glimpse)</h3>
+      <h3>Free Plan (Scroll Glimpse)</h3>
       <ul>
         <li>Limited access to content library</li>
         <li>Basic features included</li>
@@ -87,7 +87,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       <p>Subscriptions automatically renew unless canceled at least 24 hours before the current period ends.</p>
       
       <h2>Content Usage</h2>
-      <p>The content available on Siraaj is for personal, non-commercial use only. You may not:</p>
+      <p>The content available on Scroll is for personal, non-commercial use only. You may not:</p>
       <ul>
         <li>Distribute, share, or make content available to others</li>
         <li>Copy, reproduce, or create derivative works</li>
@@ -106,7 +106,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       </ul>
       
       <h2>Intellectual Property</h2>
-      <p>All content, features, and functionality of Siraaj are owned by us or our licensors and are protected by copyright, trademark, and other intellectual property laws.</p>
+      <p>All content, features, and functionality of Scroll are owned by us or our licensors and are protected by copyright, trademark, and other intellectual property laws.</p>
       
       <h2>Termination</h2>
       <p>We may terminate or suspend your account and access to the service immediately, without prior notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties.</p>
@@ -115,7 +115,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       <p>The service is provided "as is" and "as available" without warranties of any kind. We do not guarantee that the service will be uninterrupted, secure, or error-free.</p>
       
       <h2>Limitation of Liability</h2>
-      <p>In no event shall Siraaj be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service.</p>
+      <p>In no event shall Scroll be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service.</p>
       
       <h2>Governing Law</h2>
       <p>These Terms are governed by and construed in accordance with the laws of Saudi Arabia.</p>
@@ -125,7 +125,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       
       <h2>Contact Information</h2>
       <p>If you have any questions about these Terms, please contact us at:</p>
-      <p><strong>Email:</strong> legal@siraaj.app<br>
+      <p><strong>Email:</strong> legal@scroll.app<br>
       <strong>Address:</strong> Riyadh, Saudi Arabia</p>
       ''';
 

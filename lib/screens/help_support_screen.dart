@@ -65,8 +65,8 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
       
       const mockFAQsJson = [
         {
-          "question": "How do I subscribe to Siraaj Premium?",
-          "answer": "You can subscribe to Siraaj Premium by going to Settings > Subscription and selecting your preferred plan. We offer monthly and annual subscriptions with a 14-day free trial.",
+          "question": "How do I subscribe to Scroll Premium?",
+          "answer": "You can subscribe to Scroll Premium by going to Settings > Subscription and selecting your preferred plan. We offer monthly and annual subscriptions with a 14-day free trial.",
           "category": "Subscription"
         },
         {

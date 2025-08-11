@@ -1,6 +1,6 @@
-# Siraaj App Icons
+# Scroll App Icons
 
-This document lists all icons used in the Siraaj Flutter app for creating custom SVG replacements.
+This document lists all icons used in the Scroll Flutter app for creating custom SVG replacements.
 
 ## Navigation Icons
 
@@ -290,7 +290,7 @@ The following Material Design icons are also used throughout the app:
 
 ## Total Icon Count
 
-This comprehensive list contains **187 unique icons** used throughout the Siraaj app, covering all major functionality areas including navigation, media controls, user interactions, content management, and system features.
+This comprehensive list contains **187 unique icons** used throughout the Scroll app, covering all major functionality areas including navigation, media controls, user interactions, content management, and system features.
 
 Each icon should be designed as a custom SVG with consistent styling that matches the app's visual design system.
 
@@ -402,4 +402,4 @@ The following PNG icons have been added to the `assets/icons/` directory and int
 
 ## Updated Total Icon Count
 
-With the addition of PNG icons and mock content category icons, the comprehensive list now contains **195+ unique icons** used throughout the Siraaj app, covering all major functionality areas including navigation, media controls, user interactions, content management, system features, content categorization, and Islamic-themed iconography.
+With the addition of PNG icons and mock content category icons, the comprehensive list now contains **195+ unique icons** used throughout the Scroll app, covering all major functionality areas including navigation, media controls, user interactions, content management, system features, content categorization, and Islamic-themed iconography.

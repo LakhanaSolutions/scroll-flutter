@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glowy_borders/glowy_borders.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:siraaj/models/welcome_content.dart';
-import 'package:siraaj/screens/auth/welcome_content_widget.dart';
-import 'package:siraaj/screens/auth/login_content_widget.dart';
-import 'package:siraaj/screens/auth/request_otp_content_widget.dart';
-import 'package:siraaj/screens/auth/enter_otp_content_widget.dart';
+import 'package:scroll/models/welcome_content.dart';
+import 'package:scroll/screens/auth/welcome_content_widget.dart';
+import 'package:scroll/screens/auth/login_content_widget.dart';
+import 'package:scroll/screens/auth/request_otp_content_widget.dart';
+import 'package:scroll/screens/auth/enter_otp_content_widget.dart';
 import '../../widgets/bottom_sheets/settings_modals.dart';
 import '../../models/auth_state_model.dart';
 import '../../providers/auth_provider.dart';
@@ -163,7 +163,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   String? _getSecondaryButtonText() {
     switch (_currentMode) {
       case AuthMode.welcome:
-        return 'Learn More about Siraaj';
+        return 'Learn More about Scroll';
       case AuthMode.email:
         return 'Go back';
       case AuthMode.requestOtp:

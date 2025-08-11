@@ -1,8 +1,8 @@
-# Siraaj Database Schema Documentation
+# Scroll Database Schema Documentation
 
 ## Overview
 
-This document describes the comprehensive database schema for the Siraaj audiobook and learning platform. The schema is designed for PostgreSQL and includes BetterAuth compatibility for authentication and session management.
+This document describes the comprehensive database schema for the Scroll audiobook and learning platform. The schema is designed for PostgreSQL and includes BetterAuth compatibility for authentication and session management.
 
 ## Table of Contents
 

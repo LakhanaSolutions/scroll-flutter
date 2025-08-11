@@ -1,10 +1,10 @@
-# Siraaj - Islamic Audiobook Platform
+# Scroll - Islamic Audiobook Platform
 
 A comprehensive audiobook and Islamic learning platform built with Flutter, offering premium content with trial-based access controls and sophisticated subscription management.
 
 ## Project Overview
 
-Siraaj is an audiobook platform specializing in Islamic content, featuring works by classical scholars like Imam Ahmed Raza Khan Barelvi, Shaykh Abdul Qadir Jilani, and contemporary Islamic scholars. The platform includes sophisticated trial usage tracking, premium content access controls, and a comprehensive audio streaming system.
+Scroll is an audiobook platform specializing in Islamic content, featuring works by classical scholars like Imam Ahmed Raza Khan Barelvi, Shaykh Abdul Qadir Jilani, and contemporary Islamic scholars. The platform includes sophisticated trial usage tracking, premium content access controls, and a comprehensive audio streaming system.
 
 ## Key Features
 

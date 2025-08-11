@@ -1,4 +1,4 @@
-// Mock data for Siraaj app - Phase 1 UI implementation
+// Mock data for Scroll app - Phase 1 UI implementation
 // In Phase 2, this will be replaced with actual API calls
 
 import 'package:flutter/material.dart';

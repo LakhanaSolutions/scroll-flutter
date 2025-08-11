@@ -41,8 +41,8 @@ class AudioPlayerService {
       _audioHandler = await AudioService.init(
         builder: () => AudioPlayerHandler(_player!),
         config: const AudioServiceConfig(
-          androidNotificationChannelId: 'com.example.siraaj.audio',
-          androidNotificationChannelName: 'Siraaj Audio Player',
+          androidNotificationChannelId: 'com.example.scroll.audio',
+          androidNotificationChannelName: 'Scroll Audio Player',
           androidNotificationOngoing: true,
           androidNotificationClickStartsActivity: true,
         ),

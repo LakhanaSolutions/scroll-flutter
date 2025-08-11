@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Comprehensive spacing system for the Siraaj app
+/// Comprehensive spacing system for the Scroll app
 /// Implements consistent spacing values following 8px grid system
 class AppSpacing {
   // Prevent instantiation

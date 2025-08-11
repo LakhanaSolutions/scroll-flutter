@@ -1,10 +1,10 @@
 # Frontend API Requirements
 
-This document outlines all API endpoints required by the Siraaj Flutter frontend application, organized by database table and corresponding screens. This will guide the backend API implementation to replace all mock data with real API calls.
+This document outlines all API endpoints required by the Scroll Flutter frontend application, organized by database table and corresponding screens. This will guide the backend API implementation to replace all mock data with real API calls.
 
 ## Overview
 
-The Siraaj app requires comprehensive API endpoints to support:
+The Scroll app requires comprehensive API endpoints to support:
 - Authentication and user management
 - Content discovery and playback
 - Subscription management
@@ -337,7 +337,7 @@ For real-time features:
 {
   "success": true,
   "data": {
-    "url": "https://cdn.siraaj.app/uploads/avatar_123.jpg",
+    "url": "https://cdn.scroll.app/uploads/avatar_123.jpg",
     "filename": "avatar_123.jpg",
     "size": 154620,
     "mimeType": "image/jpeg"

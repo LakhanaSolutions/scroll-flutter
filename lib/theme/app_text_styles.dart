@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Comprehensive typography system for the Siraaj app
+/// Comprehensive typography system for the Scroll app
 /// Implements Material You 3 typography scale and iOS San Francisco font system
 class AppTextStyles {
   // Prevent instantiation

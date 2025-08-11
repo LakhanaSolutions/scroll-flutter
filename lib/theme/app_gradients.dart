@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Reusable gradient configurations for the Siraaj app
+/// Reusable gradient configurations for the Scroll app
 /// Provides consistent gradient patterns across the application
 class AppGradients {
   // Prevent instantiation

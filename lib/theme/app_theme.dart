@@ -6,7 +6,7 @@ import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'app_spacing.dart';
 
-/// Comprehensive theme configuration for the Siraaj app
+/// Comprehensive theme configuration for the Scroll app
 /// Implements Material You 3 for Android and iOS native styling for iOS
 class AppTheme {
   // Prevent instantiation

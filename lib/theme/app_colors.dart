@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Comprehensive color system for the Siraaj app
+/// Comprehensive color system for the Scroll app
 /// Implements Material You 3 color tokens and iOS system colors
 class AppColors {
   // Prevent instantiation

@@ -36,7 +36,7 @@ class SubscriptionHistoryScreen extends StatelessWidget {
   List<SubscriptionHistoryItem> get _historyItems => [
     SubscriptionHistoryItem(
       id: '1',
-      planName: 'Siraaj Premium Monthly',
+      planName: 'Scroll Premium Monthly',
       price: '29.99 SAR',
       startDate: DateTime(2024, 1, 15),
       endDate: DateTime(2024, 12, 15),
@@ -46,7 +46,7 @@ class SubscriptionHistoryScreen extends StatelessWidget {
     ),
     SubscriptionHistoryItem(
       id: '2',
-      planName: 'Siraaj Glimpse',
+      planName: 'Scroll Glimpse',
       price: '0 SAR',
       startDate: DateTime(2023, 8, 1),
       endDate: DateTime(2024, 1, 14),
@@ -56,7 +56,7 @@ class SubscriptionHistoryScreen extends StatelessWidget {
     ),
     SubscriptionHistoryItem(
       id: '3',
-      planName: 'Siraaj Scholar\'s Circle',
+      planName: 'Scroll Scholar\'s Circle',
       price: '299.99 SAR',
       startDate: DateTime(2022, 10, 1),
       endDate: DateTime(2023, 9, 30),

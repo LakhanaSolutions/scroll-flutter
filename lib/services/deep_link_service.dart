@@ -2,8 +2,8 @@ import 'package:flutter/services.dart';
 
 /// Service for handling deep links and generating shareable URLs
 class DeepLinkService {
-  static const String _baseUrl = 'https://siraaj.app';
-  static const String _customScheme = 'siraaj://';
+  static const String _baseUrl = 'https://scroll.app';
+  static const String _customScheme = 'scroll://';
 
   /// Generate a shareable URL for a book/audiobook
   static String generateBookUrl(String bookId) {
@@ -55,7 +55,7 @@ class DeepLinkService {
 
   /// Generate a shareable text with URL
   static String generateShareText(String title, String url) {
-    return 'Check out "$title" on Siraaj: $url';
+    return 'Check out "$title" on Scroll: $url';
   }
 
   /// Parse a deep link URL and extract information
@@ -64,7 +64,7 @@ class DeepLinkService {
     if (uri == null) return null;
 
     // Handle custom scheme
-    if (uri.scheme == 'siraaj') {
+    if (uri.scheme == 'scroll') {
       return {
         'type': 'custom',
         'path': uri.path,
@@ -73,7 +73,7 @@ class DeepLinkService {
     }
 
     // Handle HTTPS scheme
-    if (uri.scheme == 'https' && uri.host == 'siraaj.app') {
+    if (uri.scheme == 'https' && uri.host == 'scroll.app') {
       final pathSegments = uri.pathSegments;
       if (pathSegments.isEmpty) return null;
 
@@ -126,7 +126,7 @@ class DeepLinkService {
     return null;
   }
 
-  /// Validate if a URL is a valid Siraaj deep link
+  /// Validate if a URL is a valid Scroll deep link
   static bool isValidDeepLink(String url) {
     return parseDeepLink(url) != null;
   }

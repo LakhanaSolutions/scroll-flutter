@@ -172,7 +172,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   ),
                   const SizedBox(height: AppSpacing.small),
                   AppBodyText(
-                    'Help us improve Siraaj by sharing your thoughts',
+                    'Help us improve Scroll by sharing your thoughts',
                     textAlign: TextAlign.center,
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -375,7 +375,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   ),
                   const SizedBox(height: AppSpacing.small),
                   AppCaptionText(
-                    'Your feedback helps us make Siraaj better for everyone',
+                    'Your feedback helps us make Scroll better for everyone',
                     textAlign: TextAlign.center,
                     color: colorScheme.onSurfaceVariant,
                   ),

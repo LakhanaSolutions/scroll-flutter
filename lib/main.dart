@@ -53,7 +53,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     final localeState = ref.watch(localeProvider);
 
     return MaterialApp.router(
-      title: 'Siraaj',
+      title: 'Scroll',
       locale: localeState.locale,
       theme: AppTheme.lightTheme.copyWith(
         extensions: [AppThemeExtension.getForPlatform(isDark: false)],

@@ -13,14 +13,14 @@ class GreetingMessage extends StatelessWidget {
 
   static GreetingMessage generic() {
     return const GreetingMessage(
-      title: 'Welcome to Siraaj',
+      title: 'Welcome to Scroll',
       subtitle: 'Please enter your email to get started',
     );
   }
 
   static GreetingMessage newUser() {
     return const GreetingMessage(
-      title: 'Welcome to Siraaj!',
+      title: 'Welcome to Scroll!',
       subtitle: 'We\'ll send you a verification code to get started',
     );
   }

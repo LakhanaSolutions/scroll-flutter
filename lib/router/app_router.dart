@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:siraaj/screens/auth/auth_screen.dart';
+import 'package:scroll/screens/auth/auth_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/theme_demo_screen.dart';

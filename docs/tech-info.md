@@ -1,14 +1,14 @@
-# Siraaj - Technical Information
+# Scroll - Technical Information
 
 ## Project Overview
 
-Siraaj is a comprehensive audiobook and Islamic learning platform built with Flutter. The platform supports premium audio streaming, subscription management with trial restrictions, user progress tracking, and sophisticated content access controls.
+Scroll is a comprehensive audiobook and Islamic learning platform built with Flutter. The platform supports premium audio streaming, subscription management with trial restrictions, user progress tracking, and sophisticated content access controls.
 
 ## Project Structure
 
 ### Root Directory
 ```
-siraaj/frontend/
+scroll/frontend/
 ├── lib/                 # Main application code
 ├── android/            # Android platform configuration
 ├── ios/               # iOS platform configuration
@@ -151,8 +151,8 @@ TrialUsageSession {
 /home/subscription (trial upgrade flows)
 
 // Deep linking support
-https://siraaj.app/content/premium-book-id
-siraaj://chapter/chapter-id/content-id
+https://scroll.app/content/premium-book-id
+scroll://chapter/chapter-id/content-id
 ```
 
 ### State Management Architecture
@@ -226,7 +226,7 @@ if (isTrialUserOnPremiumContent && noTimeRemaining) {
 #### **Android (`/android/`)**
 - **Audio Permissions**: WAKE_LOCK, FOREGROUND_SERVICE, MEDIA_PLAYBACK permissions
 - **Audio Service**: Background audio service declaration
-- **Deep Linking**: Configured for `https://siraaj.app` and `siraaj://` schemes
+- **Deep Linking**: Configured for `https://scroll.app` and `scroll://` schemes
 - **Build Configuration**: Gradle setup with audio optimization
 
 #### **iOS (`/ios/`)**
@@ -299,4 +299,4 @@ The following test accounts are available in development mode (OTP: `123456` for
 - **Premium Features**: Toggleable premium functionality
 - **UI Experiments**: A/B testing for subscription conversion
 
-This comprehensive technical overview documents the complete Siraaj platform architecture with detailed focus on the advanced trial user restriction system and premium content access controls.
+This comprehensive technical overview documents the complete Scroll platform architecture with detailed focus on the advanced trial user restriction system and premium content access controls.

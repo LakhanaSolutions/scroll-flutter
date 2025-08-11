@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:siraaj/widgets/buttons/music_player_fab.dart';
+import 'package:scroll/widgets/buttons/music_player_fab.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../providers/theme_provider.dart';

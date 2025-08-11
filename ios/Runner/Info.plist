@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Siraaj</string>
+	<string>Scroll</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>siraaj</string>
+	<string>scroll</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -49,7 +49,7 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>siraaj.app</string>
+			<string>scroll.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
@@ -57,10 +57,10 @@
 		</dict>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>siraaj.custom</string>
+			<string>scroll.custom</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>siraaj</string>
+				<string>scroll</string>
 			</array>
 		</dict>
 	</array>

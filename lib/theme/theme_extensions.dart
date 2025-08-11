@@ -4,7 +4,7 @@ import 'app_colors.dart';
 import 'app_spacing.dart';
 import 'app_gradients.dart';
 
-/// Platform-specific theme extensions for the Siraaj app
+/// Platform-specific theme extensions for the Scroll app
 /// Provides iOS-specific design tokens and behaviors
 @immutable
 class AppThemeExtension extends ThemeExtension<AppThemeExtension> {

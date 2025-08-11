@@ -72,7 +72,7 @@ class AboutScreen extends StatelessWidget {
                   
                   // App name and tagline
                   const AppTitleText(
-                    'Siraaj',
+                    'Scroll',
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.small),
@@ -108,13 +108,13 @@ class AboutScreen extends StatelessWidget {
             // App description
             _buildSection(
               context,
-              title: 'About Siraaj',
+              title: 'About Scroll',
               child: AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppBodyText(
-                      'Siraaj is a premium Islamic audiobook platform designed to enrich your spiritual journey. We curate high-quality content from renowned scholars and speakers, making Islamic knowledge accessible anytime, anywhere.',
+                      'Scroll is a premium Islamic audiobook platform designed to enrich your spiritual journey. We curate high-quality content from renowned scholars and speakers, making Islamic knowledge accessible anytime, anywhere.',
                       color: colorScheme.onSurface,
                     ),
                     const SizedBox(height: AppSpacing.medium),
@@ -301,9 +301,9 @@ class AboutScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.small),
                     GestureDetector(
-                      onTap: () => _copyToClipboard(context, 'contact@siraaj.app'),
+                      onTap: () => _copyToClipboard(context, 'contact@scroll.app'),
                       child: AppBodyText(
-                        'contact@siraaj.app',
+                        'contact@scroll.app',
                         color: colorScheme.primary,
                       ),
                     ),
@@ -336,7 +336,7 @@ class AboutScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
               child: AppCaptionText(
-                '© 2024 Siraaj. All rights reserved.\nMade with ❤️ for the Muslim community',
+                '© 2024 Scroll. All rights reserved.\nMade with ❤️ for the Muslim community',
                 textAlign: TextAlign.center,
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -547,7 +547,7 @@ class AboutScreen extends StatelessWidget {
   void _showLicenses(BuildContext context) {
     showLicensePage(
       context: context,
-      applicationName: 'Siraaj',
+      applicationName: 'Scroll',
       applicationVersion: '1.0.0',
       applicationIcon: Container(
         width: 64,

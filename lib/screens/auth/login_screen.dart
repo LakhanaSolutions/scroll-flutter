@@ -84,9 +84,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('About Siraaj'),
+        title: const Text('About Scroll'),
         content: const Text(
-          'Siraaj is your personalized learning companion that illuminates the path of knowledge. '
+          'Scroll is your personalized learning companion that illuminates the path of knowledge. '
           'Sign up to access curated content, track your progress, and join our community of learners.'
         ),
         actions: [

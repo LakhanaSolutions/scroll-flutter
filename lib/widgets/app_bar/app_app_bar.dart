@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siraaj/theme/app_colors.dart';
+import 'package:scroll/theme/app_colors.dart';
 import '../../theme/theme_extensions.dart';
 
 /// Reusable AppBar widget for consistent navigation across the app

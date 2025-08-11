@@ -47,7 +47,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   
   List<SubscriptionPlan> get _subscriptionPlans => [
     SubscriptionPlan(
-      name: 'Siraaj Glimpse',
+      name: 'Scroll Glimpse',
       type: 'Free Plan',
       price: '0 SAR',
       timePeriod: 'Lifetime',
@@ -67,7 +67,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       isCurrent: true,
     ),
     SubscriptionPlan(
-      name: 'Siraaj Premium',
+      name: 'Scroll Premium',
       type: 'Paid Plan',
       price: '29.99 SAR',
       timePeriod: 'Monthly',
@@ -86,7 +86,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       isPopular: true,
     ),
     SubscriptionPlan(
-      name: 'Siraaj Scholar\'s Circle',
+      name: 'Scroll Scholar\'s Circle',
       type: 'Paid Plan',
       price: '299.99 SAR',
       timePeriod: 'Annual',

@@ -1,6 +1,6 @@
 # TODO Items
 
-This document tracks all TODO items throughout the Siraaj Frontend codebase.
+This document tracks all TODO items throughout the Scroll Frontend codebase.
 
 ## Settings & Preferences
 

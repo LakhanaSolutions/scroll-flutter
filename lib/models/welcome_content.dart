@@ -10,7 +10,7 @@ class WelcomeContent {
   });
 
   static const WelcomeContent defaultContent = WelcomeContent(
-    title: 'Welcome to Siraaj',
+    title: 'Welcome to Scroll',
     description: 'Your personalized learning companion that illuminates the path of knowledge.',
     buttonText: 'Get Started',
   );

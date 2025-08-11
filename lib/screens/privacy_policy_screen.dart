@@ -85,7 +85,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       
       <h2>Contact Us</h2>
       <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-      <p><strong>Email:</strong> privacy@siraaj.app<br>
+      <p><strong>Email:</strong> privacy@scroll.app<br>
       <strong>Address:</strong> Riyadh, Saudi Arabia</p>
       ''';
 

@@ -79,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return AppCard(
       gradient: context.planGradient(planName),
+      padding: const EdgeInsets.all(AppSpacing.medium),
       elevation: 0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

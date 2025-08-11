@@ -176,7 +176,7 @@ class DownloadedBookData {
 }
 
 enum ContentType { book, podcast }
-enum AvailabilityType { free, premium, trial }
+enum AvailabilityType { glimpse, premium }
 enum ChapterStatus { notPlayed, playing, paused, completed }
 
 class AuthorData {
@@ -916,7 +916,7 @@ class MockData {
             authorData: authors[0], // Using first author as placeholder
             coverUrl: 'https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy',
             type: ContentType.book,
-            availability: AvailabilityType.free,
+            availability: AvailabilityType.glimpse,
             rating: 4.6,
             duration: '8h 30m',
             chapterCount: 12,
@@ -948,7 +948,7 @@ class MockData {
             authorData: authors[1],
             coverUrl: 'https://via.placeholder.com/150x200/FF9800/white?text=Hajj',
             type: ContentType.book,
-            availability: AvailabilityType.trial,
+            availability: AvailabilityType.premium,
             rating: 4.9,
             duration: '12h 15m',
             chapterCount: 18,
@@ -970,7 +970,7 @@ class MockData {
             authorData: authors[2],
             coverUrl: 'https://via.placeholder.com/150x200/9C27B0/white?text=Six+Pillars',
             type: ContentType.book,
-            availability: AvailabilityType.free,
+            availability: AvailabilityType.glimpse,
             rating: 4.7,
             duration: '6h 45m',
             chapterCount: 8,
@@ -1021,7 +1021,7 @@ class MockData {
             authorData: authors[2],
             coverUrl: 'https://via.placeholder.com/150x200/795548/white?text=Recitation',
             type: ContentType.podcast,
-            availability: AvailabilityType.free,
+            availability: AvailabilityType.glimpse,
             rating: 4.8,
             duration: '2h 15m',
             chapterCount: 30,
@@ -1040,7 +1040,7 @@ class MockData {
             authorData: authors[0],
             coverUrl: 'https://via.placeholder.com/150x200/9E9E9E/white?text=Knowledge',
             type: ContentType.book,
-            availability: AvailabilityType.free,
+            availability: AvailabilityType.glimpse,
             rating: 4.5,
             duration: '5h 30m',
             chapterCount: 10,

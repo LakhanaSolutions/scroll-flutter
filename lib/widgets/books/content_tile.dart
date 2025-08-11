@@ -3,7 +3,7 @@ import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
 import '../text/app_text.dart';
 import '../cards/app_card.dart';
-import '../indicators/app_badges.dart';
+import 'content_cover.dart';
 
 /// Reusable content tile widget for books and podcasts
 /// Similar to audiobook_of_week.dart but more compact and versatile
@@ -26,84 +26,27 @@ class ContentTile extends StatelessWidget {
       margin: margin ?? const EdgeInsets.only(bottom: AppSpacing.small),
       elevation: AppSpacing.elevationNone,
       onTap: onTap,
-      child: Stack(
+      child: Row(
         children: [
-          Row(
-            children: [
-              // Content cover
-              _buildContentCover(context),
-              const SizedBox(width: AppSpacing.medium),
-              // Content info
-              Expanded(
-                child: _buildContentInfo(context),
-              ),
-            ],
+          // Content cover with availability badge
+          ContentCover(
+            content: content,
+            width: 100,
+            height: 130,
+            elevation: 2,
+            borderRadius: AppSpacing.radiusSmall,
+            showAvailabilityBadge: content.availability == AvailabilityType.premium,
           ),
-          // Premium badge in top right corner - aligned like Most Popular badge
-          if (content.availability == AvailabilityType.premium)
-            Positioned(
-              top: 8,
-              right: AppSpacing.medium,
-              child: AppAvailabilityBadge(
-                availability: content.availability,
-                fontSize: 8,
-              ),
-            ),
+          const SizedBox(width: AppSpacing.medium),
+          // Content info
+          Expanded(
+            child: _buildContentInfo(context),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildContentCover(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      width: 100,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-        child: Stack(
-          children: [
-            // Placeholder cover with gradient
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.primary,
-                    colorScheme.primaryContainer,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Center(
-                child: Icon(
-                  content.type == ContentType.book 
-                      ? Icons.menu_book_rounded 
-                      : Icons.podcasts_rounded,
-                  color: colorScheme.onPrimary,
-                  size: AppSpacing.iconMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
 
   Widget _buildContentInfo(BuildContext context) {

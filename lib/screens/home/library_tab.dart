@@ -432,7 +432,7 @@ class _LibraryTabState extends State<LibraryTab> with TickerProviderStateMixin {
       authorData: mockAuthor,
       coverUrl: 'https://via.placeholder.com/150x200',
       type: ContentType.book,
-      availability: AvailabilityType.free,
+      availability: AvailabilityType.glimpse,
       rating: 4.5,
       duration: '5h 30m',
       chapterCount: 10,

@@ -14,6 +14,7 @@ import '../widgets/buttons/app_buttons.dart';
 import '../widgets/trial/glimpse_into_premium_stats.dart';
 import '../widgets/reviews/add_review_card.dart';
 import '../widgets/social/social_listening_stats.dart';
+import '../widgets/books/content_cover.dart';
 
 /// Playlist screen that displays detailed information about a book or podcast
 /// Shows description, actions, narrator selection, and chapters list
@@ -142,33 +143,13 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Content cover
-          SizedBox(
+          ContentCover(
+            content: widget.content,
             width: 120,
             height: 160,
-            child: AppCard(
-              padding: EdgeInsets.zero,
-              gradient: widget.content.type == ContentType.book 
-                  ? AppGradients.primaryGradient(colorScheme)
-                  : AppGradients.warningGradient(colorScheme),
-              child: Stack(
-                children: [
-                  // Centered icon
-                  Center(
-                    child: Icon(
-                      _getContentTypeIcon(widget.content.type),
-                      color: Colors.white,
-                      size: AppSpacing.iconLarge,
-                    ),
-                  ),
-                  // Availability badge
-                  Positioned(
-                    top: AppSpacing.small,
-                    right: AppSpacing.small,
-                    child: _buildAvailabilityBadge(context),
-                  ),
-                ],
-              ),
-            ),
+            elevation: 4,
+            borderRadius: AppSpacing.radiusMedium,
+            showAvailabilityBadge: widget.content.availability == AvailabilityType.premium,
           ),
           const SizedBox(width: AppSpacing.large),
           // Content details
@@ -284,82 +265,6 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     );
   }
 
-  Widget _buildAvailabilityBadge(BuildContext context) {
-    final theme = Theme.of(context);
-
-    Color badgeColor;
-    String badgeText;
-    IconData badgeIcon;
-
-    switch (widget.content.availability) {
-      case AvailabilityType.free:
-        badgeColor = const Color(0xFF4CAF50); // Green
-        badgeText = 'FREE';
-        badgeIcon = Icons.check_circle;
-        break;
-      case AvailabilityType.premium:
-        badgeColor = const Color(0xFFFFD700); // Gold
-        badgeText = 'PRO';
-        badgeIcon = Icons.diamond_rounded;
-        break;
-      case AvailabilityType.trial:
-        badgeColor = const Color(0xFFFF6F00); // Orange
-        badgeText = 'TRIAL';
-        badgeIcon = Icons.schedule_rounded;
-        break;
-    }
-
-    return ClipPath(
-      clipper: _RibbonClipper(),
-      child: Container(
-        width: 60,
-        height: 30,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              badgeColor,
-              badgeColor.withValues(alpha: 0.8),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: badgeColor.withValues(alpha: 0.3),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                badgeIcon,
-                color: widget.content.availability == AvailabilityType.premium 
-                    ? Colors.black87 
-                    : Colors.white,
-                size: AppSpacing.iconExtraSmall,
-              ),
-              const SizedBox(width: 2),
-              Text(
-                badgeText,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: widget.content.availability == AvailabilityType.premium 
-                      ? Colors.black87 
-                      : Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 9,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildTrialStatsSection(BuildContext context) {
     final isFreeTrial = ref.watch(isFreeTrialProvider);
@@ -1102,29 +1007,6 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
 }
 
 /// Custom clipper for ribbon effect
-class _RibbonClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    
-    // Start from top-left
-    path.moveTo(0, 0);
-    // Top edge
-    path.lineTo(size.width - 8, 0);
-    // Right edge with fold
-    path.lineTo(size.width, 8);
-    path.lineTo(size.width - 8, size.height);
-    // Bottom edge
-    path.lineTo(0, size.height);
-    // Close path
-    path.close();
-    
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
 
 /// Individual chapter tile widget with play status indicators
 class _ChapterTile extends StatelessWidget {

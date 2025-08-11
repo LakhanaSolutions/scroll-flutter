@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
+import '../../theme/app_colors.dart';
 
 /// Comprehensive badge system for consistent badge styling throughout the app
 /// Handles availability badges, status badges, and other indicator badges
@@ -24,28 +27,26 @@ class AppAvailabilityBadge extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     Color badgeColor;
+    Color textColor;
     IconData badgeIcon;
     String badgeText;
 
     switch (availability) {
-      case AvailabilityType.free:
-        badgeColor = colorScheme.tertiary;
-        badgeIcon = Icons.public_rounded;
-        badgeText = 'FREE';
+      case AvailabilityType.glimpse:
+        badgeColor = AppColors.glimpsePrimary;
+        textColor = Colors.white;
+        badgeIcon = Icons.visibility_rounded;
+        badgeText = 'GLIMPSE';
         break;
       case AvailabilityType.premium:
-        badgeColor = colorScheme.primary;
+        badgeColor = AppColors.premiumPrimary;
+        textColor = Colors.white;
         badgeIcon = Icons.star_rounded;
         badgeText = 'PREMIUM';
         break;
-      case AvailabilityType.trial:
-        badgeColor = colorScheme.error;
-        badgeIcon = Icons.timer_rounded;
-        badgeText = 'TRIAL';
-        break;
     }
 
-    // For premium content, show only icon similar to "Most Popular" badge
+    // For premium content, show only icon with plan gradient
     if (availability == AvailabilityType.premium) {
       return Container(
         padding: const EdgeInsets.symmetric(
@@ -53,7 +54,7 @@ class AppAvailabilityBadge extends StatelessWidget {
           vertical: AppSpacing.small,
         ),
         decoration: BoxDecoration(
-          color: colorScheme.primary,
+          gradient: AppGradients.planGradient(colorScheme, 'Premium'),
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(AppSpacing.radiusSmall),
             bottomRight: Radius.circular(AppSpacing.radiusSmall),
@@ -63,7 +64,31 @@ class AppAvailabilityBadge extends StatelessWidget {
         ),
         child: Icon(
           badgeIcon,
-          color: colorScheme.onPrimary,
+          color: badgeColor,
+          size: AppSpacing.iconSmall,
+        ),
+      );
+    }
+    
+    // For glimpse content, show only icon with plan gradient
+    if (availability == AvailabilityType.glimpse) {
+      return Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.small,
+        ),
+        decoration: BoxDecoration(
+          gradient: context.planGradient('Glimpse'),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(AppSpacing.radiusSmall),
+            bottomRight: Radius.circular(AppSpacing.radiusSmall),
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
+          ),
+        ),
+        child: Icon(
+          badgeIcon,
+          color: textColor,
           size: AppSpacing.iconExtraSmall,
         ),
       );

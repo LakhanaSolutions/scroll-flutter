@@ -5,7 +5,7 @@ import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
-import '../widgets/cards/app_card.dart';
+import '../widgets/books/content_tile.dart';
 import '../theme/app_icons.dart';
 import '../providers/subscription_provider.dart';
 
@@ -185,27 +185,25 @@ class MoodScreen extends ConsumerWidget {
           
           // Grid of content items - because variety is the spice of spiritual life
           ...moodCategory.books.map((book) {
+            // Find the actual content item to get full details
+            final allContent = [
+              ...MockData.getCategoryContent('1'),
+              ...MockData.getCategoryContent('2'),
+              ...MockData.getCategoryContent('3'),
+            ];
+            
+            final contentItem = allContent.firstWhere(
+              (item) => item.title == book.title || item.id == book.id,
+              orElse: () => allContent.first,
+            );
+            
             return Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.medium),
-              child: _MoodContentCard(
-                book: book,
+              child: ContentTile(
+                content: contentItem,
                 onTap: () {
-                  // Navigate to playlist/content details
-                  // Find the actual content item to get full details
-                  final allContent = [
-                    ...MockData.getCategoryContent('1'),
-                    ...MockData.getCategoryContent('2'),
-                    ...MockData.getCategoryContent('3'),
-                  ];
-                  
-                  final contentItem = allContent.firstWhere(
-                    (item) => item.title == book.title || item.id == book.id,
-                    orElse: () => allContent.first,
-                  );
-                  
                   context.push('/home/playlist/${contentItem.id}');
                 },
-                showPremiumBadge: shouldShowPremiumAds && book.isPremium,
               ),
             );
           }),
@@ -215,146 +213,3 @@ class MoodScreen extends ConsumerWidget {
   }
 }
 
-/// Individual content card for mood-based content
-/// Each card is a gateway to spiritual enlightenment (or at least good audio)
-class _MoodContentCard extends StatelessWidget {
-  final BookData book;
-  final VoidCallback? onTap;
-  final bool showPremiumBadge;
-
-  const _MoodContentCard({
-    required this.book,
-    this.onTap,
-    this.showPremiumBadge = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return AppCard(
-      onTap: onTap,
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.medium),
-        child: Row(
-          children: [
-            // Book cover placeholder - because every book deserves a good look
-            Container(
-              width: 60,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.primary.withValues(alpha: 0.8),
-                    colorScheme.primaryContainer,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.shadow.withValues(alpha: 0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      AppIcons.book,
-                      color: colorScheme.onPrimary,
-                      size: AppSpacing.iconMedium,
-                    ),
-                  ),
-                  // Premium badge - for those special premium moments
-                  if (showPremiumBadge)
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'PRO',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onSecondary,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(width: AppSpacing.medium),
-            
-            // Book details - the juicy information bits
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppSubtitleText(
-                    book.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: AppSpacing.extraSmall),
-                  AppCaptionText(
-                    'by ${book.author}',
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star_rounded,
-                        size: AppSpacing.iconExtraSmall,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(width: AppSpacing.extraSmall),
-                      AppCaptionText(
-                        book.rating.toString(),
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(width: AppSpacing.medium),
-                      Icon(
-                        Icons.access_time_rounded,
-                        size: AppSpacing.iconExtraSmall,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: AppSpacing.extraSmall),
-                      AppCaptionText(
-                        book.duration,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            // Chevron icon - because navigation needs direction
-            Icon(
-              Icons.chevron_right_rounded,
-              color: colorScheme.onSurfaceVariant,
-              size: AppSpacing.iconSmall,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -189,6 +189,18 @@ class AppColors {
   static const Color brandSecondaryLight = Color(0xFFbfdbfe); // Light blue
   static const Color brandSecondaryDark = Color(0xFF5a7ca6); // CSS --chart-3 (darker blue)
 
+  // ====== Subscription Plan Colors ======
+  
+  /// Glimpse plan colors (free tier)
+  static const Color glimpsePrimary = Color(0xFF4CAF50); // Green for free
+  static const Color glimpseLight = Color(0xFF81C784);
+  static const Color glimpseDark = Color(0xFF2E7D32);
+  
+  /// Premium plan colors
+  static const Color premiumPrimary = Color(0xFF4CAF50); // Green for premium
+  static const Color premiumLight = Color(0xFF66BB6A);
+  static const Color premiumDark = Color(0xFF388E3C);
+
   // ====== Gradient Colors ======
   
   /// Primary gradient for backgrounds and accents

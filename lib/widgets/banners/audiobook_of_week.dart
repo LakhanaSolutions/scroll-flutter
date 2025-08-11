@@ -5,6 +5,7 @@ import '../text/app_text.dart';
 import '../buttons/app_buttons.dart';
 import '../cards/app_card_home.dart';
 import '../images/app_image.dart';
+import '../indicators/app_badges.dart';
 
 /// Audiobook of the week banner widget
 /// Full width banner showcasing the featured audiobook with cover, title, author and action button
@@ -109,40 +110,17 @@ class AudiobookOfWeekBanner extends StatelessWidget {
             height: 140,
             backgroundColor: colorScheme.primaryContainer,
           ),
-          // Premium badge
-          if (book.isPremium)
-            Positioned(
-              top: AppSpacing.small,
-              right: AppSpacing.small,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.small,
-                  vertical: AppSpacing.extraSmall,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      color: colorScheme.onSecondary,
-                      size: AppSpacing.iconExtraSmall,
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      'PRO',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSecondary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+          // Availability badge positioned at top center like playlist screen
+          Positioned(
+            top: AppSpacing.elevationNone,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: AppAvailabilityBadge(
+                availability: book.isPremium ? AvailabilityType.premium : AvailabilityType.glimpse,
               ),
             ),
+          ),
         ],
       ),
     );

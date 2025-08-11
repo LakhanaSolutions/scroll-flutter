@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/mock_data.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_extensions.dart';
 import '../text/app_text.dart';
 import '../images/app_image.dart';
 
@@ -76,6 +77,7 @@ class _BookShelfItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final appTheme = context.appTheme;
 
     return Container(
       width: 160,
@@ -148,8 +150,8 @@ class _BookShelfItem extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFFFFD700), // Gold
-                                    const Color(0xFFFFA500), // Orange
+                                    appTheme.warning,
+                                    appTheme.warningContainer,
                                   ],
                                 ),
                                 borderRadius: const BorderRadius.only(
@@ -180,7 +182,7 @@ class _BookShelfItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.star_rounded,
-                        color: const Color(0xFFFFD700), // Gold color
+                        color: appTheme.warning,
                         size: AppSpacing.iconMedium, // Larger size
                       ),
                       const SizedBox(width: AppSpacing.extraSmall),
@@ -210,7 +212,7 @@ class _BookShelfItem extends StatelessWidget {
                   padding: const EdgeInsets.only(top: AppSpacing.extraSmall),
                   child: AppCaptionText(
                     '${(book.progress! * 100).round()}% complete',
-                    color: const Color(0xFFFFD700),
+                    color: appTheme.warning,
                   ),
                 ),
             ],

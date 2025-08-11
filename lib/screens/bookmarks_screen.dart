@@ -7,6 +7,7 @@ import '../theme/app_spacing.dart';
 import '../widgets/text/app_text.dart';
 import '../widgets/app_bar/app_app_bar.dart';
 import '../widgets/cards/app_card.dart';
+import '../widgets/indicators/app_badges.dart';
 
 /// Bookmarks screen that displays user's bookmarked playlists
 class BookmarksScreen extends ConsumerWidget {
@@ -169,7 +170,9 @@ class _BookmarkTile extends ConsumerWidget {
                           color: colorScheme.primary,
                         ),
                         const Spacer(),
-                        _buildAvailabilityBadge(context),
+                        AppAvailabilityBadge(
+                          availability: content.availability,
+                        ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.small),
@@ -261,59 +264,4 @@ class _BookmarkTile extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvailabilityBadge(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    Color badgeColor;
-    String badgeText;
-    IconData badgeIcon;
-
-    switch (content.availability) {
-      case AvailabilityType.free:
-        badgeColor = colorScheme.tertiary;
-        badgeText = 'FREE';
-        badgeIcon = Icons.check_circle;
-        break;
-      case AvailabilityType.premium:
-        badgeColor = colorScheme.secondary;
-        badgeText = 'PRO';
-        badgeIcon = Icons.star_rounded;
-        break;
-      case AvailabilityType.trial:
-        badgeColor = colorScheme.error;
-        badgeText = 'TRIAL';
-        badgeIcon = Icons.access_time_rounded;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.small,
-        vertical: AppSpacing.extraSmall,
-      ),
-      decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            badgeIcon,
-            color: colorScheme.onSecondary,
-            size: AppSpacing.iconExtraSmall,
-          ),
-          const SizedBox(width: AppSpacing.extraSmall),
-          Text(
-            badgeText,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSecondary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -16,10 +16,10 @@ class PremiumContentSection extends StatelessWidget {
 
   const PremiumContentSection({
     super.key,
-    this.title = 'Premium Exclusive Content',
-    this.description = 'Unlock these amazing features with Premium',
+    this.title = '✨ Premium Awaits You',
+    this.description = 'Transform your spiritual journey with these exclusive benefits',
     required this.features,
-    this.actionText = 'Try Premium',
+    this.actionText = 'Get Premium',
     this.onAction,
     this.showFeatures = true,
   });
@@ -42,13 +42,27 @@ class PremiumContentSection extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-          color: colorScheme.surfaceContainer,
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-            width: 1,
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.primaryContainer.withValues(alpha: 0.3),
+              colorScheme.secondaryContainer.withValues(alpha: 0.2),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+          border: Border.all(
+            color: colorScheme.primary.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.all(AppSpacing.medium),
+        padding: const EdgeInsets.all(AppSpacing.large),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,14 +70,28 @@ class PremiumContentSection extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(AppSpacing.small),
+                    padding: const EdgeInsets.all(AppSpacing.medium),
                     decoration: BoxDecoration(
-                      color: colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFFFFD700), // Gold
+                          const Color(0xFFFFA500), // Orange
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Icon(
-                      Icons.workspace_premium_rounded,
-                      color: colorScheme.onSecondary,
+                      Icons.diamond_rounded,
+                      color: Colors.white,
                       size: AppSpacing.iconMedium,
                     ),
                   ),
@@ -72,9 +100,13 @@ class PremiumContentSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppSubtitleText(
+                        Text(
                           title,
-                          color: colorScheme.onSurface,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.extraSmall),
                         AppBodyText(
@@ -95,18 +127,56 @@ class PremiumContentSection extends StatelessWidget {
               // Action button
               SizedBox(
                 width: double.infinity,
-                child: AppSecondaryButton(
-                  onPressed: onAction,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.star_rounded,
-                        size: AppSpacing.iconSmall,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colorScheme.primary,
+                        colorScheme.primary.withValues(alpha: 0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
-                      const SizedBox(width: AppSpacing.small),
-                      Text(actionText),
                     ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                      onTap: onAction,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.medium,
+                          horizontal: AppSpacing.large,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.rocket_launch_rounded,
+                              color: colorScheme.onPrimary,
+                              size: AppSpacing.iconMedium,
+                            ),
+                            const SizedBox(width: AppSpacing.small),
+                            Text(
+                              actionText,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                color: colorScheme.onPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -134,12 +204,12 @@ class PremiumContentSection extends StatelessWidget {
 
   IconData _getFeatureIcon(String feature) {
     final lowerFeature = feature.toLowerCase();
-    if (lowerFeature.contains('download')) return Icons.download_rounded;
-    if (lowerFeature.contains('ad-free') || lowerFeature.contains('ads')) return Icons.block_rounded;
-    if (lowerFeature.contains('exclusive')) return Icons.diamond_rounded;
-    if (lowerFeature.contains('sync')) return Icons.sync_rounded;
-    if (lowerFeature.contains('early') || lowerFeature.contains('access')) return Icons.fast_forward_rounded;
-    if (lowerFeature.contains('quality') || lowerFeature.contains('hd')) return Icons.high_quality_rounded;
+    if (lowerFeature.contains('offline') || lowerFeature.contains('anytime')) return Icons.offline_bolt_rounded;
+    if (lowerFeature.contains('immerse') || lowerFeature.contains('interruptions')) return Icons.headphones_rounded;
+    if (lowerFeature.contains('exclusive') || lowerFeature.contains('libraries')) return Icons.library_books_rounded;
+    if (lowerFeature.contains('devices') || lowerFeature.contains('seamlessly')) return Icons.devices_rounded;
+    if (lowerFeature.contains('first') || lowerFeature.contains('discover')) return Icons.explore_rounded;
+    if (lowerFeature.contains('crystal') || lowerFeature.contains('audio')) return Icons.graphic_eq_rounded;
     return Icons.star_rounded;
   }
 }
@@ -164,38 +234,70 @@ class _PremiumFeatureItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.medium),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withValues(alpha: 0.8),
+            Colors.white.withValues(alpha: 0.4),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
         border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.1),
+          color: colorScheme.primary.withValues(alpha: 0.1),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(AppSpacing.small),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF00D2FF), // Teal
+                  const Color(0xFF3A7BD5), // Blue
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF00D2FF).withValues(alpha: 0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Icon(
               icon,
-              color: color,
+              color: Colors.white,
               size: AppSpacing.iconSmall,
             ),
           ),
           const SizedBox(width: AppSpacing.medium),
           Expanded(
-            child: AppBodyText(
+            child: Text(
               feature,
-              color: colorScheme.onSurface,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
             ),
           ),
           Icon(
-            Icons.lock_rounded,
-            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-            size: AppSpacing.iconSmall,
+            Icons.check_circle_rounded,
+            color: const Color(0xFF4CAF50),
+            size: AppSpacing.iconMedium,
           ),
         ],
       ),

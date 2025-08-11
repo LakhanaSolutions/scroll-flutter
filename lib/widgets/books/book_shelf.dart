@@ -11,6 +11,7 @@ class BookShelf extends StatelessWidget {
   final List<BookData> books;
   final Function(BookData)? onBookTap;
   final EdgeInsets? padding;
+  final bool showProgress;
 
   const BookShelf({
     super.key,
@@ -18,6 +19,7 @@ class BookShelf extends StatelessWidget {
     required this.books,
     this.onBookTap,
     this.padding,
+    this.showProgress = false,
   });
 
   @override
@@ -37,7 +39,7 @@ class BookShelf extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.medium),
           SizedBox(
-            height: 245,
+            height: 280,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
@@ -46,6 +48,7 @@ class BookShelf extends StatelessWidget {
                 final book = books[index];
                 return _BookShelfItem(
                   book: book,
+                  showProgress: showProgress,
                   onTap: () => onBookTap?.call(book),
                 );
               },
@@ -61,10 +64,12 @@ class BookShelf extends StatelessWidget {
 class _BookShelfItem extends StatelessWidget {
   final BookData book;
   final VoidCallback? onTap;
+  final bool showProgress;
 
   const _BookShelfItem({
     required this.book,
     this.onTap,
+    this.showProgress = false,
   });
 
   @override
@@ -121,44 +126,93 @@ class _BookShelfItem extends StatelessWidget {
                           ),
                         ),
                       ),
+                    // Progress bar for continue listening
+                    if (showProgress && book.progress != null)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(AppSpacing.radiusMedium),
+                              bottomRight: Radius.circular(AppSpacing.radiusMedium),
+                            ),
+                          ),
+                          child: FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: book.progress,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    const Color(0xFFFFD700), // Gold
+                                    const Color(0xFFFFA500), // Orange
+                                  ],
+                                ),
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(AppSpacing.radiusMedium),
+                                  bottomRight: Radius.circular(AppSpacing.radiusMedium),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
               const SizedBox(height: AppSpacing.small),
-              // Book title
-              AppBodyText(
-                book.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: AppSpacing.extraSmall),
-              // Author and rating
+              // Book title with prominent rating
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppCaptionText(
-                    book.author,
+                  AppBodyText(
+                    book.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    color: colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: AppSpacing.extraSmall),
+                  // Large gold star rating - closer to title
                   Row(
                     children: [
                       Icon(
                         Icons.star_rounded,
-                        color: colorScheme.primary,
-                        size: AppSpacing.iconExtraSmall,
+                        color: const Color(0xFFFFD700), // Gold color
+                        size: AppSpacing.iconMedium, // Larger size
                       ),
                       const SizedBox(width: AppSpacing.extraSmall),
-                      AppCaptionText(
+                      Text(
                         book.rating.toString(),
-                        color: colorScheme.onSurfaceVariant,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
+              const SizedBox(height: AppSpacing.extraSmall),
+              // Author
+              AppCaptionText(
+                book.author,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              // Progress text for continue listening
+              if (showProgress && book.progress != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.extraSmall),
+                  child: AppCaptionText(
+                    '${(book.progress! * 100).round()}% complete',
+                    color: const Color(0xFFFFD700),
+                  ),
+                ),
             ],
           ),
         ),

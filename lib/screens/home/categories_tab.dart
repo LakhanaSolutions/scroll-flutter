@@ -436,7 +436,7 @@ class _CategoryTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
-      margin: const EdgeInsets.only(bottom: AppSpacing.small),
+      margin: const EdgeInsets.only(bottom: AppSpacing.medium),
       gradient: context.surfaceGradient,
       elevation: AppSpacing.elevationNone,
       onTap: onTap,
@@ -495,6 +495,14 @@ class _CategoryTile extends StatelessWidget {
                       color: colorScheme.onSurface,
                     ),
                     const SizedBox(height: AppSpacing.extraSmall),
+                    // Category description
+                    AppCaptionText(
+                      category.description,
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: AppSpacing.small),
                     Row(
                       children: [
                         AppCaptionText(

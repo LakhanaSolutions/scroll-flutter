@@ -80,6 +80,7 @@ class BookData {
   final String duration;
   final bool isPremium;
   final List<String> categories;
+  final double? progress; // For continue listening feature (0.0 to 1.0)
 
   BookData({
     required this.id,
@@ -90,6 +91,7 @@ class BookData {
     required this.duration,
     this.isPremium = false,
     required this.categories,
+    this.progress,
   });
 }
 
@@ -404,12 +406,12 @@ class MockData {
   // Mock premium features
   static List<String> getPremiumFeatures() {
     return [
-      'Unlimited downloads',
-      'Ad-free listening',
-      'Exclusive premium content',
-      'Multiple device sync',
-      'Early access to new releases',
-      'HD audio quality',
+      'Listen offline, anytime',
+      'Immerse without interruptions',
+      'Access exclusive premium libraries',
+      'Seamlessly continue across all devices',
+      'Be the first to discover new content',
+      'Experience crystal-clear audio quality',
     ];
   }
 
@@ -425,6 +427,75 @@ class MockData {
       isPremium: true,
       categories: ['Fatawa', 'Islamic Law', 'Barelvi', 'Featured'],
     );
+  }
+
+  // Mock continue listening books - personalization
+  static List<BookData> getContinueListening() {
+    return [
+      BookData(
+        id: 'continue1',
+        title: 'Seerat-un-Nabi',
+        author: 'Allama Shibli Nomani',
+        coverUrl: 'https://via.placeholder.com/150x200/FF9800/white?text=Seerat+Nabi',
+        rating: 4.7,
+        duration: '32h 15m',
+        progress: 0.65, // 65% complete
+        categories: ['Biography', 'Prophet', 'History'],
+      ),
+      BookData(
+        id: 'continue2',
+        title: 'Tafseer-e-Naeemi',
+        author: 'Mufti Ahmed Yaar Khan',
+        coverUrl: 'https://via.placeholder.com/150x200/E91E63/white?text=Tafseer+Naeemi',
+        rating: 4.8,
+        duration: '125h 45m',
+        progress: 0.23, // 23% complete
+        categories: ['Tafseer', 'Quran', 'Commentary'],
+      ),
+      BookData(
+        id: 'continue3',
+        title: 'Fiqh-e-Hanafi',
+        author: 'Imam Abu Hanifa',
+        coverUrl: 'https://via.placeholder.com/150x200/3F51B5/white?text=Fiqh+Hanafi',
+        rating: 4.9,
+        duration: '68h 20m',
+        progress: 0.42, // 42% complete
+        categories: ['Fiqh', 'Islamic Law', 'Hanafi'],
+      ),
+    ];
+  }
+
+  // Mock recommended books based on listening history
+  static List<BookData> getRecommendedBooks() {
+    return [
+      BookData(
+        id: 'rec1',
+        title: 'Malfuzat-e-Ala Hazrat',
+        author: 'Imam Ahmed Raza Khan',
+        coverUrl: 'https://via.placeholder.com/150x200/4CAF50/white?text=Malfuzat',
+        rating: 4.8,
+        duration: '28h 15m',
+        categories: ['Malfuzat', 'Spiritual', 'Barelvi'],
+      ),
+      BookData(
+        id: 'rec2',
+        title: 'Hadaiq-e-Bakhshish',
+        author: 'Imam Ahmed Raza Khan',
+        coverUrl: 'https://via.placeholder.com/150x200/FF5722/white?text=Hadaiq',
+        rating: 4.9,
+        duration: '15h 30m',
+        categories: ['Poetry', 'Naat', 'Spiritual'],
+      ),
+      BookData(
+        id: 'rec3',
+        title: 'Bahar-e-Shariat',
+        author: 'Maulana Amjad Ali Azmi',
+        coverUrl: 'https://via.placeholder.com/150x200/607D8B/white?text=Bahar+Shariat',
+        rating: 4.7,
+        duration: '42h 45m',
+        categories: ['Fiqh', 'Islamic Law', 'Hanafi'],
+      ),
+    ];
   }
 
   // Mock Islamic categories

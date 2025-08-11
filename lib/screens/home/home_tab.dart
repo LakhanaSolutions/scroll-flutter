@@ -113,6 +113,34 @@ class HomeTab extends ConsumerWidget {
                 
                 const SizedBox(height: AppSpacing.large),
           
+          // Audiobook of the week - moved to top for better engagement
+          AudiobookOfWeekBanner(
+            book: MockData.getAudiobookOfTheWeek(),
+            onAction: () {
+              final audiobook = MockData.getAudiobookOfTheWeek();
+              context.push('/home/playlist/${audiobook.id}');
+            },
+          ),
+          
+          // Continue listening - personalization
+          BookShelf(
+            title: 'Continue Listening',
+            books: MockData.getContinueListening(),
+            showProgress: true,
+            onBookTap: (book) {
+              context.push('/home/playlist/${book.id}');
+            },
+          ),
+          
+          // Because you listened to... - recommendations
+          BookShelf(
+            title: 'Because You Listened to Fatawa Razvia',
+            books: MockData.getRecommendedBooks(),
+            onBookTap: (book) {
+              context.push('/home/playlist/${book.id}');
+            },
+          ),
+          
           // Premium upgrade banner (only show to free trial users)
           if (shouldShowPremiumAds)
             PremiumBanner(
@@ -144,15 +172,6 @@ class HomeTab extends ConsumerWidget {
               features: MockData.getPremiumFeatures(),
               onAction: () => context.push('/home/subscription'),
             ),
-          
-          // Audiobook of the week
-          AudiobookOfWeekBanner(
-            book: MockData.getAudiobookOfTheWeek(),
-            onAction: () {
-              final audiobook = MockData.getAudiobookOfTheWeek();
-              context.push('/home/playlist/${audiobook.id}');
-            },
-          ),
           
           const SizedBox(height: AppSpacing.large),
             ],

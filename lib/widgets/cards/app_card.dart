@@ -47,7 +47,7 @@ class AppCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: margin ?? const EdgeInsets.all(AppSpacing.small),
+      margin: margin ?? const EdgeInsets.all(AppSpacing.extraSmall),
       child: Material(
         color: gradient != null ? Colors.transparent : (backgroundColor ?? colorScheme.surface),
         borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
@@ -62,7 +62,7 @@ class AppCard extends StatelessWidget {
             onTap: onTap,
             borderRadius: borderRadius ?? BorderRadius.circular(AppSpacing.radiusLarge),
             child: Padding(
-              padding: padding ?? const EdgeInsets.all(AppSpacing.medium),
+              padding: padding ?? const EdgeInsets.all(AppSpacing.small),
               child: child,
             ),
           ),

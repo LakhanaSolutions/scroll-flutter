@@ -39,11 +39,11 @@ class ContentTile extends StatelessWidget {
               ),
             ],
           ),
-          // Premium badge in top right corner
+          // Premium badge in top right corner - aligned like Most Popular badge
           if (content.availability == AvailabilityType.premium)
             Positioned(
-              top: AppSpacing.small,
-              right: AppSpacing.small,
+              top: 8,
+              right: AppSpacing.medium,
               child: AppAvailabilityBadge(
                 availability: content.availability,
                 fontSize: 8,

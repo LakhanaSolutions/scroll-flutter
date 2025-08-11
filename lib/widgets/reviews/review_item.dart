@@ -10,7 +10,7 @@ class ReviewItem extends StatelessWidget {
   final ReviewData review;
   final Function(String reviewId, bool isUpvote)? onVote;
 
-  const ReviewItem({
+   ReviewItem({
     super.key,
     required this.review,
     this.onVote,
@@ -20,6 +20,7 @@ class ReviewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isExpanded = _isExpanded ?? false;
 
     return AppCard(
       elevation: 0,
@@ -30,7 +31,7 @@ class ReviewItem extends StatelessWidget {
           // Header with user info and rating
           Row(
             children: [
-              // User avatar
+              // Simple user avatar
               CircleAvatar(
                 backgroundColor: colorScheme.primaryContainer,
                 radius: 20,
@@ -42,10 +43,10 @@ class ReviewItem extends StatelessWidget {
                           height: 40,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              _buildAvatarFallback(colorScheme),
+                              _buildAvatarFallback(review.userName),
                         ),
                       )
-                    : _buildAvatarFallback(colorScheme),
+                    : _buildAvatarFallback(review.userName),
               ),
               const SizedBox(width: AppSpacing.medium),
               
@@ -57,7 +58,8 @@ class ReviewItem extends StatelessWidget {
                     Text(
                       review.userName,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.extraSmall),
@@ -69,19 +71,17 @@ class ReviewItem extends StatelessWidget {
                 ),
               ),
               
-              // Rating stars
+              // Simple rating stars
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(5, (index) {
                   final starValue = index + 1;
                   final isFilled = starValue <= review.rating;
-                  final isHalfFilled = starValue > review.rating && 
-                                       starValue - 0.5 <= review.rating;
                   
                   return Icon(
-                    isHalfFilled ? Icons.star_half_rounded : Icons.star_rounded,
-                    color: isFilled || isHalfFilled 
-                        ? Colors.amber.shade600 
+                    Icons.star_rounded,
+                    color: isFilled 
+                        ? colorScheme.primary
                         : colorScheme.outline.withValues(alpha: 0.3),
                     size: 16,
                   );
@@ -91,119 +91,138 @@ class ReviewItem extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.medium),
           
-          // Review text
-          AppBodyText(
-            review.reviewText,
-            maxLines: null, // Allow unlimited lines for full text
-          ),
+          // Review text with read more functionality
+          _buildReviewText(context, colorScheme),
           const SizedBox(height: AppSpacing.medium),
-          
-          // Vote buttons and helpfulness
-          Row(
-            children: [
-              AppCaptionText(
-                'Was this helpful?',
-                color: colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: AppSpacing.medium),
-              
-              // Upvote button
-              InkWell(
-                onTap: () => onVote?.call(review.id, true),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.extraSmall,
-                  ),
-                  decoration: BoxDecoration(
-                    color: review.isUserUpvoted 
-                        ? colorScheme.primaryContainer
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.thumb_up_rounded,
-                        size: 16,
-                        color: review.isUserUpvoted 
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: AppSpacing.extraSmall),
-                      Text(
-                        '${review.upvotes}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: review.isUserUpvoted 
-                              ? colorScheme.primary
-                              : colorScheme.onSurfaceVariant,
-                          fontWeight: review.isUserUpvoted 
-                              ? FontWeight.w600 
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.small),
-              
-              // Downvote button
-              InkWell(
-                onTap: () => onVote?.call(review.id, false),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.extraSmall,
-                  ),
-                  decoration: BoxDecoration(
-                    color: review.isUserDownvoted 
-                        ? colorScheme.errorContainer
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.thumb_down_rounded,
-                        size: 16,
-                        color: review.isUserDownvoted 
-                            ? colorScheme.error
-                            : colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: AppSpacing.extraSmall),
-                      Text(
-                        '${review.downvotes}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: review.isUserDownvoted 
-                              ? colorScheme.error
-                              : colorScheme.onSurfaceVariant,
-                          fontWeight: review.isUserDownvoted 
-                              ? FontWeight.w600 
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+      
+          // Simple vote buttons
+          _buildHelpfulButtons(context, colorScheme, theme),
         ],
       ),
     );
   }
 
-  Widget _buildAvatarFallback(ColorScheme colorScheme) {
-    return Icon(
-      Icons.person_rounded,
-      color: colorScheme.onPrimaryContainer,
-      size: 20,
+  bool? _isExpanded;
+  
+  Widget _buildReviewText(BuildContext context, ColorScheme colorScheme) {
+    final theme = Theme.of(context);
+    final isLongText = review.reviewText.length > 200;
+    final shouldExpand = _isExpanded ?? false;
+    
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppBodyText(
+              review.reviewText,
+              maxLines: shouldExpand ? null : 4,
+              overflow: shouldExpand ? TextOverflow.visible : TextOverflow.ellipsis,
+            ),
+            if (isLongText)
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _isExpanded = !shouldExpand;
+                  });
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(shouldExpand ? 'Read Less' : 'Read More'),
+                    Icon(
+                      shouldExpand ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
+  }
+  
+  Widget _buildHelpfulButtons(BuildContext context, ColorScheme colorScheme, ThemeData theme) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Row(
+          children: [
+            AppCaptionText(
+              'Was this helpful?',
+              color: colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: AppSpacing.medium),
+            
+            // Simple upvote button
+            TextButton.icon(
+              onPressed: () {
+                onVote?.call(review.id, true);
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.thumb_up_rounded,
+                size: 16,
+                color: review.isUserUpvoted 
+                    ? colorScheme.primary
+                    : colorScheme.onSurfaceVariant,
+              ),
+              label: Text(
+                '${review.upvotes}',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: review.isUserUpvoted 
+                      ? colorScheme.primary
+                      : colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            
+            // Simple downvote button
+            TextButton.icon(
+              onPressed: () {
+                onVote?.call(review.id, false);
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.thumb_down_rounded,
+                size: 16,
+                color: review.isUserDownvoted 
+                    ? colorScheme.error
+                    : colorScheme.onSurfaceVariant,
+              ),
+              label: Text(
+                '${review.downvotes}',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: review.isUserDownvoted 
+                      ? colorScheme.error
+                      : colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildAvatarFallback(String userName) {
+    return Text(
+      _getInitials(userName),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+  
+  String _getInitials(String name) {
+    final words = name.split(' ');
+    if (words.length >= 2) {
+      return '${words[0][0]}${words[1][0]}'.toUpperCase();
+    } else {
+      return name.substring(0, 1).toUpperCase();
+    }
   }
 
   String _formatDate(DateTime date) {

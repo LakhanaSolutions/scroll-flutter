@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:siraaj/theme/app_gradients.dart';
 import 'package:siraaj/widgets/buttons/music_player_fab.dart';
 import '../data/mock_data.dart';
 import '../theme/app_spacing.dart';
@@ -117,8 +118,12 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
             _buildNarratorSection(context),
             // Chapters list section
             _buildChaptersSection(context),
+            // Download section
+            _buildDownloadSection(context),
             // Reviews section
             _buildReviewsSection(context),
+            // Bottom padding
+            const SizedBox(height: AppSpacing.large),
           ],
         ),
       ),
@@ -137,45 +142,22 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Content cover
-          Container(
+          SizedBox(
             width: 120,
             height: 160,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.15),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+            child: AppCard(
+              padding: EdgeInsets.zero,
+              gradient: widget.content.type == ContentType.book 
+                  ? AppGradients.primaryGradient(colorScheme)
+                  : AppGradients.warningGradient(colorScheme),
               child: Stack(
                 children: [
-                  // Placeholder cover with gradient
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          colorScheme.primary,
-                          colorScheme.primaryContainer,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        widget.content.type == ContentType.book 
-                            ? Icons.menu_book_rounded 
-                            : Icons.podcasts_rounded,
-                        color: colorScheme.onPrimary,
-                        size: AppSpacing.iconLarge,
-                      ),
+                  // Centered icon
+                  Center(
+                    child: Icon(
+                      _getContentTypeIcon(widget.content.type),
+                      color: Colors.white,
+                      size: AppSpacing.iconLarge,
                     ),
                   ),
                   // Availability badge
@@ -194,24 +176,25 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Content type indicator
+                // Content type indicator with unique colors
                 Row(
                   children: [
                     Icon(
-                      widget.content.type == ContentType.book 
-                          ? Icons.book_rounded 
-                          : Icons.podcasts_rounded,
-                      color: colorScheme.primary,
+                      _getContentTypeIcon(widget.content.type),
+                      color: _getContentTypeColor(widget.content.type),
                       size: AppSpacing.iconSmall,
                     ),
                     const SizedBox(width: AppSpacing.extraSmall),
-                    AppCaptionText(
+                    Text(
                       widget.content.type == ContentType.book ? 'Book' : 'Podcast',
-                      color: colorScheme.primary,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: _getContentTypeColor(widget.content.type),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.small),
+                const SizedBox(height: AppSpacing.extraSmall),
                 // Title
                 AppTitleText(
                   widget.content.title,
@@ -219,7 +202,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                   overflow: TextOverflow.ellipsis,
                   color: colorScheme.onSurface,
                 ),
-                const SizedBox(height: AppSpacing.small),
+                const SizedBox(height: AppSpacing.extraSmall),
                 // Author
                 AppSubtitleText(
                   'by ${widget.content.author}',
@@ -229,7 +212,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                 ),
                 const SizedBox(height: AppSpacing.medium),
                 // Rating, duration, chapters
-                Wrap(
+                Row(
                   children: [
                     _buildInfoChip(
                       context,
@@ -237,14 +220,14 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                       widget.content.rating.toString(),
                       colorScheme.primary,
                     ),
-                    const SizedBox(width: AppSpacing.medium),
+                    const SizedBox(width: AppSpacing.small),
                     _buildInfoChip(
                       context,
                       Icons.access_time_rounded,
                       widget.content.duration,
                       colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(width: AppSpacing.medium),
+                    const SizedBox(width: AppSpacing.small),
                     _buildInfoChip(
                       context,
                       Icons.list_rounded,
@@ -253,7 +236,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.medium),
+                const SizedBox(height: AppSpacing.small),
                 // Social stats
                 SocialListeningStats(
                   contentId: widget.content.id,
@@ -270,26 +253,39 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
   }
 
   Widget _buildInfoChip(BuildContext context, IconData icon, String text, Color color) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: color,
-          size: AppSpacing.iconExtraSmall,
-        ),
-        const SizedBox(width: AppSpacing.extraSmall),
-        AppCaptionText(
-          text,
-          color: color,
-        ),
-      ],
+    final theme = Theme.of(context);
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.small,
+        vertical: AppSpacing.extraSmall,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: AppSpacing.iconExtraSmall,
+          ),
+          const SizedBox(width: AppSpacing.extraSmall),
+          Text(
+            text,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildAvailabilityBadge(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     Color badgeColor;
     String badgeText;
@@ -297,48 +293,70 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
 
     switch (widget.content.availability) {
       case AvailabilityType.free:
-        badgeColor = colorScheme.tertiary;
+        badgeColor = const Color(0xFF4CAF50); // Green
         badgeText = 'FREE';
         badgeIcon = Icons.check_circle;
         break;
       case AvailabilityType.premium:
-        badgeColor = colorScheme.secondary;
+        badgeColor = const Color(0xFFFFD700); // Gold
         badgeText = 'PRO';
-        badgeIcon = Icons.star_rounded;
+        badgeIcon = Icons.diamond_rounded;
         break;
       case AvailabilityType.trial:
-        badgeColor = colorScheme.error;
+        badgeColor = const Color(0xFFFF6F00); // Orange
         badgeText = 'TRIAL';
-        badgeIcon = Icons.access_time_rounded;
+        badgeIcon = Icons.schedule_rounded;
         break;
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.small,
-        vertical: AppSpacing.extraSmall,
-      ),
-      decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            badgeIcon,
-            color: colorScheme.onSecondary,
-            size: AppSpacing.iconExtraSmall,
+    return ClipPath(
+      clipper: _RibbonClipper(),
+      child: Container(
+        width: 60,
+        height: 30,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              badgeColor,
+              badgeColor.withValues(alpha: 0.8),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          const SizedBox(width: AppSpacing.extraSmall),
-          Text(
-            badgeText,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSecondary,
-              fontWeight: FontWeight.bold,
+          boxShadow: [
+            BoxShadow(
+              color: badgeColor.withValues(alpha: 0.3),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                badgeIcon,
+                color: widget.content.availability == AvailabilityType.premium 
+                    ? Colors.black87 
+                    : Colors.white,
+                size: AppSpacing.iconExtraSmall,
+              ),
+              const SizedBox(width: 2),
+              Text(
+                badgeText,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: widget.content.availability == AvailabilityType.premium 
+                      ? Colors.black87 
+                      : Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 9,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -401,47 +419,25 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
               ),
               if (showActionButtons) ...[
                 const SizedBox(height: AppSpacing.large),
-                // Action buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppPrimaryButton(
-                        onPressed: () {
-                          debugPrint('Play tapped for: ${widget.content.title}');
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.play_arrow_rounded,
-                              size: AppSpacing.iconSmall,
-                            ),
-                            const SizedBox(width: AppSpacing.small),
-                            const Text('Play'),
-                          ],
+                // Play button
+                SizedBox(
+                  width: double.infinity,
+                  child: AppPrimaryButton(
+                    onPressed: () {
+                      debugPrint('Play tapped for: ${widget.content.title}');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.play_arrow_rounded,
+                          size: AppSpacing.iconSmall,
                         ),
-                      ),
+                        const SizedBox(width: AppSpacing.small),
+                        const Text('Play'),
+                      ],
                     ),
-                    const SizedBox(width: AppSpacing.medium),
-                    Expanded(
-                      child: AppSecondaryButton(
-                        onPressed: () {
-                          debugPrint('Download tapped for: ${widget.content.title}');
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.download_rounded,
-                              size: AppSpacing.iconSmall,
-                            ),
-                            const SizedBox(width: AppSpacing.small),
-                            const Text('Download'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ] else if (isFreeTrial && widget.content.availability == AvailabilityType.premium && !canAccessPremiumContent) ...[
                 const SizedBox(height: AppSpacing.large),
@@ -499,8 +495,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
-        elevation: 0,
-        backgroundColor: colorScheme.surfaceContainerLow,
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -508,15 +503,45 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.person_rounded,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconSmall,
+                  AppCard(
+                    padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                    margin: EdgeInsets.zero,
+                    gradient: AppGradients.tertiaryGradient(colorScheme),
+                    child: Icon(
+                      Icons.mic_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconSmall,
+                    ),
                   ),
-                  const SizedBox(width: AppSpacing.small),
+                  const SizedBox(width: AppSpacing.medium),
                   AppSubtitleText(
                     widget.content.type == ContentType.book ? 'Narrator' : 'Speakers',
                   ),
+                  const Spacer(),
+                  // Show count only when there are multiple narrators
+                  if (widget.content.narrators.length > 1)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.small,
+                        vertical: AppSpacing.extraSmall,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                        border: Border.all(
+                          color: colorScheme.tertiary.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        '${widget.content.narrators.length}',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.tertiary,
+                          fontWeight: FontWeight.w600,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(height: AppSpacing.medium),
@@ -537,37 +562,78 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: colorScheme.primaryContainer,
-          child: Icon(
-            Icons.person_rounded,
-            color: colorScheme.onPrimaryContainer,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        border: Border.all(
+          color: colorScheme.tertiary.withValues(alpha: 0.2),
+          width: 1,
         ),
-        const SizedBox(width: AppSpacing.medium),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppSubtitleText(narrator.name),
-              AppCaptionText(
-                narrator.bio,
-                color: colorScheme.onSurfaceVariant,
+      ),
+      padding: const EdgeInsets.all(AppSpacing.medium),
+      margin: const EdgeInsets.all(AppSpacing.extraSmall),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 56,
+            height: 56,
+            child: AppCard(
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
+              gradient: AppGradients.tertiaryGradient(colorScheme),
+              child: Icon(
+                Icons.person_rounded,
+                color: Colors.white,
+                size: AppSpacing.iconMedium,
               ),
-            ],
+            ),
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.info_outline_rounded),
-          color: colorScheme.primary,
-          tooltip: 'View Narrator',
-          onPressed: () {
-            context.push('/home/narrator/${narrator.id}');
-          },
-        ),
-      ],
+          const SizedBox(width: AppSpacing.large),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        narrator.name,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/home/narrator/${narrator.id}');
+                      },
+                      child: AppCard(
+                        padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                        margin: EdgeInsets.zero,
+                        backgroundColor: colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+                        child: Icon(
+                          Icons.info_outline_rounded,
+                          color: colorScheme.tertiary,
+                          size: AppSpacing.iconSmall,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.extraSmall),
+                AppCaptionText(
+                  narrator.bio,
+                  color: colorScheme.onSurfaceVariant,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -576,40 +642,100 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
     final colorScheme = theme.colorScheme;
 
     if (widget.content.type == ContentType.podcast) {
-      // For podcasts, show all speakers
+      // For podcasts, show all speakers with consistent design
       return Column(
         children: widget.content.narrators.map((narrator) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.small),
+          return Container(
+            margin: const EdgeInsets.only(bottom: AppSpacing.small),
+            padding: const EdgeInsets.all(AppSpacing.medium),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  colorScheme.surfaceContainerLow,
+                  colorScheme.surface,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              border: Border.all(
+                color: const Color(0xFF00838F).withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
             child: Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: colorScheme.primaryContainer,
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF00838F), // Teal
+                        const Color(0xFF00695C), // Dark teal
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF00838F).withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
                   child: Icon(
                     Icons.person_rounded,
-                    color: colorScheme.onPrimaryContainer,
+                    color: Colors.white,
+                    size: AppSpacing.iconMedium,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.medium),
+                const SizedBox(width: AppSpacing.large),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppSubtitleText(narrator.name),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              narrator.name,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.push('/home/narrator/${narrator.id}');
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF00838F).withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.info_outline_rounded,
+                                color: const Color(0xFF00838F),
+                                size: AppSpacing.iconSmall,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.extraSmall),
                       AppCaptionText(
                         narrator.bio,
                         color: colorScheme.onSurfaceVariant,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.info_outline_rounded),
-                  color: colorScheme.primary,
-                  tooltip: 'View Narrator',
-                  onPressed: () {
-                    context.push('/home/narrator/${narrator.id}');
-                  },
                 ),
               ],
             ),
@@ -641,11 +767,48 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
               ),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: colorScheme.surfaceContainerHighest,
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      gradient: isSelected 
+                          ? LinearGradient(
+                              colors: [
+                                const Color(0xFF00838F), // Teal
+                                const Color(0xFF00695C), // Dark teal
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : LinearGradient(
+                              colors: [
+                                colorScheme.surfaceContainerHighest,
+                                colorScheme.surfaceContainerHigh,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                      shape: BoxShape.circle,
+                      border: isSelected 
+                          ? null 
+                          : Border.all(
+                              color: colorScheme.outline.withValues(alpha: 0.2),
+                              width: 1,
+                            ),
+                      boxShadow: isSelected 
+                          ? [
+                              BoxShadow(
+                                color: const Color(0xFF00838F).withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ] 
+                          : null,
+                    ),
                     child: Icon(
                       Icons.person_rounded,
-                      color: colorScheme.onSurfaceVariant,
+                      color: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
+                      size: AppSpacing.iconMedium,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.medium),
@@ -653,30 +816,59 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppSubtitleText(
-                          narrator.name,
-                          color: colorScheme.onSurface,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                narrator.name,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            if (isSelected)
+                              Container(
+                                margin: const EdgeInsets.only(right: AppSpacing.small),
+                                padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check_rounded,
+                                  color: const Color(0xFF4CAF50),
+                                  size: AppSpacing.iconExtraSmall,
+                                ),
+                              ),
+                            GestureDetector(
+                              onTap: () {
+                                context.push('/home/narrator/${narrator.id}');
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF00838F).withValues(alpha: 0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  color: const Color(0xFF00838F),
+                                  size: AppSpacing.iconExtraSmall,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: AppSpacing.extraSmall),
                         AppCaptionText(
                           narrator.bio,
                           color: colorScheme.onSurfaceVariant,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
-                  ),
-                  if (isSelected)
-                    Icon(
-                      Icons.check_circle_rounded,
-                      color: colorScheme.onSurfaceVariant,
-                      size: AppSpacing.iconSmall,
-                    ),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline_rounded),
-                    color: colorScheme.primary,
-                    tooltip: 'View Narrator',
-                    onPressed: () {
-                      context.push('/home/narrator/${narrator.id}');
-                    },
                   ),
                 ],
               ),
@@ -754,6 +946,249 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
       ),
     );
   }
+
+
+  IconData _getContentTypeIcon(ContentType type) {
+    switch (type) {
+      case ContentType.book:
+        return Icons.menu_book_rounded;
+      case ContentType.podcast:
+        return Icons.podcasts_rounded;
+    }
+  }
+
+  Color _getContentTypeColor(ContentType type) {
+    switch (type) {
+      case ContentType.book:
+        return const Color(0xFF1976D2); // Blue
+      case ContentType.podcast:
+        return const Color(0xFFFF6F00); // Orange
+    }
+  }
+
+  Widget _buildDownloadSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isFreeTrial = ref.watch(isFreeTrialProvider);
+    final isPremium = ref.watch(isPremiumProvider);
+    
+    // Only show download section if user can access the content
+    final showDownload = !isFreeTrial || 
+                        widget.content.availability != AvailabilityType.premium ||
+                        isPremium;
+    
+    if (!showDownload) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(AppSpacing.medium, 0, AppSpacing.medium, AppSpacing.large),
+      child: AppCard(
+        gradient: AppGradients.subtleSurfaceGradient(colorScheme),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  AppCard(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    margin: EdgeInsets.zero,
+                    gradient: AppGradients.successGradient(colorScheme),
+                    child: Icon(
+                      Icons.download_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconMedium,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.medium),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppSubtitleText('Download for Offline Listening'),
+                        const SizedBox(height: AppSpacing.extraSmall),
+                        AppCaptionText(
+                          'Listen anytime without internet connection',
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.large),
+              
+              // App Store style storage information
+              _buildAppStoreStyleStorage(context),
+              const SizedBox(height: AppSpacing.large),
+              
+              // Download button
+              SizedBox(
+                width: double.infinity,
+                child: AppPrimaryButton(
+                  onPressed: () {
+                    debugPrint('Download tapped for: ${widget.content.title}');
+                    _showDownloadBottomSheet(context);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.download_rounded,
+                        size: AppSpacing.iconSmall,
+                      ),
+                      const SizedBox(width: AppSpacing.small),
+                      const Text('Download'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildAppStoreStyleStorage(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+      ),
+      padding: const EdgeInsets.all(AppSpacing.medium),
+      margin: const EdgeInsets.all(AppSpacing.extraSmall),
+      child: Row(
+        children: [
+          // Storage icon
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.small),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+            ),
+            child: Icon(
+              Icons.storage_rounded,
+              color: colorScheme.onPrimaryContainer,
+              size: AppSpacing.iconMedium,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.medium),
+          // Storage info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Size',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _getEstimatedStorageSize(),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Offline badge
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.extraSmall,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.offline_bolt_rounded,
+                  size: 14,
+                  color: colorScheme.primary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Offline',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  
+  String _getEstimatedStorageSize() {
+    // Mock calculation based on duration
+    final duration = widget.content.duration;
+    if (duration.contains('hour')) {
+      final hours = double.tryParse(duration.split(' ')[0]) ?? 1;
+      final mbSize = (hours * 45).round(); // ~45MB per hour
+      if (mbSize >= 1024) {
+        return '${(mbSize / 1024).toStringAsFixed(1)} GB';
+      }
+      return '$mbSize MB';
+    }
+    return '120 MB'; // Default estimate
+  }
+  
+  void _showDownloadBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _DownloadBottomSheet(
+        content: widget.content,
+        selectedNarratorId: _selectedNarratorId,
+      ),
+    );
+  }
+
+}
+
+/// Custom clipper for ribbon effect
+class _RibbonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    
+    // Start from top-left
+    path.moveTo(0, 0);
+    // Top edge
+    path.lineTo(size.width - 8, 0);
+    // Right edge with fold
+    path.lineTo(size.width, 8);
+    path.lineTo(size.width - 8, size.height);
+    // Bottom edge
+    path.lineTo(0, size.height);
+    // Close path
+    path.close();
+    
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 /// Individual chapter tile widget with play status indicators
@@ -799,17 +1234,59 @@ class _ChapterTile extends StatelessWidget {
                     color: colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: AppSpacing.small),
-                  // Progress bar
+                  // Enhanced progress bar with gradient
                   if (chapter.progress > 0)
                     Column(
                       children: [
-                        LinearProgressIndicator(
-                          value: chapter.progress,
-                          backgroundColor: colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            chapter.status == ChapterStatus.completed
-                                ? colorScheme.tertiary
-                                : colorScheme.primary,
+                        Container(
+                          height: 6, // Thicker progress bar
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                alignment: Alignment.centerLeft,
+                                widthFactor: chapter.progress,
+                                child: Container(
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: chapter.status == ChapterStatus.completed
+                                          ? [
+                                              const Color(0xFF4CAF50), // Green
+                                              const Color(0xFF66BB6A), // Light green
+                                            ]
+                                          : [
+                                              const Color(0xFFFFD700), // Gold
+                                              const Color(0xFFFFA000), // Amber
+                                            ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(3),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: (chapter.status == ChapterStatus.completed
+                                                ? const Color(0xFF4CAF50)
+                                                : const Color(0xFFFFD700))
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 2,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: AppSpacing.extraSmall),
@@ -817,26 +1294,48 @@ class _ChapterTile extends StatelessWidget {
                     ),
                   Row(
                     children: [
-                      AppCaptionText(
+                      Text(
                         'Chapter ${chapter.chapterNumber}',
-                        color: colorScheme.onSurfaceVariant,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                          height: 1.0,
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.medium),
                       Icon(
-                        Icons.access_time_rounded,
+                        Icons.schedule_rounded,
                         size: AppSpacing.iconExtraSmall,
-                        color: colorScheme.onSurfaceVariant,
+                        color: const Color(0xFF607D8B),
                       ),
                       const SizedBox(width: AppSpacing.extraSmall),
-                      AppCaptionText(
+                      Text(
                         chapter.duration,
-                        color: colorScheme.onSurfaceVariant,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: const Color(0xFF607D8B),
+                          fontWeight: FontWeight.w500,
+                          height: 1.0,
+                        ),
                       ),
                       if (chapter.status == ChapterStatus.paused && chapter.pausedAt != null) ...[
                         const SizedBox(width: AppSpacing.medium),
-                        AppCaptionText(
-                          'Paused at ${chapter.pausedAt}',
-                          color: colorScheme.primary,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.extraSmall,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusExtraSmall),
+                          ),
+                          child: Text(
+                            'Paused at ${chapter.pausedAt}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: const Color(0xFFFFD700),
+                              fontWeight: FontWeight.w600,
+                              height: 1.0,
+                            ),
+                          ),
                         ),
                       ],
                     ],
@@ -928,5 +1427,374 @@ class _ChapterTile extends StatelessWidget {
           size: AppSpacing.iconSmall,
         );
     }
+  }
+}
+
+/// Download bottom sheet with chapter selection
+class _DownloadBottomSheet extends StatefulWidget {
+  final ContentItemData content;
+  final String selectedNarratorId;
+
+  const _DownloadBottomSheet({
+    required this.content,
+    required this.selectedNarratorId,
+  });
+
+  @override
+  State<_DownloadBottomSheet> createState() => _DownloadBottomSheetState();
+}
+
+class _DownloadBottomSheetState extends State<_DownloadBottomSheet> {
+  bool _isCustomSelection = false;
+  List<String> _selectedChapterIds = [];
+  late List<ChapterData> _availableChapters;
+
+  @override
+  void initState() {
+    super.initState();
+    _availableChapters = widget.content.chapters
+        .where((chapter) => chapter.narratorId == widget.selectedNarratorId)
+        .toList();
+    
+    // Initially select all chapters
+    _selectedChapterIds = _availableChapters.map((chapter) => chapter.id).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusLarge),
+        ),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: AppSpacing.medium),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.download_rounded,
+                  color: colorScheme.primary,
+                ),
+                const SizedBox(width: AppSpacing.small),
+                AppTitleText('Download Content'),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: AppSpacing.medium),
+          
+          // Content info
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+            child: AppCard(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: AppCard(
+                      padding: EdgeInsets.zero,
+                      margin: EdgeInsets.zero,
+                      gradient: widget.content.type == ContentType.book 
+                          ? AppGradients.primaryGradient(colorScheme)
+                          : AppGradients.warningGradient(colorScheme),
+                      child: Icon(
+                        widget.content.type == ContentType.book 
+                            ? Icons.menu_book_rounded 
+                            : Icons.podcasts_rounded,
+                        color: Colors.white,
+                        size: AppSpacing.iconMedium,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.medium),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppSubtitleText(
+                          widget.content.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: AppSpacing.extraSmall),
+                        AppCaptionText(
+                          'by ${widget.content.author}',
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: AppSpacing.large),
+          
+          // Selection options
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+            child: Column(
+              children: [
+                // All chapters option
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                      color: !_isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
+                      width: !_isCustomSelection ? 2 : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  ),
+                  margin: const EdgeInsets.all(AppSpacing.extraSmall),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isCustomSelection = false;
+                        _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: Row(
+                        children: [
+                          Radio<bool>(
+                            value: false,
+                            groupValue: _isCustomSelection,
+                            onChanged: (value) {
+                              setState(() {
+                                _isCustomSelection = false;
+                                _selectedChapterIds = _availableChapters.map((c) => c.id).toList();
+                              });
+                            },
+                          ),
+                          const SizedBox(width: AppSpacing.small),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AppSubtitleText('All (${_availableChapters.length}) chapters'),
+                                const SizedBox(height: AppSpacing.extraSmall),
+                                AppCaptionText(
+                                  _getEstimatedStorageSize(_availableChapters.length),
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: AppSpacing.small),
+                
+                // Custom selection option
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                      color: _isCustomSelection ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
+                      width: _isCustomSelection ? 2 : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                  ),
+                  margin: const EdgeInsets.all(AppSpacing.extraSmall),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isCustomSelection = true;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: Row(
+                        children: [
+                          Radio<bool>(
+                            value: true,
+                            groupValue: _isCustomSelection,
+                            onChanged: (value) {
+                              setState(() {
+                                _isCustomSelection = true;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: AppSpacing.small),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AppSubtitleText('Select chapters'),
+                                const SizedBox(height: AppSpacing.extraSmall),
+                                AppCaptionText(
+                                  _isCustomSelection 
+                                      ? '${_selectedChapterIds.length} selected • ${_getEstimatedStorageSize(_selectedChapterIds.length)}'
+                                      : 'Choose specific chapters to download',
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: AppSpacing.medium),
+          
+          // Chapter list (when custom selection is enabled)
+          if (_isCustomSelection) ...[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppSubtitleText('Select Chapters'),
+                    const SizedBox(height: AppSpacing.small),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _availableChapters.length,
+                        itemBuilder: (context, index) {
+                          final chapter = _availableChapters[index];
+                          final isSelected = _selectedChapterIds.contains(chapter.id);
+                          
+                          return CheckboxListTile(
+                            value: isSelected,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value == true) {
+                                  _selectedChapterIds.add(chapter.id);
+                                } else {
+                                  _selectedChapterIds.remove(chapter.id);
+                                }
+                              });
+                            },
+                            title: AppBodyText(
+                              chapter.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: AppCaptionText(
+                              'Chapter ${chapter.chapterNumber} • ${chapter.duration}',
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ] else ...[
+            const Spacer(),
+          ],
+          
+          // Download button
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.large),
+            child: Column(
+              children: [
+                if (_selectedChapterIds.isNotEmpty) ...[
+                  AppCard(
+                    backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppBodyText('Total size:'),
+                          AppBodyText(
+                            _getEstimatedStorageSize(_selectedChapterIds.length),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.medium),
+                ],
+                SizedBox(
+                  width: double.infinity,
+                  child: AppPrimaryButton(
+                    onPressed: _selectedChapterIds.isEmpty ? null : () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Download started for ${_selectedChapterIds.length} chapters!'),
+                          backgroundColor: colorScheme.primary,
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.download_rounded,
+                          size: AppSpacing.iconSmall,
+                        ),
+                        const SizedBox(width: AppSpacing.small),
+                        Text('Start Download (${_selectedChapterIds.length})'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  String _getEstimatedStorageSize(int chapterCount) {
+    // Mock calculation based on chapters
+    final mbSize = (chapterCount * 15).round(); // ~15MB per chapter
+    if (mbSize >= 1024) {
+      return '${(mbSize / 1024).toStringAsFixed(1)} GB';
+    }
+    return '$mbSize MB';
   }
 }

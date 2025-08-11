@@ -76,9 +76,11 @@ class _NarratorScreenState extends State<NarratorScreen> {
           children: [
             // Narrator header
             _buildNarratorHeader(context),
-            // Narrator info
+            // Badge bar with alive tags
+            _buildBadgeBar(context),
+            // Narrator info with engaging design
             _buildNarratorInfo(context),
-            // Voice sample section
+            // Real audio player for voice sample
             _buildVoiceSampleSection(context),
             // Awards & Achievements
             if (widget.narrator.awards.isNotEmpty)
@@ -87,6 +89,8 @@ class _NarratorScreenState extends State<NarratorScreen> {
             _buildContentSection(context),
             // Reviews section
             _buildReviewsSection(context),
+            // Personalization section
+            _buildPersonalizationSection(context),
             const SizedBox(height: AppSpacing.large),
           ],
         ),
@@ -200,6 +204,121 @@ class _NarratorScreenState extends State<NarratorScreen> {
     );
   }
 
+  Widget _buildBadgeBar(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.small),
+      child: Row(
+        children: [
+          // Active status badge
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.extraSmall,
+            ),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF4CAF50), // Green
+                  Color(0xFF66BB6A), // Light green
+                ],
+              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.extraSmall),
+                Text(
+                  'Active Today',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.small),
+          // Trending badge
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.extraSmall,
+            ),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFFFFD700), // Gold
+                  Color(0xFFFFA000), // Amber
+                ],
+              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.trending_up_rounded,
+                  color: Colors.white,
+                  size: AppSpacing.iconExtraSmall,
+                ),
+                const SizedBox(width: AppSpacing.extraSmall),
+                Text(
+                  'Trending',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.small),
+          // Experience badge
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.extraSmall,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.tertiaryContainer,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            ),
+            child: Text(
+              'Pro Voice',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.onTertiaryContainer,
+                fontWeight: FontWeight.w600,
+                fontSize: 11,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildNarratorInfo(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -216,19 +335,48 @@ class _NarratorScreenState extends State<NarratorScreen> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconSmall,
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF00838F), // Teal
+                          Color(0xFF00ACC1), // Light teal
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.person_pin_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconSmall,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.small),
-                  const AppSubtitleText('About'),
+                  const AppSubtitleText('About This Voice Artist'),
                 ],
               ),
               const SizedBox(height: AppSpacing.medium),
-              AppBodyText(
-                widget.narrator.bio,
-                color: colorScheme.onSurfaceVariant,
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                  border: Border(
+                    left: BorderSide(
+                      color: const Color(0xFF00838F),
+                      width: 3,
+                    ),
+                  ),
+                ),
+                child: AppBodyText(
+                  widget.narrator.bio,
+                  color: colorScheme.onSurfaceVariant,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    height: 1.5,
+                    fontSize: 14,
+                  ),
+                ),
               ),
               if (widget.narrator.languages.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.large),
@@ -352,6 +500,14 @@ class _NarratorScreenState extends State<NarratorScreen> {
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: AppCard(
         elevation: 0,
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.surface,
+            colorScheme.surfaceContainer,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
@@ -359,49 +515,201 @@ class _NarratorScreenState extends State<NarratorScreen> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.play_circle_outline_rounded,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconSmall,
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFFE91E63), // Pink
+                          Color(0xFFF06292), // Light pink
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.waves_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconSmall,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.small),
                   const AppSubtitleText('Voice Sample'),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.small,
+                      vertical: AppSpacing.extraSmall,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE91E63).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Text(
+                      '2:47',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: const Color(0xFFE91E63),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.medium),
+              
+              // Real audio player interface
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppSpacing.medium),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHigh,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFE91E63).withValues(alpha: 0.1),
+                      const Color(0xFFF06292).withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                  border: Border.all(
+                    color: const Color(0xFFE91E63).withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.graphic_eq_rounded,
-                      color: colorScheme.primary,
-                      size: AppSpacing.iconLarge,
+                    // Waveform visualization (mock)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(20, (index) {
+                        final heights = [4.0, 8.0, 12.0, 6.0, 16.0, 10.0, 8.0, 14.0, 4.0, 12.0, 
+                                       18.0, 8.0, 10.0, 6.0, 14.0, 8.0, 12.0, 4.0, 10.0, 6.0];
+                        return Container(
+                          width: 3,
+                          height: heights[index % heights.length],
+                          margin: const EdgeInsets.symmetric(horizontal: 1),
+                          decoration: BoxDecoration(
+                            color: index < 7 ? const Color(0xFFE91E63) : const Color(0xFFE91E63).withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        );
+                      }),
                     ),
                     const SizedBox(height: AppSpacing.medium),
-                    AppBodyText(
-                      'Listen to a sample of ${widget.narrator.name}\'s narration',
-                      textAlign: TextAlign.center,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(height: AppSpacing.large),
-                    AppPrimaryButton(
-                      onPressed: _playVoiceSample,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.play_arrow_rounded,
-                            size: AppSpacing.iconSmall,
+                    
+                    // Progress bar
+                    Row(
+                      children: [
+                        Text('0:45', style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFFE91E63))),
+                        const SizedBox(width: AppSpacing.small),
+                        Expanded(
+                          child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              Container(
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE91E63).withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: 0.35,
+                                child: Container(
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFE91E63),
+                                        Color(0xFFF06292),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: AppSpacing.small),
-                          const Text('Play Sample'),
-                        ],
+                        ),
+                        const SizedBox(width: AppSpacing.small),
+                        Text('2:47', style: theme.textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.medium),
+                    
+                    // Play controls
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => debugPrint('Previous 10s'),
+                          child: Container(
+                            padding: const EdgeInsets.all(AppSpacing.small),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE91E63).withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.replay_10_rounded,
+                              color: const Color(0xFFE91E63),
+                              size: AppSpacing.iconMedium,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.large),
+                        GestureDetector(
+                          onTap: _playVoiceSample,
+                          child: Container(
+                            padding: const EdgeInsets.all(AppSpacing.medium),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFFE91E63),
+                                  Color(0xFFF06292),
+                                ],
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFFE91E63).withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.play_arrow_rounded,
+                              color: Colors.white,
+                              size: AppSpacing.iconMedium,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.large),
+                        GestureDetector(
+                          onTap: () => debugPrint('Forward 30s'),
+                          child: Container(
+                            padding: const EdgeInsets.all(AppSpacing.small),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE91E63).withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.forward_30_rounded,
+                              color: const Color(0xFFE91E63),
+                              size: AppSpacing.iconMedium,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.medium),
+                    Text(
+                      '"${widget.narrator.name} brings stories to life with incredible emotion"',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
                   ],
@@ -610,6 +918,177 @@ class _NarratorScreenState extends State<NarratorScreen> {
           ],
         ],
       ],
+    );
+  }
+
+  Widget _buildPersonalizationSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.all(AppSpacing.medium),
+      child: AppCard(
+        elevation: 0,
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer.withValues(alpha: 0.3),
+            colorScheme.surfaceContainer,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF9C27B0), // Purple
+                          Color(0xFFBA68C8), // Light purple
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.tune_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconSmall,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  const AppSubtitleText('Personalize Your Experience'),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.medium),
+              
+              // Quick action buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.notifications_rounded,
+                      label: 'New Releases',
+                      subtitle: 'Get notified',
+                      color: const Color(0xFF2196F3),
+                      onTap: () {
+                        debugPrint('Enable notifications for ${widget.narrator.name}');
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.playlist_add_rounded,
+                      label: 'Auto Add',
+                      subtitle: 'To playlists',
+                      color: const Color(0xFF4CAF50),
+                      onTap: () {
+                        debugPrint('Auto-add ${widget.narrator.name} content');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.small),
+              Row(
+                children: [
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.speed_rounded,
+                      label: 'Playback',
+                      subtitle: 'Speed: 1.2x',
+                      color: const Color(0xFFFF9800),
+                      onTap: () {
+                        debugPrint('Set preferred playback speed for ${widget.narrator.name}');
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.share_rounded,
+                      label: 'Share',
+                      subtitle: 'This profile',
+                      color: const Color(0xFF9C27B0),
+                      onTap: () {
+                        debugPrint('Share ${widget.narrator.name} profile');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Personalization button widget
+class _PersonalizationButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _PersonalizationButton({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.small),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          border: Border.all(
+            color: color.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: AppSpacing.iconMedium,
+            ),
+            const SizedBox(height: AppSpacing.extraSmall),
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -474,4 +474,175 @@ class _AuthorScreenState extends State<AuthorScreen> {
       ],
     );
   }
+
+  Widget _buildPersonalizationSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.all(AppSpacing.medium),
+      child: AppCard(
+        elevation: 0,
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer.withValues(alpha: 0.3),
+            colorScheme.surfaceContainer,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.extraSmall),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF9C27B0), // Purple
+                          Color(0xFFBA68C8), // Light purple
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.tune_rounded,
+                      color: Colors.white,
+                      size: AppSpacing.iconSmall,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  const AppSubtitleText('Personalize Your Experience'),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.medium),
+              
+              // Quick action buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.notifications_rounded,
+                      label: 'New Books',
+                      subtitle: 'Get notified',
+                      color: const Color(0xFF2196F3),
+                      onTap: () {
+                        debugPrint('Enable notifications for ${widget.author.name}');
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.auto_stories_rounded,
+                      label: 'Recommendations',
+                      subtitle: 'Similar authors',
+                      color: const Color(0xFF4CAF50),
+                      onTap: () {
+                        debugPrint('Show similar authors to ${widget.author.name}');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.small),
+              Row(
+                children: [
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.bookmark_add_rounded,
+                      label: 'Wishlist',
+                      subtitle: 'Future books',
+                      color: const Color(0xFFFF9800),
+                      onTap: () {
+                        debugPrint('Add ${widget.author.name} to wishlist');
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.small),
+                  Expanded(
+                    child: _PersonalizationButton(
+                      icon: Icons.share_rounded,
+                      label: 'Share',
+                      subtitle: 'This author',
+                      color: const Color(0xFF9C27B0),
+                      onTap: () {
+                        debugPrint('Share ${widget.author.name} profile');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Personalization button widget for author screen
+class _PersonalizationButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _PersonalizationButton({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.small),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          border: Border.all(
+            color: color.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: AppSpacing.iconMedium,
+            ),
+            const SizedBox(height: AppSpacing.extraSmall),
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

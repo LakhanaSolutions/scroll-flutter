@@ -13,6 +13,7 @@ import 'package:scroll/screens/auth/enter_otp_content_widget.dart';
 import '../../widgets/bottom_sheets/settings_modals.dart';
 import '../../models/auth_state_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../api/api_client.dart';
 
 enum AuthMode { welcome, email, requestOtp, enterOtp }
 
@@ -56,7 +57,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       curve: Curves.easeInOut,
     ));
     
-    // Initialize auth provider
+    // Initialize API client and auth provider
+    ApiClient().initialize();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).initialize();
     });
@@ -173,12 +176,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   }
 
   String _getTitle() {
+    final authState = ref.watch(authProvider);
+    
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContent.defaultContent.title;
       case AuthMode.email:
-        return 'Welcome Back';
+        return 'Welcome to Scroll';
       case AuthMode.requestOtp:
+        final userName = authState.user?.name;
+        if (userName != null && userName.isNotEmpty) {
+          return 'Welcome $userName';
+        }
         return 'Verify Your Email';
       case AuthMode.enterOtp:
         return 'Enter Verification Code';

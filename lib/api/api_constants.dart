@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'https://api.example.com';
+  static const String baseUrl = 'http://localhost:3200';
   
   // Health endpoints
   static const String health = '/health';
@@ -40,6 +40,8 @@ class ApiConstants {
   static const String authorizationHeader = 'Authorization';
   static const String acceptHeader = 'Accept';
   static const String userAgentHeader = 'User-Agent';
+  static const String acceptLanguageHeader = 'Accept-Language';
+  static const String deviceTypeHeader = 'X-Device-Type';
   
   // Content Types
   static const String applicationJson = 'application/json';

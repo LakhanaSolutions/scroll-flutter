@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/auth_state_model.dart';
 import '../models/user_model.dart';
 import '../services/token_service.dart';
+import '../api/scroll_api.dart';
 import 'subscription_provider.dart';
 
 /// Authentication provider with test users for different subscription plans:
@@ -22,6 +23,7 @@ final isLoadingProvider = Provider<bool>((ref) {
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final Ref _ref;
+  final ScrollApi _api = ScrollApi();
   
   AuthNotifier(this._ref) : super(AuthState.initial());
 
@@ -112,32 +114,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     state = state.copyWith(status: AuthStatus.loading, clearError: true);
 
-    // Simulate API delay
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    // Check if user exists in dummy data
-    if (_dummyUsers.containsKey(email.toLowerCase())) {
-      final userData = _dummyUsers[email.toLowerCase()]!;
-      final user = User.fromJson(userData);
+    try {
+      // Call the real API to check if user exists
+      final response = await _api.checkEmail(email: email.toLowerCase());
+      final userName = response['name'] as String?;
+      
+      final bool isNewUser = userName == null || userName == 'New User';
+      
+      final user = User(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        email: email.toLowerCase(),
+        name: isNewUser ? null : userName,
+        isNew: isNewUser,
+        createdAt: DateTime.now(),
+      );
       
       state = state.copyWith(
         status: AuthStatus.userDetected,
         user: user,
         email: email.toLowerCase(),
       );
-    } else {
-      // New user
-      final newUser = User(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        email: email.toLowerCase(),
-        isNew: true,
-        createdAt: DateTime.now(),
-      );
-      
+    } catch (error) {
+      // Handle API errors
       state = state.copyWith(
-        status: AuthStatus.userDetected,
-        user: newUser,
-        email: email.toLowerCase(),
+        status: AuthStatus.error,
+        errorMessage: 'Failed to verify email. Please try again.',
       );
     }
   }

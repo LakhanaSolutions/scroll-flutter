@@ -1,0 +1,2083 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Scroll Backend API",
+    "description": "Backend API for Scroll - Audiobook & Learning Platform",
+    "version": "1.0.0",
+    "contact": { "name": "Scroll Team", "email": "support@scroll.app" }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Session Token"
+      },
+      "cookieAuth": { "type": "apiKey", "in": "cookie", "name": "sessionToken" }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check endpoint",
+        "tags": ["Health"],
+        "description": "Returns server health status and database connectivity",
+        "responses": {
+          "200": {
+            "description": "Health check response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "enum": ["ok"] },
+                    "timestamp": { "type": "string" },
+                    "uptime": { "type": "number" },
+                    "database": { "type": "string" }
+                  },
+                  "required": ["status", "timestamp", "uptime", "database"],
+                  "additionalProperties": false,
+                  "description": "Health check response"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "enum": ["error"] },
+                    "timestamp": { "type": "string" },
+                    "uptime": { "type": "number" },
+                    "database": { "type": "string" }
+                  },
+                  "required": ["status", "timestamp", "uptime", "database"],
+                  "additionalProperties": false,
+                  "description": "Service unavailable response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/request-otp": {
+      "post": {
+        "summary": "Request OTP for email authentication",
+        "tags": ["Auth"],
+        "description": "Send OTP to user email for passwordless authentication",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User email address"
+                  }
+                },
+                "required": ["email"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "email": { "type": "string" },
+                    "otp": { "type": "string" }
+                  },
+                  "required": ["message", "email"],
+                  "additionalProperties": false,
+                  "description": "OTP sent successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to send OTP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Failed to send OTP"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-otp": {
+      "post": {
+        "summary": "Verify OTP and sign in",
+        "tags": ["Auth"],
+        "description": "Verify the OTP code and create authenticated session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User email address"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "description": "6-digit OTP code"
+                  }
+                },
+                "required": ["email", "otp"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified and user signed in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "email": { "type": "string" },
+                        "name": { "type": "string", "nullable": true },
+                        "image": { "type": "string", "nullable": true },
+                        "role": {
+                          "type": "string",
+                          "enum": ["USER", "PREMIUM", "ADMIN", "MODERATOR"]
+                        }
+                      },
+                      "required": ["id", "email", "name", "image", "role"],
+                      "additionalProperties": false
+                    },
+                    "sessionToken": { "type": "string" }
+                  },
+                  "required": ["message", "user", "sessionToken"],
+                  "additionalProperties": false,
+                  "description": "OTP verified and user signed in"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid OTP or verification failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Invalid OTP or verification failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/check-email": {
+      "post": {
+        "summary": "Check if user exists by email",
+        "tags": ["Auth"],
+        "description": "Returns user name if exists, otherwise returns \"New User\"",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address to check"
+                  }
+                },
+                "required": ["email"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "User name or \"New User\""
+                    }
+                  },
+                  "required": ["name"],
+                  "additionalProperties": false,
+                  "description": "User check result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "summary": "Get current user session",
+        "tags": ["Auth"],
+        "description": "Returns the current authenticated user information or null if not authenticated",
+        "responses": {
+          "200": {
+            "description": "Current user session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "email": { "type": "string" },
+                        "name": { "type": "string", "nullable": true },
+                        "image": { "type": "string", "nullable": true },
+                        "role": {
+                          "type": "string",
+                          "enum": ["USER", "PREMIUM", "ADMIN", "MODERATOR"]
+                        }
+                      },
+                      "required": ["id", "email", "name", "image", "role"],
+                      "additionalProperties": false,
+                      "nullable": true
+                    }
+                  },
+                  "required": ["user"],
+                  "additionalProperties": false,
+                  "description": "Current user session"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout": {
+      "post": {
+        "summary": "Sign out user",
+        "tags": ["Auth"],
+        "description": "Destroys the current user session and clears authentication cookies",
+        "responses": {
+          "200": {
+            "description": "Sign out successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Sign out successful"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/{*}": {
+      "get": {
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "*",
+            "required": true
+          }
+        ],
+        "responses": { "200": { "description": "Default Response" } }
+      },
+      "post": {
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "*",
+            "required": true
+          }
+        ],
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "summary": "Get user profile",
+        "tags": ["Users"],
+        "description": "Returns the authenticated user's profile information",
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "User profile information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "email": { "type": "string", "format": "email" },
+                    "name": { "type": "string", "nullable": true },
+                    "image": { "type": "string", "nullable": true },
+                    "role": {
+                      "type": "string",
+                      "enum": ["USER", "PREMIUM", "ADMIN", "MODERATOR"]
+                    },
+                    "isActive": { "type": "boolean" },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "image",
+                    "role",
+                    "isActive",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false,
+                  "description": "User profile information"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Unauthorized - authentication required"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user profile",
+        "tags": ["Users"],
+        "description": "Updates the authenticated user's profile information",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100,
+                    "description": "User display name"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "description": "User biography"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "User nationality"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Updated user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "email": { "type": "string", "format": "email" },
+                    "name": { "type": "string", "nullable": true },
+                    "image": { "type": "string", "nullable": true },
+                    "role": {
+                      "type": "string",
+                      "enum": ["USER", "PREMIUM", "ADMIN", "MODERATOR"]
+                    },
+                    "isActive": { "type": "boolean" },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "image",
+                    "role",
+                    "isActive",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Updated user profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Bad request - validation failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/preferences": {
+      "get": {
+        "summary": "Get user preferences",
+        "tags": ["Users"],
+        "description": "Returns the authenticated user's application preferences and settings",
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "User preferences",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "themeMode": {
+                      "type": "string",
+                      "enum": ["LIGHT", "DARK", "SYSTEM"],
+                      "description": "App theme mode"
+                    },
+                    "language": {
+                      "type": "string",
+                      "description": "App language"
+                    },
+                    "defaultSpeed": {
+                      "type": "number",
+                      "description": "Default playback speed"
+                    },
+                    "defaultVolume": {
+                      "type": "number",
+                      "description": "Default audio volume"
+                    },
+                    "autoPlay": {
+                      "type": "boolean",
+                      "description": "Auto-play next chapter"
+                    },
+                    "rememberPosition": {
+                      "type": "boolean",
+                      "description": "Remember playback position"
+                    },
+                    "emailNotifications": {
+                      "type": "boolean",
+                      "description": "Email notifications enabled"
+                    },
+                    "pushNotifications": {
+                      "type": "boolean",
+                      "description": "Push notifications enabled"
+                    },
+                    "publicProfile": {
+                      "type": "boolean",
+                      "description": "Public profile visibility"
+                    },
+                    "shareListeningStats": {
+                      "type": "boolean",
+                      "description": "Share listening statistics"
+                    },
+                    "preferredGenres": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Preferred content genres"
+                    },
+                    "contentLanguages": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Preferred content languages"
+                    },
+                    "explicitContent": {
+                      "type": "boolean",
+                      "description": "Allow explicit content"
+                    }
+                  },
+                  "required": [
+                    "themeMode",
+                    "language",
+                    "defaultSpeed",
+                    "defaultVolume",
+                    "autoPlay",
+                    "rememberPosition",
+                    "emailNotifications",
+                    "pushNotifications",
+                    "publicProfile",
+                    "shareListeningStats",
+                    "preferredGenres",
+                    "contentLanguages",
+                    "explicitContent"
+                  ],
+                  "additionalProperties": false,
+                  "description": "User preferences"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Preferences not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Preferences not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user preferences",
+        "tags": ["Users"],
+        "description": "Updates the authenticated user's application preferences and settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "themeMode": {
+                    "type": "string",
+                    "enum": ["LIGHT", "DARK", "SYSTEM"],
+                    "description": "App theme mode"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "App language"
+                  },
+                  "defaultSpeed": {
+                    "type": "number",
+                    "minimum": 0.5,
+                    "maximum": 3,
+                    "description": "Default playback speed"
+                  },
+                  "defaultVolume": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Default audio volume"
+                  },
+                  "autoPlay": {
+                    "type": "boolean",
+                    "description": "Auto-play next chapter"
+                  },
+                  "rememberPosition": {
+                    "type": "boolean",
+                    "description": "Remember playback position"
+                  },
+                  "emailNotifications": {
+                    "type": "boolean",
+                    "description": "Email notifications enabled"
+                  },
+                  "pushNotifications": {
+                    "type": "boolean",
+                    "description": "Push notifications enabled"
+                  },
+                  "publicProfile": {
+                    "type": "boolean",
+                    "description": "Public profile visibility"
+                  },
+                  "shareListeningStats": {
+                    "type": "boolean",
+                    "description": "Share listening statistics"
+                  },
+                  "preferredGenres": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Preferred content genres"
+                  },
+                  "contentLanguages": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Preferred content languages"
+                  },
+                  "explicitContent": {
+                    "type": "boolean",
+                    "description": "Allow explicit content"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Preferences updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Preferences updated successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content": {
+      "get": {
+        "summary": "Get all content",
+        "tags": ["Content"],
+        "description": "Returns paginated list of published content with optional filtering by type, availability, featured status, and search",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "default": 1
+            },
+            "in": "query",
+            "name": "page",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "maximum": 100,
+              "default": 20
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+            },
+            "in": "query",
+            "name": "type",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["FREE", "PREMIUM", "TRIAL", "PAID"]
+            },
+            "in": "query",
+            "name": "availability",
+            "required": false
+          },
+          {
+            "schema": { "type": "boolean" },
+            "in": "query",
+            "name": "featured",
+            "required": false
+          },
+          {
+            "schema": { "type": "boolean" },
+            "in": "query",
+            "name": "popular",
+            "required": false
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "search",
+            "required": false
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "category",
+            "required": false
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "author",
+            "required": false
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "narrator",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "description": { "type": "string", "nullable": true },
+                          "coverUrl": { "type": "string", "nullable": true },
+                          "type": {
+                            "type": "string",
+                            "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+                          },
+                          "availability": {
+                            "type": "string",
+                            "enum": ["FREE", "PREMIUM", "TRIAL", "PAID"]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "DRAFT",
+                              "PUBLISHED",
+                              "ARCHIVED",
+                              "DELETED"
+                            ]
+                          },
+                          "duration": { "type": "number", "nullable": true },
+                          "chapterCount": { "type": "number" },
+                          "rating": { "type": "number" },
+                          "ratingCount": { "type": "number" },
+                          "viewCount": { "type": "number" },
+                          "isFeatured": { "type": "boolean" },
+                          "isPopular": { "type": "boolean" },
+                          "isPremium": { "type": "boolean" },
+                          "tags": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "language": { "type": "string" },
+                          "publishedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "title",
+                          "slug",
+                          "description",
+                          "coverUrl",
+                          "type",
+                          "availability",
+                          "status",
+                          "duration",
+                          "chapterCount",
+                          "rating",
+                          "ratingCount",
+                          "viewCount",
+                          "isFeatured",
+                          "isPopular",
+                          "isPremium",
+                          "tags",
+                          "language",
+                          "publishedAt",
+                          "createdAt",
+                          "updatedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": { "type": "number" },
+                        "limit": { "type": "number" },
+                        "total": { "type": "number" },
+                        "pages": { "type": "number" }
+                      },
+                      "required": ["page", "limit", "total", "pages"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["content", "pagination"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content/{id}": {
+      "get": {
+        "summary": "Get content by ID or slug",
+        "tags": ["Content"],
+        "description": "Returns detailed information about a specific content item, including authors, narrators, and categories",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Content ID or slug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "title": { "type": "string" },
+                    "slug": { "type": "string" },
+                    "description": { "type": "string", "nullable": true },
+                    "coverUrl": { "type": "string", "nullable": true },
+                    "type": {
+                      "type": "string",
+                      "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+                    },
+                    "availability": {
+                      "type": "string",
+                      "enum": ["FREE", "PREMIUM", "TRIAL", "PAID"]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["DRAFT", "PUBLISHED", "ARCHIVED", "DELETED"]
+                    },
+                    "duration": { "type": "number", "nullable": true },
+                    "chapterCount": { "type": "number" },
+                    "rating": { "type": "number" },
+                    "ratingCount": { "type": "number" },
+                    "viewCount": { "type": "number" },
+                    "isFeatured": { "type": "boolean" },
+                    "isPopular": { "type": "boolean" },
+                    "isPremium": { "type": "boolean" },
+                    "tags": { "type": "array", "items": { "type": "string" } },
+                    "language": { "type": "string" },
+                    "publishedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" },
+                    "authors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "role": { "type": "string", "nullable": true }
+                        },
+                        "required": ["id", "name", "slug", "role"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "narrators": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "role": { "type": "string", "nullable": true }
+                        },
+                        "required": ["id", "name", "slug", "role"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" }
+                        },
+                        "required": ["id", "name", "slug"],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "slug",
+                    "description",
+                    "coverUrl",
+                    "type",
+                    "availability",
+                    "status",
+                    "duration",
+                    "chapterCount",
+                    "rating",
+                    "ratingCount",
+                    "viewCount",
+                    "isFeatured",
+                    "isPopular",
+                    "isPremium",
+                    "tags",
+                    "language",
+                    "publishedAt",
+                    "createdAt",
+                    "updatedAt",
+                    "authors",
+                    "narrators",
+                    "categories"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content/{id}/chapters": {
+      "get": {
+        "tags": ["Content"],
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "title": { "type": "string" },
+                      "slug": { "type": "string" },
+                      "description": { "type": "string", "nullable": true },
+                      "chapterNumber": { "type": "number" },
+                      "duration": { "type": "number" },
+                      "audioUrl": { "type": "string", "nullable": true },
+                      "status": {
+                        "type": "string",
+                        "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+                      },
+                      "publishedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "slug",
+                      "description",
+                      "chapterNumber",
+                      "duration",
+                      "audioUrl",
+                      "status",
+                      "publishedAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content/{id}/bookmark": {
+      "post": {
+        "tags": ["Content"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "note": { "type": "string", "maxLength": 500 }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Content"],
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Get all authors",
+        "tags": ["Authors"],
+        "description": "Returns paginated list of authors with optional search filtering",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "default": 1
+            },
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "description": "Page number"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "maximum": 100,
+              "default": 20
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "description": "Items per page (max 100)"
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "description": "Search author names"
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "genre",
+            "required": false,
+            "description": "Filter by genre"
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "nationality",
+            "required": false,
+            "description": "Filter by nationality"
+          },
+          {
+            "schema": { "type": "boolean" },
+            "in": "query",
+            "name": "verified",
+            "required": false,
+            "description": "Filter verified authors"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated authors list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "authors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "bio": { "type": "string", "nullable": true },
+                          "imageUrl": { "type": "string", "nullable": true },
+                          "nationality": { "type": "string", "nullable": true },
+                          "birthYear": { "type": "number", "nullable": true },
+                          "website": { "type": "string", "nullable": true },
+                          "genres": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "totalBooks": { "type": "number" },
+                          "followersCount": { "type": "number" },
+                          "isVerified": { "type": "boolean" },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "slug",
+                          "bio",
+                          "imageUrl",
+                          "nationality",
+                          "birthYear",
+                          "website",
+                          "genres",
+                          "totalBooks",
+                          "followersCount",
+                          "isVerified",
+                          "createdAt",
+                          "updatedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": { "type": "number" },
+                        "limit": { "type": "number" },
+                        "total": { "type": "number" },
+                        "pages": { "type": "number" }
+                      },
+                      "required": ["page", "limit", "total", "pages"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["authors", "pagination"],
+                  "additionalProperties": false,
+                  "description": "Paginated authors list"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors/{id}": {
+      "get": {
+        "summary": "Get author by ID or slug",
+        "tags": ["Authors"],
+        "description": "Returns detailed information about a specific author including their content",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Author ID or slug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed author information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "slug": { "type": "string" },
+                    "bio": { "type": "string", "nullable": true },
+                    "imageUrl": { "type": "string", "nullable": true },
+                    "nationality": { "type": "string", "nullable": true },
+                    "birthYear": { "type": "number", "nullable": true },
+                    "website": { "type": "string", "nullable": true },
+                    "genres": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "totalBooks": { "type": "number" },
+                    "followersCount": { "type": "number" },
+                    "isVerified": { "type": "boolean" },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" },
+                    "contents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "type": {
+                            "type": "string",
+                            "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+                          },
+                          "coverUrl": { "type": "string", "nullable": true },
+                          "role": { "type": "string", "nullable": true }
+                        },
+                        "required": [
+                          "id",
+                          "title",
+                          "slug",
+                          "type",
+                          "coverUrl",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "bio",
+                    "imageUrl",
+                    "nationality",
+                    "birthYear",
+                    "website",
+                    "genres",
+                    "totalBooks",
+                    "followersCount",
+                    "isVerified",
+                    "createdAt",
+                    "updatedAt",
+                    "contents"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Detailed author information"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Author not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors/{id}/follow": {
+      "post": {
+        "summary": "Follow author",
+        "tags": ["Authors"],
+        "description": "Follow an author to receive notifications about new content",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Author ID or slug"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Author followed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Author followed successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Author not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Unfollow author",
+        "tags": ["Authors"],
+        "description": "Stop following an author",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Author ID or slug"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Author unfollowed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Author unfollowed successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Author not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Get all categories",
+        "tags": ["Categories"],
+        "description": "Returns hierarchical list of content categories",
+        "parameters": [
+          {
+            "schema": { "type": "boolean" },
+            "in": "query",
+            "name": "featured",
+            "required": false,
+            "description": "Filter featured categories"
+          },
+          {
+            "schema": { "type": "string" },
+            "in": "query",
+            "name": "parent",
+            "required": false,
+            "description": "Filter by parent category ID"
+          },
+          {
+            "schema": { "type": "boolean", "default": false },
+            "in": "query",
+            "name": "flat",
+            "required": false,
+            "description": "Return flat list instead of hierarchy"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "description": { "type": "string", "nullable": true },
+                          "icon": { "type": "string", "nullable": true },
+                          "imageUrl": { "type": "string", "nullable": true },
+                          "color": { "type": "string", "nullable": true },
+                          "itemCount": { "type": "number" },
+                          "sortOrder": { "type": "number" },
+                          "isFeatured": { "type": "boolean" },
+                          "parentId": { "type": "string", "nullable": true },
+                          "children": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": { "type": "string" },
+                                "name": { "type": "string" },
+                                "slug": { "type": "string" }
+                              },
+                              "required": ["id", "name", "slug"],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "slug",
+                          "description",
+                          "icon",
+                          "imageUrl",
+                          "color",
+                          "itemCount",
+                          "sortOrder",
+                          "isFeatured",
+                          "parentId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": ["categories"],
+                  "additionalProperties": false,
+                  "description": "List of categories"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get category by ID or slug",
+        "tags": ["Categories"],
+        "description": "Returns detailed information about a specific category including its content",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Category ID or slug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed category information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "slug": { "type": "string" },
+                    "description": { "type": "string", "nullable": true },
+                    "icon": { "type": "string", "nullable": true },
+                    "imageUrl": { "type": "string", "nullable": true },
+                    "color": { "type": "string", "nullable": true },
+                    "itemCount": { "type": "number" },
+                    "sortOrder": { "type": "number" },
+                    "isFeatured": { "type": "boolean" },
+                    "parentId": { "type": "string", "nullable": true },
+                    "children": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "slug": { "type": "string" }
+                        },
+                        "required": ["id", "name", "slug"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parent": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "slug": { "type": "string" }
+                      },
+                      "required": ["id", "name", "slug"],
+                      "additionalProperties": false,
+                      "nullable": true
+                    },
+                    "contents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "slug": { "type": "string" },
+                          "type": {
+                            "type": "string",
+                            "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+                          },
+                          "coverUrl": { "type": "string", "nullable": true },
+                          "rating": { "type": "number" },
+                          "isPremium": { "type": "boolean" }
+                        },
+                        "required": [
+                          "id",
+                          "title",
+                          "slug",
+                          "type",
+                          "coverUrl",
+                          "rating",
+                          "isPremium"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "description",
+                    "icon",
+                    "imageUrl",
+                    "color",
+                    "itemCount",
+                    "sortOrder",
+                    "isFeatured",
+                    "parentId",
+                    "parent",
+                    "contents"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Detailed category information"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Category not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks": {
+      "get": {
+        "summary": "Get user bookmarks",
+        "tags": ["Bookmarks"],
+        "description": "Returns paginated list of user's bookmarked content",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "default": 1
+            },
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "description": "Page number"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": true,
+              "minimum": 0,
+              "maximum": 100,
+              "default": 20
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "description": "Items per page (max 100)"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["BOOK", "PODCAST", "AUDIOBOOK", "SERIES"]
+            },
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "description": "Filter by content type"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Paginated bookmarks list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "bookmarks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "note": { "type": "string", "nullable": true },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "id": { "type": "string" },
+                              "title": { "type": "string" },
+                              "slug": { "type": "string" },
+                              "description": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "coverUrl": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "BOOK",
+                                  "PODCAST",
+                                  "AUDIOBOOK",
+                                  "SERIES"
+                                ]
+                              },
+                              "rating": { "type": "number" },
+                              "duration": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "isPremium": { "type": "boolean" },
+                              "authors": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": { "type": "string" },
+                                    "name": { "type": "string" },
+                                    "slug": { "type": "string" }
+                                  },
+                                  "required": ["id", "name", "slug"],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "title",
+                              "slug",
+                              "description",
+                              "coverUrl",
+                              "type",
+                              "rating",
+                              "duration",
+                              "isPremium",
+                              "authors"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["id", "note", "createdAt", "content"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": { "type": "number" },
+                        "limit": { "type": "number" },
+                        "total": { "type": "number" },
+                        "pages": { "type": "number" }
+                      },
+                      "required": ["page", "limit", "total", "pages"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["bookmarks", "pagination"],
+                  "additionalProperties": false,
+                  "description": "Paginated bookmarks list"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks/{id}": {
+      "put": {
+        "summary": "Update bookmark note",
+        "tags": ["Bookmarks"],
+        "description": "Update the personal note for a bookmark",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "description": "Personal note for bookmark"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Bookmark ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Bookmark updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Bookmark updated successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bookmark not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Bookmark not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete bookmark",
+        "tags": ["Bookmarks"],
+        "description": "Remove a bookmark from user's collection",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Bookmark ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }, { "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Bookmark deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "message": { "type": "string" } },
+                  "required": ["message"],
+                  "additionalProperties": false,
+                  "description": "Bookmark deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bookmark not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["error", "message"],
+                  "additionalProperties": false,
+                  "description": "Bookmark not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "API Information",
+        "tags": ["Health"],
+        "description": "Returns basic information about the API and available documentation",
+        "responses": {
+          "200": {
+            "description": "API information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "version": { "type": "string" },
+                    "description": { "type": "string" },
+                    "docs": { "type": "string" }
+                  },
+                  "required": ["name", "version", "description", "docs"],
+                  "additionalProperties": false,
+                  "description": "API information"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    { "url": "http://localhost:3200", "description": "Development server" }
+  ],
+  "tags": [
+    { "name": "Health", "description": "Health check endpoints" },
+    { "name": "Auth", "description": "Authentication endpoints" },
+    { "name": "Users", "description": "User management endpoints" },
+    { "name": "Content", "description": "Content management endpoints" },
+    { "name": "Authors", "description": "Author management endpoints" },
+    { "name": "Categories", "description": "Category management endpoints" },
+    { "name": "Bookmarks", "description": "Bookmark management endpoints" }
+  ]
+}

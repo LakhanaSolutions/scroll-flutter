@@ -1,0 +1,332 @@
+{
+  "_comment": "This file contains ONE sample of each data format used in datapool.json. Use these as reference schemas for API development.",
+  
+  "notification": {
+    "id": "1",
+    "title": "Trial Ending Soon",
+    "message": "Your trial expires in 3 days. Upgrade to Premium!",
+    "type": "warning",
+    "isDismissible": true,
+    "actionText": "Upgrade Now"
+  },
+  
+  "author": {
+    "id": "author_1",
+    "name": "Imam Ahmed Raza Khan Barelvi",
+    "slug": "imam-ahmed-raza-khan-barelvi",
+    "bio": "Imam Ahmed Raza Khan (1856-1921) was a renowned Islamic scholar, jurist, and reformer from India. He founded the Barelvi movement and wrote over 1000 books on various Islamic subjects. His most famous work is the Quranic translation \"Kanz ul Iman\".",
+    "imageUrl": null,
+    "nationality": "Indian",
+    "birthYear": "1856",
+    "genres": ["Fiqh", "Quran Translation", "Islamic Law", "Sufism"],
+    "awards": ["Ala Hazrat", "Mujaddid of 14th Century"],
+    "socialLinks": [],
+    "quote": "The light of Islam will spread to every corner of the world.",
+    "totalBooks": 1050,
+    "isFollowing": true
+  },
+  
+  "narrator": {
+    "id": "narrator_1",
+    "name": "Allama Muhammad Ilyas Qadri",
+    "slug": "allama-muhammad-ilyas-qadri",
+    "bio": "Allama Muhammad Ilyas Qadri is the founder and spiritual leader of Dawat-e-Islami. He is known for his efforts in Islamic education and spiritual reformation, inspiring millions worldwide through his teachings.",
+    "imageUrl": null,
+    "languages": ["Urdu", "Arabic", "English"],
+    "genres": ["Islamic Studies", "Spiritual Reformation", "Character Building"],
+    "awards": ["Spiritual Leader Award", "Excellence in Da'wah"],
+    "socialLinks": ["@dawateislami"],
+    "experienceYears": 30,
+    "voiceDescription": "Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation",
+    "totalNarrations": 85,
+    "isFollowing": true,
+    "gender": "Male"
+  },
+  
+  "category": {
+    "id": "1",
+    "name": "Fiqh",
+    "slug": "fiqh",
+    "iconPath": "assets/icons/icons8-allah-100.png",
+    "imageUrl": null,
+    "itemCount": 48,
+    "listeningHours": "156h",
+    "description": "Islamic jurisprudence and legal rulings"
+  },
+  
+  "mood": {
+    "id": "1",
+    "name": "Strengthen Your Iman",
+    "slug": "strengthen-your-iman",
+    "emoji": "🤲",
+    "description": "Strengthen your faith with inspiring Sunni content",
+    "books": [
+      {
+        "id": "1",
+        "title": "Kanz ul Iman",
+        "slug": "kanz-ul-iman",
+        "author": "Imam Ahmed Raza Khan Barelvi",
+        "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+        "rating": 4.9,
+        "duration": "45h 30m",
+        "categories": ["Quran", "Translation", "Barelvi"]
+      }
+    ]
+  },
+  
+  "book": {
+    "_comment": "Universal book format - contains all possible fields. Optional fields may be null or omitted based on context.",
+    "id": "fiqh_1",
+    "title": "Fiqh Made Easy",
+    "slug": "fiqh-made-easy",
+    "author": "Salih al-Munajjid",
+    "authorId": "author_1",
+    "authorSlug": "salih-al-munajjid",
+    "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+    "type": "book",
+    "availability": "glimpse",
+    "rating": 4.6,
+    "duration": "8h 30m",
+    "chapterCount": 12,
+    "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
+    "narrators": ["narrator_1"],
+    "language": "Arabic",
+    "isBookmarked": false,
+    "isPremium": false,
+    "categories": ["Fiqh", "Islamic Law", "Beginner"],
+    "progress": 0.65,
+    "playedWhen": "2 hours ago",
+    "playedMinutes": 45,
+    "isFinished": false,
+    "downloadSize": "4.2 GB",
+    "isDownloading": false,
+    "downloadProgress": 1.0,
+    "narrator": "Allama Muhammad Ilyas Qadri"
+  },
+  
+  "recentlyPlayedItem": {
+    "id": "1",
+    "title": "Kanz ul Iman",
+    "slug": "kanz-ul-iman",
+    "narrator": "Allama Muhammad Ilyas Qadri",
+    "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+    "playedWhen": "2 hours ago",
+    "playedMinutes": 45,
+    "progress": 0.3,
+    "isFinished": false
+  },
+  
+  "downloadedItem": {
+    "id": "1",
+    "title": "Fatawa Razvia",
+    "slug": "fatawa-razvia",
+    "narrator": "Allama Muhammad Ilyas Qadri",
+    "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Fatawa+Razvia",
+    "downloadSize": "4.2 GB",
+    "isDownloading": false,
+    "downloadProgress": 1.0
+  },
+  
+  "note": {
+    "id": "note_1",
+    "title": "Key Point on Wudu",
+    "content": "Remember that the intention (niyyah) is crucial for the validity of wudu. The Prophet (PBUH) said actions are judged by intentions.",
+    "contentId": "fiqh_1",
+    "contentTitle": "Fiqh Made Easy",
+    "author": "Salih al-Munajjid",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "modifiedAt": "2024-01-15T10:30:00Z",
+    "type": "personal",
+    "timestamp": "15:30"
+  },
+  
+  "review": {
+    "id": "review_1",
+    "userId": "user_1",
+    "userName": "Ahmad Mahmoud",
+    "userAvatar": "",
+    "rating": 5.0,
+    "reviewText": "Absolutely amazing content! The narrator's voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.",
+    "createdAt": "2 days ago",
+    "upvotes": 15,
+    "downvotes": 1,
+    "isUserUpvoted": false,
+    "isUserDownvoted": false,
+    "isOwnReview": false
+  },
+  
+  "reviewSummary": {
+    "averageRating": 4.5,
+    "totalReviews": 847,
+    "ratingDistribution": {
+      "5": 423,
+      "4": 298,
+      "3": 89,
+      "2": 25,
+      "1": 12
+    }
+  },
+  
+  "chapter": {
+    "id": "ch_1_1",
+    "title": "Introduction to Fiqh",
+    "slug": "introduction-to-fiqh",
+    "description": "An overview of Islamic jurisprudence and its importance in Muslim life.",
+    "duration": "45m",
+    "chapterNumber": 1,
+    "status": "completed",
+    "narratorId": "narrator_1",
+    "progress": 1.0,
+    "pausedAt": null,
+    "sizeInMB": 42.5
+  },
+  
+  "searchItem": {
+    "_comment": "Search items can be strings for recent searches, trending topics, and popular tags",
+    "recentSearch": "Islamic history",
+    "trendingTopic": "Ramadan preparation", 
+    "popularTag": "Islamic History"
+  },
+  
+  "premiumFeature": "Listen offline, anytime",
+  
+  "followingData": {
+    "followedAuthors": ["author_1", "author_2"],
+    "followedNarrators": ["narrator_1", "narrator_2"]
+  },
+  
+  "bookmarkData": {
+    "bookmarkedContent": ["fiqh_2", "aqeedah_1", "quran_1"]
+  },
+  
+  "subscriptionPlan": {
+    "id": "plan_1",
+    "name": "Scroll Premium",
+    "slug": "scroll-premium",
+    "type": "Paid Plan",
+    "price": "29.99 SAR",
+    "timePeriod": "Monthly",
+    "pros": [
+      "Unlock the entire, vast content library",
+      "Access all exclusive audiobooks and lecture series",
+      "Enjoy immediate access to all new releases",
+      "Experience seamless listening across all your devices",
+      "Benefit from the flexibility to cancel anytime",
+      "Enjoy offline playback for all content",
+      "Download as much content as you want",
+      "Option to volunteer your own narration. Each book narration gets you 1 more month of Premium plan"
+    ],
+    "cons": [],
+    "accentColor": "#4CAF50",
+    "isPopular": true,
+    "isCurrent": false,
+    "description": "Full access to premium Islamic content with unlimited downloads and offline playback",
+    "features": [
+      {
+        "name": "Unlimited Access",
+        "description": "Full access to entire content library",
+        "included": true
+      },
+      {
+        "name": "Offline Downloads",
+        "description": "Download content for offline listening",
+        "included": true
+      },
+      {
+        "name": "Multi-device Sync",
+        "description": "Seamless experience across all devices",
+        "included": true
+      }
+    ],
+    "trialDays": 14,
+    "savings": null,
+    "originalPrice": null,
+    "planIcon": "stars_rounded"
+  },
+  
+  "userSubscription": {
+    "_comment": "User's current subscription status and billing info - matches database schema",
+    "id": "sub_1",
+    "userId": "user_1",
+    "planId": "plan_1",
+    "status": "ACTIVE",
+    "currentPeriodStart": "2025-01-01T00:00:00Z",
+    "currentPeriodEnd": "2025-12-31T23:59:59Z",
+    "cancelAtPeriodEnd": false,
+    "stripeCustomerId": "cus_1234567890",
+    "stripeSubscriptionId": "sub_1234567890",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-01-01T00:00:00Z",
+    "canceledAt": null,
+    "plan": {
+      "name": "Premium Plan",
+      "price": "29.99 SAR",
+      "timePeriod": "Monthly"
+    },
+    "daysRemaining": 335,
+    "progressPercentage": 0.08,
+    "isTrialPeriod": false,
+    "nextBillingDate": "2025-02-01T00:00:00Z",
+    "autoRenew": true
+  },
+  
+  "_field_explanations": {
+    "notification.type": "Enum: 'warning', 'info', 'success', 'error'",
+    "book.availability": "Enum: 'glimpse', 'premium'",
+    "book.type": "Enum: 'book', 'podcast'",
+    "chapter.status": "Enum: 'notPlayed', 'playing', 'paused', 'completed'",
+    "chapter.sizeInMB": "Float - chapter file size in megabytes",
+    "subscriptionPlan.type": "Enum: 'Free Plan', 'Paid Plan'",
+    "subscriptionPlan.accentColor": "Hex color code for plan theming",
+    "subscriptionPlan.planIcon": "Icon name for plan display",
+    "userSubscription.status": "Enum: 'ACTIVE', 'TRIALING', 'PAST_DUE', 'CANCELED', 'INCOMPLETE', 'PAUSED'",
+    "userSubscription.progressPercentage": "Float between 0.0 and 1.0 showing subscription period progress",
+    "userSubscription.daysRemaining": "Integer - days left in current billing period",
+    "note.type": "Enum: 'personal', 'highlight', 'question'",
+    "narrator.gender": "Enum: 'Male', 'Female'",
+    "progress_fields": "Float between 0.0 and 1.0 (0% to 100%)",
+    "rating_fields": "Float between 0.0 and 5.0",
+    "timestamps": "ISO 8601 format in production, human-readable in mock data",
+    "imageUrl_fields": "Can be null, should be absolute URLs in production",
+    "slug_fields": "URL-friendly identifiers for SEO",
+    "id_fields": "Consistent naming pattern: {type}_{number} or descriptive names"
+  },
+  
+  "_usage_notes": {
+    "data_variations": {
+      "books": "Books use a unified format with optional fields. Include only relevant fields for each context: basic info for lists, progress for library, download info for offline content, etc.",
+      "book_field_contexts": {
+        "always_include": ["id", "title", "slug", "author", "coverUrl", "rating", "duration", "categories"],
+        "for_detailed_views": ["authorId", "type", "availability", "chapterCount", "description", "narrators", "language", "isBookmarked", "isPremium"],
+        "for_progress_tracking": ["progress", "playedWhen", "playedMinutes", "isFinished"],
+        "for_downloads": ["downloadSize", "isDownloading", "downloadProgress"],
+        "for_recently_played": ["narrator", "playedWhen", "playedMinutes", "progress", "isFinished"]
+      },
+      "subscriptions": "Plans contain pricing, features, and benefits - used in subscription screen and upgrade flows",
+      "user_subscriptions": "Current user subscription status with billing info, progress tracking, and plan details",
+      "chapters": "Individual chapter data with file sizes for download management",
+      "authors_narrators": "Same format used everywhere they appear - in lists, profiles, content details, following screens",
+      "notifications": "Same format in notification list and home notification badge",
+      "categories": "Same format in category list and category detail screens",
+      "reviews": "Individual reviews have same format, review summaries are aggregated data"
+    },
+    "cross_references": {
+      "books_to_authors": "book.authorId references author.id",
+      "books_to_narrators": "book.narrators array contains narrator.id values (for detailed books), book.narrator string for recently played items",
+      "chapters_to_narrators": "chapter.narratorId references narrator.id",
+      "books_to_author_slugs": "book.authorSlug references author.slug for SEO-friendly URLs",
+      "notes_to_content": "note.contentId references book.id",
+      "bookmarks_following": "Arrays contain IDs that reference other entities",
+      "user_subscription_to_plan": "userSubscription.planId references subscriptionPlan.id"
+    },
+    "api_endpoints": {
+      "book_endpoints": "Return only the fields needed for each endpoint - minimize payload size by excluding unnecessary fields",
+      "single_items": "Use full book format with all relevant fields for individual book endpoints",
+      "lists": "Use basic book fields for list endpoints (id, title, slug, author, coverUrl, rating, duration, categories)",
+      "user_specific": "Progress, bookmarks, following, notes are user-specific data requiring authentication",
+      "subscription_endpoints": "Plans endpoint returns all available plans with pricing and features",
+      "user_subscription_endpoints": "User subscription endpoint returns current subscription status, billing info, and progress data",
+      "chapter_endpoints": "Include sizeInMB for download size calculations and storage management"
+    }
+  }
+}

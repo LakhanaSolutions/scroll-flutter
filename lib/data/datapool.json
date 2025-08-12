@@ -1,0 +1,954 @@
+{
+  "notifications": [
+    {
+      "id": "1",
+      "title": "Trial Ending Soon",
+      "message": "Your trial expires in 3 days. Upgrade to Premium!",
+      "type": "warning",
+      "isDismissible": true,
+      "actionText": "Upgrade Now"
+    },
+    {
+      "id": "2",
+      "title": "Special Offer",
+      "message": "Get 50% off Premium subscription this week only!",
+      "type": "info",
+      "isDismissible": true,
+      "actionText": "Learn More"
+    }
+  ],
+  "authors": [
+    {
+      "id": "author_1",
+      "name": "Imam Ahmed Raza Khan Barelvi",
+      "slug": "imam-ahmed-raza-khan-barelvi",
+      "bio": "Imam Ahmed Raza Khan (1856-1921) was a renowned Islamic scholar, jurist, and reformer from India. He founded the Barelvi movement and wrote over 1000 books on various Islamic subjects. His most famous work is the Quranic translation \"Kanz ul Iman\".",
+      "imageUrl": null,
+      "nationality": "Indian",
+      "birthYear": "1856",
+      "genres": ["Fiqh", "Quran Translation", "Islamic Law", "Sufism"],
+      "awards": ["Ala Hazrat", "Mujaddid of 14th Century"],
+      "socialLinks": [],
+      "quote": "The light of Islam will spread to every corner of the world.",
+      "totalBooks": 1050,
+      "isFollowing": true
+    },
+    {
+      "id": "author_2",
+      "name": "Allama Kaukab Noorani Okarvi",
+      "slug": "allama-kaukab-noorani-okarvi",
+      "bio": "Allama Kaukab Noorani Okarvi (1930-2016) was a prominent Pakistani Islamic scholar and orator. He was known for his passionate defense of traditional Sunni beliefs and practices, and authored numerous books on Islamic jurisprudence.",
+      "imageUrl": null,
+      "nationality": "Pakistani",
+      "birthYear": "1930",
+      "genres": ["Islamic Jurisprudence", "Contemporary Issues", "Sunni Theology"],
+      "awards": ["Sitara-e-Imtiaz", "Global Islamic Personality Award"],
+      "socialLinks": [],
+      "quote": "Islam is the religion of love, peace, and brotherhood.",
+      "totalBooks": 85,
+      "isFollowing": true
+    },
+    {
+      "id": "author_3",
+      "name": "Maulana Ashraf Ali Thanvi",
+      "slug": "maulana-ashraf-ali-thanvi",
+      "bio": "Maulana Ashraf Ali Thanvi (1863-1943) was an Islamic scholar from the Indian subcontinent. He authored over 800 books and was known for his expertise in Islamic jurisprudence, spirituality, and reform.",
+      "imageUrl": null,
+      "nationality": "Indian",
+      "birthYear": "1863",
+      "genres": ["Fiqh", "Tasawwuf", "Islamic Ethics", "Tafseer"],
+      "awards": ["Hakeem ul-Ummat", "Mujaddid-e-Millat"],
+      "socialLinks": [],
+      "quote": "True knowledge is that which benefits in both worlds.",
+      "totalBooks": 800,
+      "isFollowing": false
+    },
+    {
+      "id": "author_4",
+      "name": "Maulana Amjad Ali Azmi",
+      "slug": "maulana-amjad-ali-azmi",
+      "bio": "Maulana Amjad Ali Azmi (1882-1941) was a distinguished Islamic scholar and author of the famous book \"Bahaar-e-Shariat\". He was a student of Imam Ahmed Raza Khan and contributed significantly to Islamic jurisprudence.",
+      "imageUrl": null,
+      "nationality": "Indian",
+      "birthYear": "1882",
+      "genres": ["Fiqh", "Islamic Law", "Hanafi Jurisprudence"],
+      "awards": ["Faqeeh-e-Azam", "Master of Islamic Law"],
+      "socialLinks": [],
+      "quote": "Following the Shariah is the path to success in both worlds.",
+      "totalBooks": 45,
+      "isFollowing": false
+    }
+  ],
+  "narrators": [
+    {
+      "id": "narrator_1",
+      "name": "Allama Muhammad Ilyas Qadri",
+      "slug": "allama-muhammad-ilyas-qadri",
+      "bio": "Allama Muhammad Ilyas Qadri is the founder and spiritual leader of Dawat-e-Islami. He is known for his efforts in Islamic education and spiritual reformation, inspiring millions worldwide through his teachings.",
+      "imageUrl": null,
+      "languages": ["Urdu", "Arabic", "English"],
+      "genres": ["Islamic Studies", "Spiritual Reformation", "Character Building"],
+      "awards": ["Spiritual Leader Award", "Excellence in Da'wah"],
+      "socialLinks": ["@dawateislami"],
+      "experienceYears": 30,
+      "voiceDescription": "Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation",
+      "totalNarrations": 85,
+      "isFollowing": true,
+      "gender": "Male"
+    },
+    {
+      "id": "narrator_2",
+      "name": "Maulana Tariq Jameel",
+      "slug": "maulana-tariq-jameel",
+      "bio": "Maulana Tariq Jameel is a renowned Pakistani Islamic scholar and preacher. He is known for his soft-spoken, humble approach to Islamic teaching and his ability to connect with people from all walks of life.",
+      "imageUrl": null,
+      "languages": ["Urdu", "Arabic", "English"],
+      "genres": ["Spiritual Guidance", "Character Development", "Islamic Ethics"],
+      "awards": ["Sitara-e-Imtiaz", "Global Peace Ambassador"],
+      "socialLinks": ["@tariqjameel"],
+      "experienceYears": 35,
+      "voiceDescription": "Gentle, compassionate, and deeply moving with clear articulation",
+      "totalNarrations": 120,
+      "isFollowing": true,
+      "gender": "Male"
+    },
+    {
+      "id": "narrator_3",
+      "name": "Dr. Muhammad Tahir ul Qadri",
+      "slug": "dr-muhammad-tahir-ul-qadri",
+      "bio": "Dr. Muhammad Tahir ul Qadri is a Pakistani Islamic scholar, author, and peace activist. He has written over 1000 books and is known for his scholarly approach to Islam and his efforts in promoting interfaith dialogue.",
+      "imageUrl": null,
+      "languages": ["Urdu", "Arabic", "English", "Persian"],
+      "genres": ["Islamic Scholarship", "Peace Studies", "Interfaith Dialogue"],
+      "awards": ["Oslo Peace Prize Nominee", "Outstanding Scholar Award"],
+      "socialLinks": ["@DrTahirulQadri"],
+      "experienceYears": 40,
+      "voiceDescription": "Scholarly, authoritative, and eloquent with multi-lingual expertise",
+      "totalNarrations": 95,
+      "isFollowing": false,
+      "gender": "Male"
+    },
+    {
+      "id": "narrator_4",
+      "name": "Pir Syed Naseeruddin Naseer Gilani",
+      "slug": "pir-syed-naseeruddin-naseer-gilani",
+      "bio": "Pir Syed Naseeruddin Naseer Gilani is a prominent Sufi master and Islamic scholar. He is known for his deep spiritual insights and his role in preserving traditional Islamic teachings.",
+      "imageUrl": null,
+      "languages": ["Urdu", "Arabic", "Persian"],
+      "genres": ["Sufism", "Spiritual Guidance", "Traditional Islamic Studies"],
+      "awards": ["Sufi Master Recognition", "Spiritual Excellence Award"],
+      "socialLinks": [],
+      "experienceYears": 45,
+      "voiceDescription": "Spiritually profound, melodious, and deeply contemplative",
+      "totalNarrations": 75,
+      "isFollowing": false,
+      "gender": "Male"
+    },
+    {
+      "id": "narrator_5",
+      "name": "Qaria Fatima Al-Zahra",
+      "slug": "qaria-fatima-al-zahra",
+      "bio": "Qaria Fatima Al-Zahra is a renowned female Quranic reciter and Islamic scholar known for her beautiful recitation of the Holy Quran and her expertise in Quranic sciences.",
+      "imageUrl": null,
+      "languages": ["Arabic", "Urdu"],
+      "genres": ["Quranic Recitation", "Tajweed", "Quranic Sciences"],
+      "awards": ["International Quranic Recitation Award", "Master of Tajweed"],
+      "socialLinks": [],
+      "experienceYears": 25,
+      "voiceDescription": "Beautiful, melodious Quranic recitation with perfect Tajweed",
+      "totalNarrations": 60,
+      "isFollowing": false,
+      "gender": "Female"
+    }
+  ],
+  "categories": [
+    {
+      "id": "2",
+      "name": "Aqeedah",
+      "slug": "aqeedah",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 32,
+      "listeningHours": "98h",
+      "description": "Islamic creed and beliefs"
+    },
+    {
+      "id": "9",
+      "name": "Arabic Language",
+      "slug": "arabic-language",
+      "iconPath": "assets/icons/icons8-letter-100.png",
+      "imageUrl": null,
+      "itemCount": 22,
+      "listeningHours": "64h",
+      "description": "Arabic language, grammar, and eloquence"
+    },
+    {
+      "id": "10",
+      "name": "Contemporary Issues",
+      "slug": "contemporary-issues",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 18,
+      "listeningHours": "58h",
+      "description": "Modern challenges and Islamic responses"
+    },
+    {
+      "id": "8",
+      "name": "Dua & Dhikr",
+      "slug": "dua-dhikr",
+      "iconPath": "assets/icons/icons8-prayer-100.png",
+      "imageUrl": null,
+      "itemCount": 15,
+      "listeningHours": "32h",
+      "description": "Supplications and remembrance"
+    },
+    {
+      "id": "11",
+      "name": "Family & Marriage",
+      "slug": "family-and-marriage",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 20,
+      "listeningHours": "61h",
+      "description": "Marriage, parenting, and family life in Islam"
+    },
+    {
+      "id": "12",
+      "name": "Fasting & Ramadan",
+      "slug": "fasting-and-ramadan",
+      "iconPath": "assets/icons/icons8-prayer-100.png",
+      "imageUrl": null,
+      "itemCount": 26,
+      "listeningHours": "73h",
+      "description": "Fasting rulings, virtues, and Ramadan guidance"
+    },
+    {
+      "id": "1",
+      "name": "Fiqh",
+      "slug": "fiqh",
+      "iconPath": "assets/icons/icons8-allah-100.png",
+      "imageUrl": null,
+      "itemCount": 48,
+      "listeningHours": "156h",
+      "description": "Islamic jurisprudence and legal rulings"
+    },
+    {
+      "id": "6",
+      "name": "Hadith",
+      "slug": "hadith",
+      "iconPath": "assets/icons/icons8-letter-100.png",
+      "imageUrl": null,
+      "itemCount": 41,
+      "listeningHours": "123h",
+      "description": "Prophetic traditions and sayings"
+    },
+    {
+      "id": "13",
+      "name": "Hajj & Umrah",
+      "slug": "hajj-and-umrah",
+      "iconPath": "assets/icons/icons8-dome-100.png",
+      "imageUrl": null,
+      "itemCount": 17,
+      "listeningHours": "52h",
+      "description": "Guidance and rulings for pilgrimage"
+    },
+    {
+      "id": "14",
+      "name": "History of Islam",
+      "slug": "history-of-islam",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 24,
+      "listeningHours": "80h",
+      "description": "Islamic history from the earliest times"
+    },
+    {
+      "id": "4",
+      "name": "Kids",
+      "slug": "kids",
+      "iconPath": "assets/icons/icons8-lotus-100.png",
+      "imageUrl": null,
+      "itemCount": 25,
+      "listeningHours": "45h",
+      "description": "Islamic content for children"
+    },
+    {
+      "id": "15",
+      "name": "Nashids & Naat",
+      "slug": "nashids-and-naat",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 21,
+      "listeningHours": "49h",
+      "description": "Islamic songs, nasheeds, and praise of the Prophet"
+    },
+    {
+      "id": "16",
+      "name": "New Muslims",
+      "slug": "new-muslims",
+      "iconPath": "assets/icons/icons8-islam-100.png",
+      "imageUrl": null,
+      "itemCount": 12,
+      "listeningHours": "27h",
+      "description": "Foundations and guidance for new Muslims"
+    },
+    {
+      "id": "3",
+      "name": "Quran",
+      "slug": "quran",
+      "iconPath": "assets/icons/icons8-quran-100.png",
+      "imageUrl": null,
+      "itemCount": 67,
+      "listeningHours": "234h",
+      "description": "Quran recitation and tafseer"
+    },
+    {
+      "id": "7",
+      "name": "Seerah",
+      "slug": "seerah",
+      "iconPath": "assets/icons/icons8-dome-100.png",
+      "imageUrl": null,
+      "itemCount": 28,
+      "listeningHours": "89h",
+      "description": "Biography of Prophet Muhammad (PBUH)"
+    },
+    {
+      "id": "17",
+      "name": "Stories of the Prophets",
+      "slug": "stories-of-the-prophets",
+      "iconPath": "assets/icons/icons8-dome-100.png",
+      "imageUrl": null,
+      "itemCount": 23,
+      "listeningHours": "77h",
+      "description": "Lives and lessons of the Prophets (Qasas al-Anbiya)"
+    },
+    {
+      "id": "18",
+      "name": "Sufism & Spirituality",
+      "slug": "sufism-and-spirituality",
+      "iconPath": "assets/icons/icons8-lotus-100.png",
+      "imageUrl": null,
+      "itemCount": 34,
+      "listeningHours": "120h",
+      "description": "Tasawwuf, purification of the heart, and inner growth"
+    },
+    {
+      "id": "19",
+      "name": "Tafseer",
+      "slug": "tafseer",
+      "iconPath": "assets/icons/icons8-quran-100.png",
+      "imageUrl": null,
+      "itemCount": 29,
+      "listeningHours": "110h",
+      "description": "Exegesis and commentary of the Quran"
+    },
+    {
+      "id": "20",
+      "name": "Tajweed",
+      "slug": "tajweed",
+      "iconPath": "assets/icons/icons8-quran-100.png",
+      "imageUrl": null,
+      "itemCount": 16,
+      "listeningHours": "54h",
+      "description": "Rules of Quranic recitation and pronunciation"
+    },
+    {
+      "id": "21",
+      "name": "Transactions & Finance",
+      "slug": "transactions-and-finance",
+      "iconPath": "assets/icons/icons8-allah-100.png",
+      "imageUrl": null,
+      "itemCount": 14,
+      "listeningHours": "43h",
+      "description": "Islamic finance, trade, and business ethics"
+    },
+    {
+      "id": "5",
+      "name": "Women",
+      "slug": "women",
+      "iconPath": "assets/icons/icons8-muslim-woman-100.png",
+      "imageUrl": null,
+      "itemCount": 19,
+      "listeningHours": "67h",
+      "description": "Content specifically for Muslim women"
+    },
+    {
+      "id": "22",
+      "name": "Worship & Prayer",
+      "slug": "worship-and-prayer",
+      "iconPath": "assets/icons/icons8-prayer-100.png",
+      "imageUrl": null,
+      "itemCount": 27,
+      "listeningHours": "90h",
+      "description": "Salah, worship, and devotion to Allah"
+    }
+  ],
+  "moods": [
+    {
+      "id": "1",
+      "name": "Strengthen Your Iman",
+      "slug": "strengthen-your-iman",
+      "emoji": "🤲",
+      "description": "Strengthen your faith with inspiring Sunni content",
+      "books": [
+        {
+          "id": "1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "author": "Imam Ahmed Raza Khan Barelvi",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "rating": 4.9,
+          "duration": "45h 30m",
+          "categories": ["Quran", "Translation", "Barelvi"]
+        },
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "author": "Allama Kaukab Noorani Okarvi",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "rating": 4.8,
+          "duration": "12h 45m",
+          "categories": ["Islamic Jurisprudence", "Barelvi"]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Islamic Jurisprudence",
+      "slug": "islamic-jurisprudence",
+      "emoji": "⚖️",
+      "description": "Learn Islamic law and Fiqh from Sunni scholars",
+      "books": [
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "author": "Allama Kaukab Noorani Okarvi",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "rating": 4.8,
+          "duration": "12h 45m",
+          "categories": ["Islamic Jurisprudence", "Barelvi"]
+        },
+        {
+          "id": "3",
+          "title": "Bahaar-e-Shariat",
+          "slug": "bahaar-e-shariat",
+          "author": "Maulana Amjad Ali Azmi",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Bahaar+Shariat",
+          "rating": 4.7,
+          "duration": "28h 15m",
+          "categories": ["Fiqh", "Islamic Law", "Barelvi"]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Spiritual Guidance",
+      "slug": "spiritual-guidance",
+      "emoji": "🌅",
+      "description": "Find peace and spiritual enlightenment",
+      "books": [
+        {
+          "id": "1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "author": "Imam Ahmed Raza Khan Barelvi",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "rating": 4.9,
+          "duration": "45h 30m",
+          "categories": ["Quran", "Translation", "Barelvi"]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Barelvi Teachings",
+      "slug": "barelvi-teachings",
+      "emoji": "🕌",
+      "description": "Traditional Sunni Barelvi Islamic teachings",
+      "books": [
+        {
+          "id": "3",
+          "title": "Bahaar-e-Shariat",
+          "slug": "bahaar-e-shariat",
+          "author": "Maulana Amjad Ali Azmi",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Bahaar+Shariat",
+          "rating": 4.7,
+          "duration": "28h 15m",
+          "categories": ["Fiqh", "Islamic Law", "Barelvi"]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Children's Islamic Education",
+      "slug": "childrens-islamic-education",
+      "emoji": "👶",
+      "description": "Islamic education for kids in Sunni tradition",
+      "books": [
+        {
+          "id": "1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "author": "Imam Ahmed Raza Khan Barelvi",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "rating": 4.9,
+          "duration": "45h 30m",
+          "categories": ["Quran", "Translation", "Barelvi"]
+        },
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "author": "Allama Kaukab Noorani Okarvi",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "rating": 4.8,
+          "duration": "12h 45m",
+          "categories": ["Islamic Jurisprudence", "Barelvi"]
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Stories of Awliya & Saints",
+      "slug": "stories-of-awliya-saints",
+      "emoji": "✨",
+      "description": "Inspiring tales of Sufi saints and righteous people",
+      "books": [
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "author": "Allama Kaukab Noorani Okarvi",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "rating": 4.8,
+          "duration": "12h 45m",
+          "categories": ["Islamic Jurisprudence", "Barelvi"]
+        },
+        {
+          "id": "3",
+          "title": "Bahaar-e-Shariat",
+          "slug": "bahaar-e-shariat",
+          "author": "Maulana Amjad Ali Azmi",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Bahaar+Shariat",
+          "rating": 4.7,
+          "duration": "28h 15m",
+          "categories": ["Fiqh", "Islamic Law", "Barelvi"]
+        }
+      ]
+    }
+  ],
+  "screens": {
+    "homepage": {
+      "audiobookOfTheWeek": {
+        "id": "aotw",
+        "title": "Fatawa Razvia",
+        "slug": "fatawa-razvia",
+        "author": "Imam Ahmed Raza Khan Barelvi",
+        "coverUrl": "https://via.placeholder.com/300x400/9C27B0/white?text=Fatawa+Razvia",
+        "rating": 4.9,
+        "duration": "85h 30m",
+        "isPremium": true,
+        "categories": ["Fatawa", "Islamic Law", "Barelvi", "Featured"]
+      },
+      "continueListening": [
+        {
+          "id": "continue1",
+          "title": "Seerat-un-Nabi",
+          "slug": "seerat-un-nabi",
+          "author": "Allama Shibli Nomani",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Seerat+Nabi",
+          "rating": 4.7,
+          "duration": "32h 15m",
+          "progress": 0.65,
+          "categories": ["Biography", "Prophet", "History"]
+        },
+        {
+          "id": "continue2",
+          "title": "Tafseer-e-Naeemi",
+          "slug": "tafseer-e-naeemi",
+          "author": "Mufti Ahmed Yaar Khan",
+          "coverUrl": "https://via.placeholder.com/150x200/E91E63/white?text=Tafseer+Naeemi",
+          "rating": 4.8,
+          "duration": "125h 45m",
+          "progress": 0.23,
+          "categories": ["Tafseer", "Quran", "Commentary"]
+        },
+        {
+          "id": "continue3",
+          "title": "Fiqh-e-Hanafi",
+          "slug": "fiqh-e-hanafi",
+          "author": "Imam Abu Hanifa",
+          "coverUrl": "https://via.placeholder.com/150x200/3F51B5/white?text=Fiqh+Hanafi",
+          "rating": 4.9,
+          "duration": "68h 20m",
+          "progress": 0.42,
+          "categories": ["Fiqh", "Islamic Law", "Hanafi"]
+        }
+      ],
+      "recommendedBooks": [
+        {
+          "id": "rec1",
+          "title": "Malfuzat-e-Ala Hazrat",
+          "slug": "malfuzat-e-ala-hazrat",
+          "author": "Imam Ahmed Raza Khan",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Malfuzat",
+          "rating": 4.8,
+          "duration": "28h 15m",
+          "categories": ["Malfuzat", "Spiritual", "Barelvi"]
+        },
+        {
+          "id": "rec2",
+          "title": "Hadaiq-e-Bakhshish",
+          "slug": "hadaiq-e-bakhshish",
+          "author": "Imam Ahmed Raza Khan",
+          "coverUrl": "https://via.placeholder.com/150x200/FF5722/white?text=Hadaiq",
+          "rating": 4.9,
+          "duration": "15h 30m",
+          "categories": ["Poetry", "Naat", "Spiritual"]
+        },
+        {
+          "id": "rec3",
+          "title": "Bahar-e-Shariat",
+          "slug": "bahar-e-shariat",
+          "author": "Maulana Amjad Ali Azmi",
+          "coverUrl": "https://via.placeholder.com/150x200/607D8B/white?text=Bahar+Shariat",
+          "rating": 4.7,
+          "duration": "42h 45m",
+          "categories": ["Fiqh", "Islamic Law", "Hanafi"]
+        }
+      ],
+      "premiumFeatures": [
+        "Listen offline, anytime",
+        "Immerse without interruptions",
+        "Access exclusive premium libraries",
+        "Seamlessly continue across all devices",
+        "Be the first to discover new content",
+        "Experience crystal-clear audio quality"
+      ],
+      "topShelfBooks": [
+        {
+          "id": "1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "author": "Imam Ahmed Raza Khan Barelvi",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "rating": 4.9,
+          "duration": "45h 30m",
+          "categories": ["Quran", "Translation", "Barelvi"]
+        },
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "author": "Allama Kaukab Noorani Okarvi",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "rating": 4.8,
+          "duration": "12h 45m",
+          "categories": ["Islamic Jurisprudence", "Barelvi"]
+        },
+        {
+          "id": "3",
+          "title": "Bahaar-e-Shariat",
+          "slug": "bahaar-e-shariat",
+          "author": "Maulana Amjad Ali Azmi",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Bahaar+Shariat",
+          "rating": 4.7,
+          "duration": "28h 15m",
+          "categories": ["Fiqh", "Islamic Law", "Barelvi"]
+        }
+      ]
+    },
+    "search": {
+      "recentSearches": [
+        "Islamic history",
+        "Seerah",
+        "Quran tafsir",
+        "Hadith collection",
+        "Ibn Kathir"
+      ],
+      "trendingTopics": [
+        "Ramadan preparation",
+        "Hadith studies",
+        "Islamic finance",
+        "Quranic recitation",
+        "Prophet stories",
+        "Islamic ethics"
+      ],
+      "popularTags": [
+        "Islamic History",
+        "Quran",
+        "Hadith",
+        "Seerah",
+        "Fiqh",
+        "Aqeedah",
+        "Tafsir",
+        "Arabic",
+        "Duas",
+        "Islamic Finance",
+        "Women in Islam",
+        "Youth",
+        "Contemporary Issues"
+      ]
+    },
+    "library": {
+      "recentlyPlayed": [
+        {
+          "id": "1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "narrator": "Allama Muhammad Ilyas Qadri",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "playedWhen": "2 hours ago",
+          "playedMinutes": 45,
+          "progress": 0.3,
+          "isFinished": false
+        },
+        {
+          "id": "2",
+          "title": "Jaa al-Haq",
+          "slug": "jaa-al-haq",
+          "narrator": "Maulana Tariq Jameel",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Jaa+al+Haq",
+          "playedWhen": "1 day ago",
+          "playedMinutes": 120,
+          "progress": 1.0,
+          "isFinished": true
+        },
+        {
+          "id": "3",
+          "title": "Bahaar-e-Shariat",
+          "slug": "bahaar-e-shariat",
+          "narrator": "Dr. Muhammad Tahir ul Qadri",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Bahaar+Shariat",
+          "playedWhen": "3 days ago",
+          "playedMinutes": 180,
+          "progress": 0.7,
+          "isFinished": false
+        }
+      ],
+      "downloads": [
+        {
+          "id": "1",
+          "title": "Fatawa Razvia",
+          "slug": "fatawa-razvia",
+          "narrator": "Allama Muhammad Ilyas Qadri",
+          "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Fatawa+Razvia",
+          "downloadSize": "4.2 GB",
+          "isDownloading": false,
+          "downloadProgress": 1.0
+        },
+        {
+          "id": "2",
+          "title": "Tafseer Kanz ul Iman",
+          "slug": "tafseer-kanz-ul-iman",
+          "narrator": "Dr. Muhammad Tahir ul Qadri",
+          "coverUrl": "https://via.placeholder.com/150x200/9C27B0/white?text=Tafseer+Kanz",
+          "downloadSize": "3.8 GB",
+          "isDownloading": false,
+          "downloadProgress": 1.0
+        },
+        {
+          "id": "3",
+          "title": "Seerat un Nabi",
+          "slug": "seerat-un-nabi",
+          "narrator": "Maulana Tariq Jameel",
+          "coverUrl": "https://via.placeholder.com/150x200/F44336/white?text=Seerat+Nabi",
+          "downloadSize": "2.1 GB",
+          "isDownloading": true,
+          "downloadProgress": 0.65
+        }
+      ],
+      "notes": [
+        {
+          "id": "note_1",
+          "title": "Key Point on Wudu",
+          "content": "Remember that the intention (niyyah) is crucial for the validity of wudu. The Prophet (PBUH) said actions are judged by intentions.",
+          "contentId": "fiqh_1",
+          "contentTitle": "Fiqh Made Easy",
+          "author": "Salih al-Munajjid",
+          "createdAt": "2024-01-15T10:30:00Z",
+          "modifiedAt": "2024-01-15T10:30:00Z",
+          "type": "personal",
+          "timestamp": "15:30"
+        },
+        {
+          "id": "note_2",
+          "title": "Beautiful Hadith",
+          "content": "The most beloved of people to Allah are those who bring most benefit to others. Subhan Allah, what a beautiful reminder to serve humanity.",
+          "contentId": "hadith_1",
+          "contentTitle": "Sahih Bukhari Collection",
+          "author": "Imam Bukhari",
+          "createdAt": "2024-01-14T16:45:00Z",
+          "modifiedAt": "2024-01-14T16:45:00Z",
+          "type": "highlight",
+          "timestamp": "42:15"
+        },
+        {
+          "id": "note_3",
+          "title": "Question for Scholar",
+          "content": "Need clarification on the ruling regarding praying in congregation during travel. Should ask the local imam about this specific situation.",
+          "contentId": "fiqh_2",
+          "contentTitle": "Prayer Guidelines",
+          "author": "Ahmad ibn Hanbal",
+          "createdAt": "2024-01-13T09:20:00Z",
+          "modifiedAt": "2024-01-13T09:20:00Z",
+          "type": "question",
+          "timestamp": "28:42"
+        }
+      ]
+    },
+    "reviews": {
+      "sampleReviews": [
+        {
+          "id": "review_1",
+          "userId": "user_1",
+          "userName": "Ahmad Mahmoud",
+          "userAvatar": "",
+          "rating": 5.0,
+          "reviewText": "Absolutely amazing content! The narrator's voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.",
+          "createdAt": "2 days ago",
+          "upvotes": 15,
+          "downvotes": 1,
+          "isUserUpvoted": false,
+          "isUserDownvoted": false,
+          "isOwnReview": false
+        },
+        {
+          "id": "review_2",
+          "userId": "user_2",
+          "userName": "Fatima Hassan",
+          "userAvatar": "",
+          "rating": 4.0,
+          "reviewText": "Very insightful and well-presented. The content is authentic and based on reliable sources. My only minor complaint is that some chapters felt a bit long.",
+          "createdAt": "5 days ago",
+          "upvotes": 8,
+          "downvotes": 0,
+          "isUserUpvoted": true,
+          "isUserDownvoted": false,
+          "isOwnReview": false
+        },
+        {
+          "id": "review_3",
+          "userId": "current_user",
+          "userName": "You",
+          "userAvatar": "",
+          "rating": 4.5,
+          "reviewText": "Great collection of Islamic teachings. The audio quality is excellent and the content is very educational. Would love to see more books by this author.",
+          "createdAt": "1 week ago",
+          "upvotes": 12,
+          "downvotes": 0,
+          "isUserUpvoted": false,
+          "isUserDownvoted": false,
+          "isOwnReview": true
+        }
+      ],
+      "reviewSummary": {
+        "averageRating": 4.5,
+        "totalReviews": 847,
+        "ratingDistribution": {
+          "5": 423,
+          "4": 298,
+          "3": 89,
+          "2": 25,
+          "1": 12
+        }
+      }
+    },
+    "content": {
+      "books": [
+        {
+          "id": "fiqh_1",
+          "title": "Fiqh Made Easy",
+          "slug": "fiqh-made-easy",
+          "author": "Salih al-Munajjid",
+          "authorId": "author_1",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+          "type": "book",
+          "availability": "glimpse",
+          "rating": 4.6,
+          "duration": "8h 30m",
+          "chapterCount": 12,
+          "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
+          "narrators": ["narrator_1"],
+          "language": "Arabic",
+          "isBookmarked": false,
+          "isPremium": false,
+          "categories": ["Fiqh", "Islamic Law", "Beginner"]
+        },
+        {
+          "id": "fiqh_2",
+          "title": "Prayer Guidelines",
+          "slug": "prayer-guidelines",
+          "author": "Ahmad ibn Hanbal",
+          "authorId": "author_2",
+          "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Prayer",
+          "type": "podcast",
+          "availability": "premium",
+          "rating": 4.8,
+          "duration": "45m",
+          "chapterCount": 5,
+          "description": "Essential guidelines for performing the five daily prayers correctly according to Islamic teachings.",
+          "narrators": ["narrator_1", "narrator_2"],
+          "language": "English",
+          "isBookmarked": true,
+          "isPremium": true,
+          "categories": ["Prayer", "Worship", "Fundamentals"]
+        }
+      ],
+      "chapters": [
+        {
+          "id": "ch_1_1",
+          "title": "Introduction to Fiqh",
+          "description": "An overview of Islamic jurisprudence and its importance in Muslim life.",
+          "duration": "45m",
+          "chapterNumber": 1,
+          "status": "completed",
+          "narratorId": "narrator_1",
+          "progress": 1.0,
+          "pausedAt": null
+        },
+        {
+          "id": "ch_1_2",
+          "title": "Purification and Wudu",
+          "description": "Learn the proper methods of purification and ablution before prayer.",
+          "duration": "38m",
+          "chapterNumber": 2,
+          "status": "paused",
+          "narratorId": "narrator_1",
+          "progress": 0.33,
+          "pausedAt": "12:30"
+        },
+        {
+          "id": "ch_1_3",
+          "title": "Prayer Fundamentals",
+          "description": "Understanding the basic requirements and structure of Islamic prayer.",
+          "duration": "52m",
+          "chapterNumber": 3,
+          "status": "playing",
+          "narratorId": "narrator_1",
+          "progress": 0.15,
+          "pausedAt": null
+        }
+      ]
+    },
+    "following": {
+      "followedAuthors": [
+        "author_1",
+        "author_2"
+      ],
+      "followedNarrators": [
+        "narrator_1",
+        "narrator_2"
+      ]
+    },
+    "bookmarks": {
+      "bookmarkedContent": [
+        "fiqh_2",
+        "aqeedah_1",
+        "quran_1"
+      ]
+    }
+  }
+}

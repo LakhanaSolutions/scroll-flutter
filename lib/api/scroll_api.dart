@@ -434,17 +434,33 @@ class ScrollApi {
   /// Get categories list.
   /// 
   /// Returns a list of content categories with optional filtering.
+  /// Used by AppDataService for initial data loading.
   /// 
   /// Query parameters (all optional):
   /// - featured: bool? (show only featured categories)
   /// - parent: string? (filter by parent category ID)
-  /// - flat: bool? (return flat list vs hierarchical)
+  /// - flat: bool? (return flat list vs hierarchical, default: true)
   /// 
-  /// Response on success (200): Array of category objects
+  /// Response on success (200): 
+  /// {
+  ///   "categories": [
+  ///     {
+  ///       "id": string,
+  ///       "name": string,
+  ///       "slug": string,
+  ///       "iconPath": string?,
+  ///       "imageUrl": string?,
+  ///       "itemCount": number,
+  ///       "listeningHours": string,
+  ///       "description": string
+  ///     }
+  ///   ],
+  ///   "total": number
+  /// }
   Future<Map<String, dynamic>> getCategories({
     bool? featured,
     String? parent,
-    bool? flat,
+    bool? flat = true,
   }) async {
     final queryParameters = <String, dynamic>{};
     if (featured != null) queryParameters['featured'] = featured;

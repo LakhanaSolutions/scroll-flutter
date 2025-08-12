@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
+import '../../services/app_data_service.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_extensions.dart';
 import '../../theme/app_icons.dart';
@@ -24,12 +25,35 @@ class _CategoriesTabState extends State<CategoriesTab> {
   
   final List<String> _languages = ['Arabic', 'English', 'Urdu'];
   final List<String> _voiceTypes = ['Female voice', 'Male voice', 'Kid voice', 'AI voice'];
+  
+  List<CategoryData>? _categories;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    final categories = await AppDataService().getCategories();
+    if (mounted) {
+      setState(() {
+        _categories = categories;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final categories = MockData.getIslamicCategories();
+    
+    // Show loading spinner if categories are not loaded yet
+    if (_categories == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    
+    final categories = _categories!;
 
     return Scaffold(
       body: Column(
@@ -476,7 +500,7 @@ class _CategoryTile extends StatelessWidget {
                 : AppImage(
                     imageUrl: category.imageUrl,
                     // Previous fallback icon: category.icon (when using IconData)
-                    fallbackIcon: category.icon!,
+                    fallbackIcon: category.icon ?? Icons.category,
                     width: AppSpacing.iconLarge + AppSpacing.medium,
                     height: AppSpacing.iconLarge + AppSpacing.medium,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),

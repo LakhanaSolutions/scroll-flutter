@@ -60,7 +60,7 @@
     "slug": "strengthen-your-iman",
     "emoji": "🤲",
     "description": "Strengthen your faith with inspiring Sunni content",
-    "books": [
+    "content": [
       {
         "id": "1",
         "title": "Kanz ul Iman",
@@ -74,8 +74,8 @@
     ]
   },
   
-  "book": {
-    "_comment": "Universal book format - contains all possible fields. Optional fields may be null or omitted based on context.",
+  "content": {
+    "_comment": "Universal content format - contains all possible fields. Optional fields may be null or omitted based on context.",
     "id": "fiqh_1",
     "title": "Fiqh Made Easy",
     "slug": "fiqh-made-easy",
@@ -101,7 +101,37 @@
     "downloadSize": "4.2 GB",
     "isDownloading": false,
     "downloadProgress": 1.0,
-    "narrator": "Allama Muhammad Ilyas Qadri"
+    "narrator": "Allama Muhammad Ilyas Qadri",
+    "reviews": [
+      {
+        "id": "review_1",
+        "userId": "user_1",
+        "userName": "Ahmad Mahmoud",
+        "userAvatar": "",
+        "rating": 5.0,
+        "reviewText": "Absolutely amazing content! The narrator's voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.",
+        "createdAt": "2 days ago",
+        "upvotes": 15,
+        "downvotes": 1,
+        "isUserUpvoted": false,
+        "isUserDownvoted": false,
+        "isOwnReview": false
+      },
+      {
+        "id": "review_2",
+        "userId": "user_2",
+        "userName": "Fatima Al-Zahra",
+        "userAvatar": "",
+        "rating": 4.0,
+        "reviewText": "Very informative and well-structured. The explanations are clear and easy to follow. Would love to see more content from this author.",
+        "createdAt": "1 week ago",
+        "upvotes": 8,
+        "downvotes": 0,
+        "isUserUpvoted": true,
+        "isUserDownvoted": false,
+        "isOwnReview": false
+      }
+    ]
   },
   
   "recentlyPlayedItem": {
@@ -272,8 +302,8 @@
   
   "_field_explanations": {
     "notification.type": "Enum: 'warning', 'info', 'success', 'error'",
-    "book.availability": "Enum: 'glimpse', 'premium'",
-    "book.type": "Enum: 'book', 'podcast'",
+    "content.availability": "Enum: 'glimpse', 'premium'",
+    "content.type": "Enum: 'book', 'podcast'",
     "chapter.status": "Enum: 'notPlayed', 'playing', 'paused', 'completed'",
     "chapter.sizeInMB": "Float - chapter file size in megabytes",
     "subscriptionPlan.type": "Enum: 'Free Plan', 'Paid Plan'",
@@ -294,10 +324,10 @@
   
   "_usage_notes": {
     "data_variations": {
-      "books": "Books use a unified format with optional fields. Include only relevant fields for each context: basic info for lists, progress for library, download info for offline content, etc.",
-      "book_field_contexts": {
+      "content": "Content uses a unified format with optional fields. Include only relevant fields for each context: basic info for lists, progress for library, download info for offline content, etc.",
+      "content_field_contexts": {
         "always_include": ["id", "title", "slug", "author", "coverUrl", "rating", "duration", "categories"],
-        "for_detailed_views": ["authorId", "type", "availability", "chapterCount", "description", "narrators", "language", "isBookmarked", "isPremium"],
+        "for_detailed_views": ["authorId", "type", "availability", "chapterCount", "description", "narrators", "language", "isBookmarked", "isPremium", "reviews"],
         "for_progress_tracking": ["progress", "playedWhen", "playedMinutes", "isFinished"],
         "for_downloads": ["downloadSize", "isDownloading", "downloadProgress"],
         "for_recently_played": ["narrator", "playedWhen", "playedMinutes", "progress", "isFinished"]
@@ -311,18 +341,18 @@
       "reviews": "Individual reviews have same format, review summaries are aggregated data"
     },
     "cross_references": {
-      "books_to_authors": "book.authorId references author.id",
-      "books_to_narrators": "book.narrators array contains narrator.id values (for detailed books), book.narrator string for recently played items",
+      "content_to_authors": "content.authorId references author.id",
+      "content_to_narrators": "content.narrators array contains narrator.id values (for detailed content), content.narrator string for recently played items",
       "chapters_to_narrators": "chapter.narratorId references narrator.id",
-      "books_to_author_slugs": "book.authorSlug references author.slug for SEO-friendly URLs",
-      "notes_to_content": "note.contentId references book.id",
+      "content_to_author_slugs": "content.authorSlug references author.slug for SEO-friendly URLs",
+      "notes_to_content": "note.contentId references content.id",
       "bookmarks_following": "Arrays contain IDs that reference other entities",
       "user_subscription_to_plan": "userSubscription.planId references subscriptionPlan.id"
     },
     "api_endpoints": {
-      "book_endpoints": "Return only the fields needed for each endpoint - minimize payload size by excluding unnecessary fields",
-      "single_items": "Use full book format with all relevant fields for individual book endpoints",
-      "lists": "Use basic book fields for list endpoints (id, title, slug, author, coverUrl, rating, duration, categories)",
+      "content_endpoints": "Return only the fields needed for each endpoint - minimize payload size by excluding unnecessary fields",
+      "single_items": "Use full content format with all relevant fields for individual content endpoints",
+      "lists": "Use basic content fields for list endpoints (id, title, slug, author, coverUrl, rating, duration, categories)",
       "user_specific": "Progress, bookmarks, following, notes are user-specific data requiring authentication",
       "subscription_endpoints": "Plans endpoint returns all available plans with pricing and features",
       "user_subscription_endpoints": "User subscription endpoint returns current subscription status, billing info, and progress data",

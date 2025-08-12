@@ -1,0 +1,1670 @@
+{
+  "Auth Module": {
+    "screen_file": "Auth Module (check-email, request-otp, verify-otp)",
+    "brief_description": "User authentication flow with email validation, OTP request and verification",
+    "endpoints": {
+      "check-email": {
+        "parameters": ["email"],
+        "data_fetching": false,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "POST /auth/check-email",
+        "model": "CheckEmailRequest, CheckEmailResponse",
+        "service_method": "AuthService.checkEmail",
+        "schema_compliance": true,
+        "notes": "Validates email existence and returns user name if exists"
+      },
+      "request-otp": {
+        "parameters": ["email", "name (optional for new users)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": true,
+        "endpoint_path": "POST /auth/request-otp",
+        "model": "OtpRequest, OtpResponse",
+        "service_method": "AuthService.requestOtp",
+        "schema_compliance": true,
+        "notes": "Sends OTP to user's email for authentication"
+      },
+      "verify-otp": {
+        "parameters": ["email", "otp"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": true,
+        "endpoint_path": "POST /auth/verify-otp",
+        "model": "VerifyOtpRequest, AuthResponse",
+        "service_method": "AuthService.verifyOtp",
+        "schema_compliance": true,
+        "notes": "Verifies OTP and returns authentication response with user and token"
+      },
+      "session": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /auth/session",
+        "model": "SessionResponse",
+        "service_method": "AuthService.getSession",
+        "schema_compliance": true,
+        "notes": "Gets current user session information"
+      },
+      "signout": {
+        "parameters": [],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": true,
+        "endpoint_path": "POST /auth/signout",
+        "model": "MessageResponse",
+        "service_method": "AuthService.signOut",
+        "schema_compliance": true,
+        "notes": "Signs out current user and invalidates session"
+      }
+    },
+    "status": "fully_done_and_working",
+    "additional_notes": "All authentication endpoints are implemented and working. Module includes complete flow from email validation to user session management."
+  },
+  "Homepage": {
+    "screen_file": "lib/screens/home/home_tab.dart",
+    "brief_description": "Main homepage displaying pick of the week, continue listening section, and top shelf content",
+    "endpoints": {
+      "pick-of-the-week": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /home/pick-of-week (NEEDED)",
+        "model": "Content (single content object)",
+        "service_method": "HomeService.getPickOfWeek (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "author", "coverUrl", "rating", "duration", "categories", "description", "isPremium"],
+        "sample_response": {
+          "id": "pick_of_week_1",
+          "title": "Kanz ul Iman",
+          "slug": "kanz-ul-iman",
+          "author": "Imam Ahmed Raza Khan Barelvi",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+          "rating": 4.9,
+          "duration": "45h 30m",
+          "categories": ["Quran", "Translation", "Barelvi"],
+          "description": "A comprehensive translation and commentary of the Holy Quran by the renowned Islamic scholar Imam Ahmed Raza Khan Barelvi.",
+          "isPremium": true
+        },
+        "notes": "Featured content of the week for homepage banner"
+      },
+      "continue-listening": {
+        "parameters": ["userId (from auth)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /home/continue-listening (NEEDED)",
+        "model": "Content[] (array of content objects with progress)",
+        "service_method": "HomeService.getContinueListening (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "author", "coverUrl", "rating", "duration", "categories", "progress", "playedWhen", "playedMinutes", "isFinished"],
+        "sample_response": [
+          {
+            "id": "fiqh_1",
+            "title": "Fiqh Made Easy",
+            "slug": "fiqh-made-easy",
+            "author": "Salih al-Munajjid",
+            "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+            "rating": 4.6,
+            "duration": "8h 30m",
+            "categories": ["Fiqh", "Islamic Law", "Beginner"],
+            "progress": 0.65,
+            "playedWhen": "2 hours ago",
+            "playedMinutes": 45,
+            "isFinished": false
+          },
+          {
+            "id": "hadith_1",
+            "title": "Sahih Bukhari Commentary",
+            "slug": "sahih-bukhari-commentary",
+            "author": "Ibn Hajar al-Asqalani",
+            "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Bukhari",
+            "rating": 4.8,
+            "duration": "25h 15m",
+            "categories": ["Hadith", "Commentary", "Advanced"],
+            "progress": 0.23,
+            "playedWhen": "1 day ago",
+            "playedMinutes": 320,
+            "isFinished": false
+          }
+        ],
+        "notes": "Content user has started but not finished, with progress tracking"
+      },
+      "top-shelf": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /home/top-shelf (NEEDED)",
+        "model": "Content[] (array of content objects)",
+        "service_method": "HomeService.getTopShelf (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "author", "coverUrl", "rating", "duration", "categories"],
+        "sample_response": [
+          {
+            "id": "quran_1",
+            "title": "Tafsir Ibn Kathir",
+            "slug": "tafsir-ibn-kathir",
+            "author": "Ibn Kathir",
+            "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Ibn+Kathir",
+            "rating": 4.9,
+            "duration": "120h 45m",
+            "categories": ["Tafsir", "Quran", "Classical"]
+          },
+          {
+            "id": "seerah_1",
+            "title": "Ar-Raheeq Al-Makhtum",
+            "slug": "ar-raheeq-al-makhtum",
+            "author": "Safiur Rahman Mubarakpuri",
+            "coverUrl": "https://via.placeholder.com/150x200/9C27B0/white?text=Seerah",
+            "rating": 4.7,
+            "duration": "18h 30m",
+            "categories": ["Seerah", "Biography", "History"]
+          },
+          {
+            "id": "aqeedah_1",
+            "title": "Kitab At-Tawheed",
+            "slug": "kitab-at-tawheed",
+            "author": "Muhammad ibn Abdul Wahhab",
+            "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Tawheed",
+            "rating": 4.8,
+            "duration": "12h 15m",
+            "categories": ["Aqeedah", "Tawheed", "Fundamental"]
+          }
+        ],
+        "notes": "Curated collection of premium/recommended content"
+      },
+      "moods": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /home/moods (NEEDED)",
+        "model": "MoodCategory[] (array of mood category objects)",
+        "service_method": "HomeService.getMoods (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "description", "imageUrl", "color", "sortOrder", "isActive", "content"],
+        "sample_response": [
+          {
+            "id": "mood_1",
+            "name": "Strengthen Your Iman",
+            "slug": "strengthen-your-iman",
+            "description": "Strengthen your faith with inspiring Sunni content",
+            "imageUrl": "https://via.placeholder.com/150x150/4CAF50/white?text=Faith",
+            "color": "#4CAF50",
+            "sortOrder": 1,
+            "isActive": true,
+            "content": [
+              {
+                "id": "content_1",
+                "title": "Kanz ul Iman",
+                "slug": "kanz-ul-iman",
+                "author": "Imam Ahmed Raza Khan Barelvi",
+                "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+                "rating": 4.9,
+                "duration": "45h 30m",
+                "categories": ["Quran", "Translation", "Barelvi"]
+              }
+            ]
+          },
+          {
+            "id": "mood_2",
+            "name": "Peaceful Reflection",
+            "slug": "peaceful-reflection",
+            "description": "Content for quiet contemplation and inner peace",
+            "imageUrl": "https://via.placeholder.com/150x150/2196F3/white?text=Peace",
+            "color": "#2196F3",
+            "sortOrder": 2,
+            "isActive": true,
+            "content": [
+              {
+                "id": "content_2",
+                "title": "Peaceful Reflections",
+                "slug": "peaceful-reflections",
+                "author": "Ibn Sina",
+                "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Peace",
+                "rating": 4.7,
+                "duration": "12h 15m",
+                "categories": ["Spirituality", "Meditation", "Peace"]
+              }
+            ]
+          },
+          {
+            "id": "mood_3",
+            "name": "Learning Journey",
+            "slug": "learning-journey",
+            "description": "Educational content for Islamic knowledge seekers",
+            "imageUrl": "https://via.placeholder.com/150x150/FF9800/white?text=Learn",
+            "color": "#FF9800",
+            "sortOrder": 3,
+            "isActive": true,
+            "content": [
+              {
+                "id": "content_3",
+                "title": "Islamic History Essentials",
+                "slug": "islamic-history-essentials",
+                "author": "Dr. Muhammad Hamidullah",
+                "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=History",
+                "rating": 4.8,
+                "duration": "22h 30m",
+                "categories": ["History", "Education", "Learning"]
+              }
+            ]
+          }
+        ],
+        "schema_notes": "DATABASE SCHEMA UPDATE NEEDED: Add 'imageUrl' column to MoodCategory table and remove 'emoji' column. Images provide better visual representation than emojis for mood-based content discovery.",
+        "notes": "Mood-based content discovery categories from MoodCategory table. Replace emoji field with imageUrl for better visual presentation."
+      }
+    },
+    "status": "not_done_api_and_database",
+    "additional_notes": "All four homepage endpoints need to be created. Currently using mock data. Content data format should follow the universal content schema from datapool_schema.json with context-appropriate fields. MoodCategory table exists but needs schema update to replace emoji with imageUrl."
+  },
+  "Categories": {
+    "screen_file": "lib/screens/home/categories_tab.dart",
+    "brief_description": "Shows a list of Islamic categories with icons, item count, listening hours and navigation",
+    "endpoints": {
+      "get-categories": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /categories",
+        "model": "Category[]",
+        "service_method": "CategoryService.getCategories",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "iconPath", "imageUrl", "itemCount", "listeningHours", "description"],
+        "sample_response": [
+          {
+            "id": "1",
+            "name": "Fiqh",
+            "slug": "fiqh",
+            "iconPath": "assets/icons/icons8-allah-100.png",
+            "imageUrl": null,
+            "itemCount": 48,
+            "listeningHours": "156h",
+            "description": "Islamic jurisprudence and legal rulings"
+          },
+          {
+            "id": "2",
+            "name": "Hadith",
+            "slug": "hadith",
+            "iconPath": "assets/icons/icons8-book-100.png",
+            "imageUrl": null,
+            "itemCount": 32,
+            "listeningHours": "89h",
+            "description": "Prophetic traditions and sayings"
+          }
+        ],
+        "notes": "Categories are used for navigation and content filtering"
+      }
+    },
+    "status": "ready_and_working",
+    "additional_notes": "Categories endpoint is implemented and working. Data follows the category schema from datapool_schema.json."
+  },
+  "Authors": {
+    "screen_file": "lib/screens/authors_list_screen.dart",
+    "brief_description": "Lists authors categorized by language with tabs for filtering (All, Arabic, English, Urdu, Persian)",
+    "endpoints": {
+      "get-authors": {
+        "parameters": ["language (optional)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /authors",
+        "model": "Author[], Pagination",
+        "service_method": "AuthorService.getAuthors",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "bio", "imageUrl", "nationality", "birthYear", "genres", "awards", "socialLinks", "quote", "totalBooks", "isFollowing"],
+        "sample_response": [
+          {
+            "id": "author_1",
+            "name": "Imam Ahmed Raza Khan Barelvi",
+            "slug": "imam-ahmed-raza-khan-barelvi",
+            "bio": "Imam Ahmed Raza Khan (1856-1921) was a renowned Islamic scholar, jurist, and reformer from India. He founded the Barelvi movement and wrote over 1000 books on various Islamic subjects. His most famous work is the Quranic translation 'Kanz ul Iman'.",
+            "imageUrl": null,
+            "nationality": "Indian",
+            "birthYear": "1856",
+            "genres": ["Fiqh", "Quran Translation", "Islamic Law", "Sufism"],
+            "awards": ["Ala Hazrat", "Mujaddid of 14th Century"],
+            "socialLinks": [],
+            "quote": "The light of Islam will spread to every corner of the world.",
+            "totalBooks": 1050,
+            "isFollowing": true
+          }
+        ],
+        "notes": "Authors can be filtered by language and support pagination. Languages are derived from content authored by each person, not hardcoded values."
+      }
+    },
+    "status": "ready_and_working",
+    "additional_notes": "Authors endpoint is implemented and working. Screen provides language-based filtering. Author languages are dynamically derived from their associated content. Data follows the author schema from datapool_schema.json."
+  },
+  "Narrators": {
+    "screen_file": "lib/screens/narrators_list_screen.dart",
+    "brief_description": "Lists narrators categorized by voice type with tabs for filtering (All, Male voice, Female voice, Kid voice, AI voice)",
+    "endpoints": {
+      "get-narrators": {
+        "parameters": ["voiceType (optional)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /narrators (NEEDED)",
+        "model": "Narrator[]",
+        "service_method": "NarratorService.getNarrators (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "bio", "imageUrl", "languages", "genres", "awards", "socialLinks", "experienceYears", "voiceDescription", "totalNarrations", "isFollowing", "gender"],
+        "sample_response": [
+          {
+            "id": "narrator_1",
+            "name": "Allama Muhammad Ilyas Qadri",
+            "slug": "allama-muhammad-ilyas-qadri",
+            "bio": "Allama Muhammad Ilyas Qadri is the founder and spiritual leader of Dawat-e-Islami. He is known for his efforts in Islamic education and spiritual reformation, inspiring millions worldwide through his teachings.",
+            "imageUrl": null,
+            "languages": ["Urdu", "Arabic", "English"],
+            "genres": ["Islamic Studies", "Spiritual Reformation", "Character Building"],
+            "awards": ["Spiritual Leader Award", "Excellence in Da'wah"],
+            "socialLinks": ["@dawateislami"],
+            "experienceYears": 30,
+            "voiceDescription": "Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation",
+            "totalNarrations": 85,
+            "isFollowing": true,
+            "gender": "Male"
+          }
+        ],
+        "notes": "Narrators can be filtered by voice type and support pagination. Languages are derived from content narrated by each person, not hardcoded values. Currently using mock data."
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "Narrators endpoint needs to be created. Screen is ready but currently uses mock data. Narrator languages are dynamically derived from their associated content. Data format should follow the narrator schema from datapool_schema.json with voice type filtering support."
+  },
+  "Preferences": {
+    "screen_file": "lib/screens/home/settings_tab.dart",
+    "brief_description": "User preferences and app settings management including language, voice gender, and app version info",
+    "endpoints": {
+      "get-app-version": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /preferences/app-version (NEEDED)",
+        "model": "AppVersion",
+        "service_method": "PreferencesService.getLatestAppVersion (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["version", "buildNumber", "releaseDate", "isUpdateRequired", "updateUrl"],
+        "sample_response": {
+          "version": "1.2.0",
+          "buildNumber": "120",
+          "releaseDate": "2025-01-15T00:00:00Z",
+          "isUpdateRequired": false,
+          "updateUrl": "https://apps.apple.com/app/siraaj/id123456789",
+          "releaseNotes": "Bug fixes and performance improvements"
+        },
+        "notes": "Returns latest available app version for update checking"
+      },
+      "get-available-languages": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /preferences/languages (NEEDED)",
+        "model": "Language[]",
+        "service_method": "PreferencesService.getAvailableLanguages (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["code", "name", "nativeName", "isSupported"],
+        "sample_response": [
+          {
+            "code": "en",
+            "name": "English",
+            "nativeName": "English",
+            "isSupported": true
+          },
+          {
+            "code": "ar",
+            "name": "Arabic",
+            "nativeName": "العربية",
+            "isSupported": true
+          },
+          {
+            "code": "ur",
+            "name": "Urdu",
+            "nativeName": "اردو",
+            "isSupported": true
+          },
+          {
+            "code": "fa",
+            "name": "Persian",
+            "nativeName": "فارسی",
+            "isSupported": false
+          }
+        ],
+        "notes": "Returns list of supported app interface languages"
+      },
+      "get-voice-genders": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /preferences/voice-genders (NEEDED)",
+        "model": "VoiceGender[]",
+        "service_method": "PreferencesService.getAvailableVoiceGenders (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["gender", "isAvailable", "narratorCount"],
+        "sample_response": [
+          {
+            "gender": "Male",
+            "isAvailable": true,
+            "narratorCount": 15
+          },
+          {
+            "gender": "Female",
+            "isAvailable": true,
+            "narratorCount": 8
+          }
+        ],
+        "notes": "API derives voice genders from available narrators in database, no separate table needed"
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "All preference endpoints need to be created. Voice genders are derived from narrator data. Settings screen shows current preferences but needs API integration for dynamic data."
+  },
+  "Profile": {
+    "screen_file": "lib/screens/profile_screen.dart",
+    "brief_description": "User profile management screen showing profile information, subscription details, and form for updating user data",
+    "endpoints": {
+      "get-user-profile": {
+        "parameters": ["userId (from auth)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /user/profile",
+        "model": "User",
+        "service_method": "UserService.getProfile",
+        "schema_compliance": true,
+        "required_fields": ["id", "email", "name", "image", "bio", "nationality", "isNew", "isActive", "createdAt", "updatedAt", "lastLoginAt"],
+        "sample_response": {
+          "id": "user_1",
+          "email": "ahmed.alrashid@example.com",
+          "name": "Ahmed Al-Rashid",
+          "image": null,
+          "bio": "Islamic studies enthusiast",
+          "nationality": "Saudi Arabia",
+          "isNew": false,
+          "isActive": true,
+          "createdAt": "2024-01-15T10:30:00Z",
+          "updatedAt": "2025-01-12T15:45:00Z",
+          "lastLoginAt": "2025-01-12T15:45:00Z"
+        },
+        "notes": "Returns authenticated user's profile information"
+      },
+      "update-user-profile": {
+        "parameters": ["name", "bio", "nationality", "image (optional)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": true,
+        "endpoint_path": "PUT /user/profile",
+        "model": "UserProfileUpdate, User",
+        "service_method": "UserService.updateProfile",
+        "schema_compliance": true,
+        "required_fields": ["name"],
+        "sample_request": {
+          "name": "Ahmed Al-Rashid",
+          "bio": "Islamic studies enthusiast and audiobook lover",
+          "nationality": "Saudi Arabia"
+        },
+        "sample_response": {
+          "id": "user_1",
+          "email": "ahmed.alrashid@example.com",
+          "name": "Ahmed Al-Rashid",
+          "bio": "Islamic studies enthusiast and audiobook lover",
+          "nationality": "Saudi Arabia",
+          "updatedAt": "2025-01-12T16:00:00Z"
+        },
+        "notes": "Updates user profile information, returns updated user object"
+      },
+      "get-user-subscription": {
+        "parameters": ["userId (from auth)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /user/subscription (NEEDED)",
+        "model": "UserSubscription",
+        "service_method": "UserService.getUserSubscription (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "userId", "planId", "status", "currentPeriodStart", "currentPeriodEnd", "cancelAtPeriodEnd", "plan", "daysRemaining", "progressPercentage", "isTrialPeriod", "nextBillingDate", "autoRenew"],
+        "sample_response": {
+          "id": "sub_1",
+          "userId": "user_1",
+          "planId": "plan_1",
+          "status": "ACTIVE",
+          "currentPeriodStart": "2025-01-01T00:00:00Z",
+          "currentPeriodEnd": "2025-12-31T23:59:59Z",
+          "cancelAtPeriodEnd": false,
+          "stripeCustomerId": "cus_1234567890",
+          "stripeSubscriptionId": "sub_1234567890",
+          "createdAt": "2025-01-01T00:00:00Z",
+          "updatedAt": "2025-01-01T00:00:00Z",
+          "canceledAt": null,
+          "plan": {
+            "name": "Premium Plan",
+            "price": "29.99 SAR",
+            "timePeriod": "Monthly"
+          },
+          "daysRemaining": 335,
+          "progressPercentage": 0.08,
+          "isTrialPeriod": false,
+          "nextBillingDate": "2025-02-01T00:00:00Z",
+          "autoRenew": true
+        },
+        "notes": "Returns user's current subscription with billing details and progress tracking"
+      },
+      "get-user-preferences": {
+        "parameters": ["userId (from auth)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /user/preferences",
+        "model": "UserPreferences",
+        "service_method": "UserService.getPreferences",
+        "schema_compliance": true,
+        "required_fields": ["id", "userId", "themeMode", "language", "isRTL", "defaultSpeed", "defaultVolume", "autoPlay", "rememberPosition", "emailNotifications", "pushNotifications", "publicProfile", "preferredGenres", "contentLanguages"],
+        "sample_response": {
+          "id": "pref_1",
+          "userId": "user_1",
+          "themeMode": "SYSTEM",
+          "language": "en",
+          "isRTL": false,
+          "defaultSpeed": 1.0,
+          "defaultVolume": 1.0,
+          "autoPlay": true,
+          "rememberPosition": true,
+          "emailNotifications": true,
+          "pushNotifications": true,
+          "weeklyDigest": true,
+          "newContentAlerts": true,
+          "publicProfile": false,
+          "shareListeningStats": false,
+          "preferredGenres": ["Fiqh", "Hadith", "Tafsir"],
+          "contentLanguages": ["en", "ar", "ur"],
+          "explicitContent": false,
+          "createdAt": "2025-01-01T00:00:00Z",
+          "updatedAt": "2025-01-12T10:30:00Z"
+        },
+        "notes": "Returns comprehensive user preferences and settings"
+      },
+      "update-user-preferences": {
+        "parameters": ["preference fields to update"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": true,
+        "endpoint_path": "PUT /user/preferences",
+        "model": "UserPreferences, MessageResponse",
+        "service_method": "UserService.updatePreferences",
+        "schema_compliance": true,
+        "required_fields": [],
+        "sample_request": {
+          "themeMode": "DARK",
+          "language": "ar",
+          "defaultSpeed": 1.25,
+          "pushNotifications": false,
+          "preferredGenres": ["Fiqh", "Hadith", "Tafsir", "Seerah"]
+        },
+        "sample_response": {
+          "success": true,
+          "message": "Preferences updated successfully"
+        },
+        "notes": "Updates user preferences, accepts partial updates"
+      }
+    },
+    "status": "partially_ready",
+    "additional_notes": "Profile and preferences endpoints exist and are working. User subscription endpoint needs to be created to display subscription details on profile screen. Profile screen shows subscription info but currently uses mock data."
+  },
+  "Library": {
+    "screen_file": "lib/screens/home/library_tab.dart",
+    "brief_description": "User's personal library with three main sections: Recently Played, Saved (bookmarks/downloads/following), and Notes management",
+    "endpoints": {
+      "get-recently-played": {
+        "parameters": ["userId (from auth)", "limit (optional)", "offset (optional)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /library/recently-played (NEEDED)",
+        "model": "RecentlyPlayedItem[]",
+        "service_method": "LibraryService.getRecentlyPlayed (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "narrator", "coverUrl", "playedWhen", "playedMinutes", "progress", "isFinished"],
+        "sample_response": [
+          {
+            "id": "recent_1",
+            "title": "Kanz ul Iman",
+            "slug": "kanz-ul-iman",
+            "narrator": "Allama Muhammad Ilyas Qadri",
+            "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+            "playedWhen": "2025-01-12T10:30:00Z",
+            "playedMinutes": 45,
+            "progress": 0.3,
+            "isFinished": false
+          },
+          {
+            "id": "recent_2",
+            "title": "Fatawa Razvia",
+            "slug": "fatawa-razvia",
+            "narrator": "Allama Muhammad Ilyas Qadri",
+            "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Fatawa+Razvia",
+            "playedWhen": "2025-01-11T16:45:00Z",
+            "playedMinutes": 125,
+            "progress": 0.75,
+            "isFinished": false
+          }
+        ],
+        "notes": "Returns user's recently played content ordered by last played time. Uses RecentlyPlayedItem format from schema."
+      },
+      "get-bookmarks": {
+        "parameters": ["userId (from auth)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /bookmarks",
+        "model": "Bookmark[], Pagination",
+        "service_method": "BookmarkService.getBookmarks",
+        "schema_compliance": true,
+        "required_fields": ["id", "userId", "contentId", "note", "createdAt", "content"],
+        "sample_response": [
+          {
+            "id": "bookmark_1",
+            "userId": "user_1",
+            "contentId": "fiqh_1",
+            "note": "Important reference for daily prayers",
+            "createdAt": "2025-01-10T14:20:00Z",
+            "content": {
+              "id": "fiqh_1",
+              "title": "Fiqh Made Easy",
+              "slug": "fiqh-made-easy",
+              "author": "Salih al-Munajjid",
+              "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+              "rating": 4.6,
+              "duration": "8h 30m",
+              "categories": ["Fiqh", "Islamic Law", "Beginner"]
+            }
+          }
+        ],
+        "notes": "Returns user's bookmarked content with optional personal notes. Endpoint exists and is working."
+      },
+      "get-downloads": {
+        "parameters": ["userId (from auth)", "status (optional)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /library/downloads (NEEDED)",
+        "model": "DownloadedItem[]",
+        "service_method": "LibraryService.getDownloads (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "narrator", "coverUrl", "downloadSize", "isDownloading", "downloadProgress", "downloadType", "selectedChapters"],
+        "sample_response": [
+          {
+            "id": "download_1",
+            "title": "Fatawa Razvia",
+            "slug": "fatawa-razvia",
+            "narrator": "Allama Muhammad Ilyas Qadri",
+            "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Fatawa+Razvia",
+            "downloadSize": "4.2 GB",
+            "isDownloading": false,
+            "downloadProgress": 1.0,
+            "downloadType": "full_content",
+            "selectedChapters": null
+          },
+          {
+            "id": "download_2",
+            "title": "Bahaar-e-Shariat",
+            "slug": "bahaar-e-shariat",
+            "narrator": "Qari Saeed Ahmad",
+            "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Bahaar",
+            "downloadSize": "2.8 GB",
+            "isDownloading": true,
+            "downloadProgress": 0.65,
+            "downloadType": "full_content",
+            "selectedChapters": null
+          },
+          {
+            "id": "download_3",
+            "title": "Kanz ul Iman",
+            "slug": "kanz-ul-iman",
+            "narrator": "Allama Muhammad Ilyas Qadri",
+            "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
+            "downloadSize": "1.2 GB",
+            "isDownloading": false,
+            "downloadProgress": 1.0,
+            "downloadType": "selective_chapters",
+            "selectedChapters": [
+              {
+                "chapterId": "ch_1_1",
+                "chapterNumber": 1,
+                "title": "Introduction to Quran Translation",
+                "duration": "45m",
+                "downloadSize": "420 MB",
+                "downloadProgress": 1.0,
+                "isDownloaded": true
+              },
+              {
+                "chapterId": "ch_1_5",
+                "chapterNumber": 5,
+                "title": "Surah Al-Fatiha Commentary",
+                "duration": "32m",
+                "downloadSize": "380 MB",
+                "downloadProgress": 1.0,
+                "isDownloaded": true
+              },
+              {
+                "chapterId": "ch_1_10",
+                "chapterNumber": 10,
+                "title": "Surah Al-Baqarah - Part 1",
+                "duration": "55m",
+                "downloadSize": "520 MB",
+                "downloadProgress": 0.75,
+                "isDownloaded": false
+              }
+            ]
+          }
+        ],
+        "schema_notes": "DATABASE SCHEMA UPDATE NEEDED: Update Download model to include 'downloadType' enum field ('full_content', 'selective_chapters') and create new ChapterDownload junction table to track individual chapter downloads with fields: id, downloadId, chapterId, downloadSize, downloadProgress, isCompleted, localPath, createdAt, updatedAt.",
+        "notes": "Returns user's downloaded content with status and progress. Supports both full content downloads and selective chapter downloads. Uses DownloadedItem format from schema with extensions for chapter-level granularity."
+      },
+      "delete-download": {
+        "parameters": ["downloadId", "userId (from auth)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "DELETE /library/downloads/{downloadId} (NEEDED)",
+        "model": "MessageResponse",
+        "service_method": "LibraryService.deleteDownload (NEEDED)",
+        "schema_compliance": true,
+        "sample_response": {
+          "success": true,
+          "message": "Download removed successfully"
+        },
+        "notes": "Removes downloaded content and frees up storage space"
+      },
+      "get-following-authors": {
+        "parameters": ["userId (from auth)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /library/following/authors (NEEDED)",
+        "model": "FollowingAuthor[]",
+        "service_method": "LibraryService.getFollowingAuthors (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "bio", "imageUrl", "nationality", "birthYear", "genres", "awards", "socialLinks", "quote", "totalBooks", "isFollowing"],
+        "sample_response": [
+          {
+            "id": "author_1",
+            "name": "Imam Ahmed Raza Khan Barelvi",
+            "slug": "imam-ahmed-raza-khan-barelvi",
+            "bio": "Imam Ahmed Raza Khan (1856-1921) was a renowned Islamic scholar, jurist, and reformer from India.",
+            "imageUrl": null,
+            "nationality": "Indian",
+            "birthYear": "1856",
+            "genres": ["Fiqh", "Quran Translation", "Islamic Law", "Sufism"],
+            "awards": ["Ala Hazrat", "Mujaddid of 14th Century"],
+            "socialLinks": [],
+            "quote": "The light of Islam will spread to every corner of the world.",
+            "totalBooks": 1050,
+            "isFollowing": true
+          }
+        ],
+        "notes": "Returns authors that the user is following. Derived from UserAuthorFollow relationship."
+      },
+      "get-following-narrators": {
+        "parameters": ["userId (from auth)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /library/following/narrators (NEEDED)",
+        "model": "FollowingNarrator[]",
+        "service_method": "LibraryService.getFollowingNarrators (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "bio", "imageUrl", "languages", "genres", "awards", "socialLinks", "experienceYears", "voiceDescription", "totalNarrations", "isFollowing", "gender"],
+        "sample_response": [
+          {
+            "id": "narrator_1",
+            "name": "Allama Muhammad Ilyas Qadri",
+            "slug": "allama-muhammad-ilyas-qadri",
+            "bio": "Allama Muhammad Ilyas Qadri is the founder and spiritual leader of Dawat-e-Islami.",
+            "imageUrl": null,
+            "languages": ["Urdu", "Arabic", "English"],
+            "genres": ["Islamic Studies", "Spiritual Reformation", "Character Building"],
+            "awards": ["Spiritual Leader Award", "Excellence in Da'wah"],
+            "socialLinks": ["@dawateislami"],
+            "experienceYears": 30,
+            "voiceDescription": "Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation",
+            "totalNarrations": 85,
+            "isFollowing": true,
+            "gender": "Male"
+          }
+        ],
+        "notes": "Returns narrators that the user is following. Derived from UserNarratorFollow relationship."
+      },
+      "get-user-notes": {
+        "parameters": ["userId (from auth)", "type (optional)", "contentId (optional)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /library/notes (NEEDED)",
+        "model": "Note[]",
+        "service_method": "LibraryService.getUserNotes (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "content", "contentId", "contentTitle", "author", "createdAt", "modifiedAt", "type", "timestamp"],
+        "sample_response": [
+          {
+            "id": "note_1",
+            "title": "Key Point on Wudu",
+            "content": "Remember that the intention (niyyah) is crucial for the validity of wudu. The Prophet (PBUH) said actions are judged by intentions.",
+            "contentId": "fiqh_1",
+            "contentTitle": "Fiqh Made Easy",
+            "author": "Salih al-Munajjid",
+            "createdAt": "2025-01-15T10:30:00Z",
+            "modifiedAt": "2025-01-15T10:30:00Z",
+            "type": "personal",
+            "timestamp": "15:30"
+          },
+          {
+            "id": "note_2",
+            "title": "Beautiful Reflection",
+            "content": "This passage about the mercy of Allah really touched my heart. It reminds us that no matter how many sins we commit, Allah's mercy is always greater.",
+            "contentId": "quran_1",
+            "contentTitle": "Kanz ul Iman",
+            "author": "Imam Ahmed Raza Khan Barelvi",
+            "createdAt": "2025-01-14T08:15:00Z",
+            "modifiedAt": "2025-01-14T12:20:00Z",
+            "type": "thought",
+            "timestamp": "15:30"
+          },
+          {
+            "id": "note_3",
+            "title": "Highlighted Quote",
+            "content": "The best of people are those who benefit others - This quote perfectly encapsulates the Islamic teaching of service to humanity.",
+            "contentId": "hadith_1",
+            "contentTitle": "Jaa al-Haq",
+            "author": "Allama Kaukab Noorani Okarvi",
+            "createdAt": "2025-01-13T19:45:00Z",
+            "modifiedAt": null,
+            "type": "highlight",
+            "timestamp": "42:18"
+          }
+        ],
+        "notes": "Returns user's notes with filtering by type (personal, highlight, thought) and content. Supports pagination and search."
+      },
+      "create-note": {
+        "parameters": ["userId (from auth)", "contentId", "chapterId (optional)", "title", "content", "type", "timestamp (optional)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "POST /library/notes (NEEDED)",
+        "model": "CreateNoteRequest, Note",
+        "service_method": "LibraryService.createNote (NEEDED)",
+        "schema_compliance": true,
+        "sample_request": {
+          "contentId": "fiqh_1",
+          "chapterId": "chapter_1",
+          "title": "Important Point",
+          "content": "This is a key learning from today's session about the importance of purification in Islam.",
+          "type": "personal",
+          "timestamp": "15:30"
+        },
+        "sample_response": {
+          "id": "note_4",
+          "title": "Important Point",
+          "content": "This is a key learning from today's session about the importance of purification in Islam.",
+          "contentId": "fiqh_1",
+          "contentTitle": "Fiqh Made Easy",
+          "author": "Salih al-Munajjid",
+          "createdAt": "2025-01-16T14:25:00Z",
+          "modifiedAt": null,
+          "type": "personal",
+          "timestamp": "15:30"
+        },
+        "notes": "Creates a new note for user. Note types: personal, highlight, thought"
+      },
+      "update-note": {
+        "parameters": ["noteId", "userId (from auth)", "title (optional)", "content (optional)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "PUT /library/notes/{noteId} (NEEDED)",
+        "model": "UpdateNoteRequest, Note",
+        "service_method": "LibraryService.updateNote (NEEDED)",
+        "schema_compliance": true,
+        "sample_request": {
+          "title": "Updated Key Point on Wudu",
+          "content": "Updated content with additional insights about the importance of intention in wudu."
+        },
+        "sample_response": {
+          "id": "note_1",
+          "title": "Updated Key Point on Wudu",
+          "content": "Updated content with additional insights about the importance of intention in wudu.",
+          "contentId": "fiqh_1",
+          "contentTitle": "Fiqh Made Easy",
+          "author": "Salih al-Munajjid",
+          "createdAt": "2025-01-15T10:30:00Z",
+          "modifiedAt": "2025-01-16T09:15:00Z",
+          "type": "personal",
+          "timestamp": "15:30"
+        },
+        "notes": "Updates existing user note. Only allows updating title and content."
+      },
+      "delete-note": {
+        "parameters": ["noteId", "userId (from auth)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "DELETE /library/notes/{noteId} (NEEDED)",
+        "model": "MessageResponse",
+        "service_method": "LibraryService.deleteNote (NEEDED)",
+        "schema_compliance": true,
+        "sample_response": {
+          "success": true,
+          "message": "Note deleted successfully"
+        },
+        "notes": "Permanently deletes user's note"
+      }
+    },
+    "status": "partially_ready",
+    "additional_notes": "Library module combines recently played tracking, bookmarks (existing endpoint), downloads management, following system, and notes functionality. Most endpoints need to be created except bookmarks which exists. Notes system supports three types: personal, highlight, thought with full CRUD operations and filtering capabilities."
+  },
+  "Search": {
+    "screen_file": "lib/screens/search_screen.dart",
+    "brief_description": "Comprehensive search functionality with placeholder widgets for recent searches, trending topics, popular tags, and categorized search results (authors, narrators, content, chapters)",
+    "endpoints": {
+      "get-recent-searches": {
+        "parameters": ["userId (from auth)", "limit (optional)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /search/recent (NEEDED)",
+        "model": "SearchItem[]",
+        "service_method": "SearchService.getRecentSearches (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["query", "searchedAt"],
+        "sample_response": [
+          "Islamic history",
+          "Imam Ahmed Raza Khan",
+          "Fiqh basics",
+          "Quran translation",
+          "Hadith collection"
+        ],
+        "notes": "Returns user's recent search queries as simple string array. Uses SearchItem format from schema."
+      },
+      "get-trending-topics": {
+        "parameters": ["limit (optional)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /search/trending (NEEDED)",
+        "model": "SearchItem[]",
+        "service_method": "SearchService.getTrendingTopics (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["topic", "searchCount"],
+        "sample_response": [
+          "Ramadan preparation",
+          "Islamic finance",
+          "Prophet's biography",
+          "Prayer guidance",
+          "Spiritual development"
+        ],
+        "notes": "Returns currently trending search topics as simple string array. Uses SearchItem format from schema."
+      },
+      "get-popular-tags": {
+        "parameters": ["limit (optional)"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /search/tags (NEEDED)",
+        "model": "SearchItem[]",
+        "service_method": "SearchService.getPopularTags (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["tag", "usageCount"],
+        "sample_response": [
+          "Islamic History",
+          "Hadith Studies",
+          "Quran Commentary", 
+          "Islamic Law",
+          "Spiritual Growth",
+          "Prayer & Worship",
+          "Islamic Ethics"
+        ],
+        "notes": "Returns popular content tags as simple string array. Uses SearchItem format from schema."
+      },
+      "perform-search": {
+        "parameters": ["query", "filters (optional)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "POST /search (NEEDED)",
+        "model": "SearchResults",
+        "service_method": "SearchService.performSearch (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["query", "authors", "narrators", "content", "chapters", "totalResults"],
+        "sample_request": {
+          "query": "islamic history",
+          "filters": {
+            "contentTypes": ["book", "audiobook"],
+            "languages": ["en", "ar"],
+            "categories": ["history"]
+          },
+          "page": 1,
+          "limit": 20
+        },
+        "sample_response": {
+          "query": "islamic history",
+          "totalResults": 47,
+          "authors": [
+            {
+              "id": "author_1",
+              "name": "Dr. Muhammad Hamidullah",
+              "slug": "dr-muhammad-hamidullah",
+              "bio": "Renowned historian and Islamic scholar specializing in early Islamic history",
+              "imageUrl": null,
+              "nationality": "French",
+              "birthYear": "1908",
+              "genres": ["Islamic History", "Biography", "Research"],
+              "awards": ["Islamic Studies Award"],
+              "socialLinks": [],
+              "quote": "History is the best teacher for understanding present challenges",
+              "totalBooks": 25,
+              "isFollowing": false
+            }
+          ],
+          "narrators": [
+            {
+              "id": "narrator_1",
+              "name": "Dr. Yasir Qadhi",
+              "slug": "dr-yasir-qadhi",
+              "bio": "Islamic scholar and educator known for historical lectures",
+              "imageUrl": null,
+              "languages": ["English", "Arabic"],
+              "genres": ["Islamic History", "Education", "Lectures"],
+              "awards": ["Excellence in Islamic Education"],
+              "socialLinks": ["@yasirqadhi"],
+              "experienceYears": 15,
+              "voiceDescription": "Clear, educational, and engaging presentation style",
+              "totalNarrations": 42,
+              "isFollowing": false,
+              "gender": "Male"
+            }
+          ],
+          "content": [
+            {
+              "id": "history_1",
+              "title": "The Early Islamic Conquests",
+              "slug": "early-islamic-conquests",
+              "author": "Dr. Muhammad Hamidullah",
+              "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=History",
+              "rating": 4.8,
+              "duration": "12h 30m",
+              "categories": ["Islamic History", "Early Islam", "Military History"],
+              "description": "Comprehensive study of the rapid expansion of Islam in the 7th century",
+              "isPremium": true
+            }
+          ],
+          "chapters": [
+            {
+              "chapter": {
+                "id": "ch_history_1_3",
+                "title": "The Battle of Yarmuk",
+                "description": "Decisive battle that opened the Levant to Islamic rule",
+                "duration": "45m",
+                "chapterNumber": 3,
+                "status": "published"
+              },
+              "parent": {
+                "id": "history_1",
+                "title": "The Early Islamic Conquests",
+                "author": "Dr. Muhammad Hamidullah",
+                "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=History"
+              }
+            }
+          ]
+        },
+        "notes": "Performs comprehensive search across all content types. Returns categorized results with authors, narrators, content items, and individual chapters. Supports filtering and pagination."
+      },
+      "save-search-history": {
+        "parameters": ["userId (from auth)", "query"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "POST /search/history (NEEDED)",
+        "model": "MessageResponse",
+        "service_method": "SearchService.saveSearchHistory (NEEDED)",
+        "schema_compliance": true,
+        "sample_request": {
+          "query": "islamic history"
+        },
+        "sample_response": {
+          "success": true,
+          "message": "Search saved to history"
+        },
+        "notes": "Saves user's search query to history for recent searches display. Automatically called when user performs search."
+      },
+      "clear-search-history": {
+        "parameters": ["userId (from auth)"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "DELETE /search/history (NEEDED)",
+        "model": "MessageResponse",
+        "service_method": "SearchService.clearSearchHistory (NEEDED)",
+        "schema_compliance": true,
+        "sample_response": {
+          "success": true,
+          "message": "Search history cleared successfully"
+        },
+        "notes": "Clears all user's search history records"
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "Search module provides comprehensive search functionality with placeholder widgets currently using mock data. Features include recent searches tracking, trending topics display, popular tags, and categorized search results (authors, narrators, content, chapters). All search endpoints need to be created. Search results are categorized and displayed in separate sections with result counts."
+  },
+  "Category View": {
+    "screen_file": "lib/screens/category_view_screen.dart",
+    "brief_description": "Category-specific content listing screen that takes a category slug parameter and displays content (from 'content' database table) with filtering by language and voice type, organized in tabs (All, Books, Podcasts)",
+    "endpoints": {
+      "get-category-content": {
+        "parameters": ["categorySlug", "language (optional)", "voiceType (optional)", "contentType (optional)", "page", "limit"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /categories/{slug}/content (NEEDED)",
+        "model": "Content[], Pagination",
+        "service_method": "CategoryService.getCategoryContent (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "author", "authorId", "authorSlug", "coverUrl", "type", "availability", "rating", "duration", "chapterCount", "description", "narrators", "language", "isBookmarked", "isPremium", "categories"],
+        "sample_request": {
+          "categorySlug": "fiqh",
+          "filters": {
+            "language": "Arabic",
+            "voiceType": "Male voice",
+            "contentType": "book"
+          },
+          "page": 1,
+          "limit": 20
+        },
+        "sample_response": {
+          "content": [
+            {
+              "id": "fiqh_1",
+              "title": "Fiqh Made Easy",
+              "slug": "fiqh-made-easy",
+              "author": "Salih al-Munajjid",
+              "authorId": "author_1",
+              "authorSlug": "salih-al-munajjid",
+              "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+              "type": "book",
+              "availability": "glimpse",
+              "rating": 4.6,
+              "duration": "8h 30m",
+              "chapterCount": 12,
+              "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
+              "narrators": [
+                {
+                  "id": "narrator_1",
+                  "name": "Allama Muhammad Ilyas Qadri",
+                  "slug": "allama-muhammad-ilyas-qadri",
+                  "bio": "Founder and spiritual leader of Dawat-e-Islami",
+                  "languages": ["Urdu", "Arabic", "English"],
+                  "voiceDescription": "Inspiring, clear, and spiritually uplifting with excellent Urdu pronunciation",
+                  "gender": "Male"
+                }
+              ],
+              "language": "Arabic",
+              "isBookmarked": false,
+              "isPremium": false,
+              "categories": ["Fiqh", "Islamic Law", "Beginner"]
+            },
+            {
+              "id": "fiqh_2",
+              "title": "Advanced Fiqh Studies",
+              "slug": "advanced-fiqh-studies",
+              "author": "Ibn Qudamah",
+              "authorId": "author_2",
+              "authorSlug": "ibn-qudamah",
+              "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Advanced+Fiqh",
+              "type": "podcast",
+              "availability": "premium",
+              "rating": 4.8,
+              "duration": "15h 45m",
+              "chapterCount": 20,
+              "description": "Deep dive into complex jurisprudential issues for advanced students of Islamic law.",
+              "narrators": [
+                {
+                  "id": "narrator_2",
+                  "name": "Dr. Yasmin Abdullah",
+                  "slug": "dr-yasmin-abdullah",
+                  "bio": "Scholar of Islamic jurisprudence",
+                  "languages": ["Arabic", "English"],
+                  "voiceDescription": "Clear and authoritative female voice",
+                  "gender": "Female"
+                }
+              ],
+              "language": "Arabic",
+              "isBookmarked": true,
+              "isPremium": true,
+              "categories": ["Fiqh", "Islamic Law", "Advanced"]
+            }
+          ],
+          "pagination": {
+            "currentPage": 1,
+            "totalPages": 3,
+            "totalItems": 48,
+            "itemsPerPage": 20,
+            "hasNextPage": true,
+            "hasPreviousPage": false
+          },
+          "filters": {
+            "availableLanguages": ["Arabic", "English", "Urdu"],
+            "availableVoiceTypes": ["Male voice", "Female voice", "Kid voice", "AI voice"],
+            "contentTypes": ["book", "podcast"]
+          }
+        },
+        "notes": "Returns content items for a specific category with optional filtering by language, voice type, and content type. Supports pagination and provides filter options for the frontend."
+      },
+      "get-category-details": {
+        "parameters": ["categorySlug"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": true,
+        "endpoint_path": "GET /categories/{slug}",
+        "model": "Category",
+        "service_method": "CategoryService.getCategoryBySlug",
+        "schema_compliance": true,
+        "required_fields": ["id", "name", "slug", "description", "icon", "imageUrl", "itemCount", "listeningHours"],
+        "sample_response": {
+          "id": "1",
+          "name": "Fiqh",
+          "slug": "fiqh",
+          "description": "Islamic jurisprudence and legal rulings covering all aspects of Islamic law and daily practice",
+          "icon": "IconData(0xe1a5)",
+          "iconPath": "assets/icons/icons8-allah-100.png",
+          "imageUrl": null,
+          "itemCount": 48,
+          "listeningHours": "156h",
+          "color": "#4CAF50"
+        },
+        "notes": "Returns category details including description shown in the header card. This endpoint already exists."
+      },
+      "get-category-stats": {
+        "parameters": ["categorySlug"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /categories/{slug}/stats (NEEDED)",
+        "model": "CategoryStats",
+        "service_method": "CategoryService.getCategoryStats (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["totalContent", "totalBooks", "totalPodcasts", "totalListeningHours", "averageRating"],
+        "sample_response": {
+          "totalContent": 48,
+          "totalBooks": 32,
+          "totalPodcasts": 16,
+          "totalListeningHours": "156h",
+          "averageRating": 4.6,
+          "languageDistribution": {
+            "Arabic": 25,
+            "English": 15,
+            "Urdu": 8
+          },
+          "voiceTypeDistribution": {
+            "Male voice": 35,
+            "Female voice": 10,
+            "Kid voice": 2,
+            "AI voice": 1
+          }
+        },
+        "notes": "Returns statistics for tab counts and filter options. Used to display content counts in tab headers (All, Books, Podcasts)."
+      }
+    },
+    "status": "partially_ready",
+    "additional_notes": "Category View module displays content for a specific category with advanced filtering capabilities. The screen receives a CategoryData object (likely from route parameters with category slug) and shows content in tabbed view (All/Books/Podcasts). Features include language filtering, voice type filtering, and category description header. Category details endpoint exists, but category content and stats endpoints need to be created. The filtering system supports dynamic content type separation and voice type matching."
+  },
+  "Playlist View": {
+    "screen_file": "lib/screens/playlist_screen.dart",
+    "brief_description": "Comprehensive content detail page showing playlist/content information, author/narrator details (fetched from memory using IDs), chapters list, download options, and reviews. Authors and narrators are pre-loaded at app start and retrieved from memory using authorId and narratorId[] arrays.",
+    "endpoints": {
+      "get-content-details": {
+        "parameters": ["contentSlug"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /content/{slug} (NEEDED)",
+        "model": "Content",
+        "service_method": "ContentService.getContentBySlug (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "author", "authorId", "authorSlug", "coverUrl", "type", "availability", "rating", "duration", "chapterCount", "description", "narrators", "language", "isBookmarked", "isPremium", "categories", "reviews"],
+        "sample_response": {
+          "id": "fiqh_1",
+          "title": "Fiqh Made Easy",
+          "slug": "fiqh-made-easy",
+          "author": "Salih al-Munajjid",
+          "authorId": "author_1",
+          "authorSlug": "salih-al-munajjid",
+          "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
+          "type": "book",
+          "availability": "glimpse",
+          "rating": 4.6,
+          "duration": "8h 30m",
+          "chapterCount": 12,
+          "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
+          "narrators": ["narrator_1", "narrator_2"],
+          "language": "Arabic",
+          "isBookmarked": false,
+          "isPremium": false,
+          "categories": ["Fiqh", "Islamic Law", "Beginner"],
+          "progress": 0.65,
+          "playedWhen": "2 hours ago",
+          "playedMinutes": 45,
+          "isFinished": false,
+          "downloadSize": "4.2 GB",
+          "isDownloading": false,
+          "downloadProgress": 1.0,
+          "reviews": [
+            {
+              "id": "review_1",
+              "userId": "user_1",
+              "userName": "Ahmad Mahmoud",
+              "userAvatar": "",
+              "rating": 5.0,
+              "reviewText": "Absolutely amazing content! The narrator's voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.",
+              "createdAt": "2 days ago",
+              "upvotes": 15,
+              "downvotes": 1,
+              "isUserUpvoted": false,
+              "isUserDownvoted": false,
+              "isOwnReview": false
+            }
+          ]
+        },
+        "notes": "Returns complete content details with embedded reviews. Authors and narrators are retrieved from in-memory cache using authorId and narratorId[] arrays."
+      },
+      "get-content-chapters": {
+        "parameters": ["narratorId", "contentId"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /content/{contentId}/chapters (NEEDED)",
+        "model": "Chapter[]",
+        "service_method": "ContentService.getContentChapters (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "slug", "description", "duration", "chapterNumber", "status", "narratorId", "progress", "pausedAt", "sizeInMB"],
+        "sample_response": [
+          {
+            "id": "ch_1_1",
+            "title": "Introduction to Fiqh",
+            "slug": "introduction-to-fiqh",
+            "description": "An overview of Islamic jurisprudence and its importance in Muslim life.",
+            "duration": "45m",
+            "chapterNumber": 1,
+            "status": "completed",
+            "narratorId": "narrator_1",
+            "progress": 1.0,
+            "pausedAt": null,
+            "sizeInMB": 42.5
+          },
+          {
+            "id": "ch_1_2",
+            "title": "Sources of Islamic Law",
+            "slug": "sources-of-islamic-law",
+            "description": "Primary and secondary sources used in Islamic jurisprudence including Quran, Sunnah, and scholarly consensus.",
+            "duration": "52m",
+            "chapterNumber": 2,
+            "status": "paused",
+            "narratorId": "narrator_1",
+            "progress": 0.65,
+            "pausedAt": "32:15",
+            "sizeInMB": 48.2
+          },
+          {
+            "id": "ch_1_3",
+            "title": "Principles of Purification",
+            "slug": "principles-of-purification",
+            "description": "Detailed explanation of Wudu, Ghusl, and Tayammum according to Islamic jurisprudence.",
+            "duration": "38m",
+            "chapterNumber": 3,
+            "status": "notPlayed",
+            "narratorId": "narrator_1",
+            "progress": 0.0,
+            "pausedAt": null,
+            "sizeInMB": 35.8
+          }
+        ],
+        "notes": "Returns chapters for specific content filtered by narrator. Used when user selects different narrator to show relevant chapters. Includes progress tracking and download size information."
+      },
+      "get-review-summary": {
+        "parameters": ["contentId"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /content/{contentId}/review-summary (NEEDED)",
+        "model": "ReviewSummary",
+        "service_method": "ReviewService.getReviewSummary (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["averageRating", "totalReviews", "ratingDistribution"],
+        "sample_response": {
+          "averageRating": 4.5,
+          "totalReviews": 847,
+          "ratingDistribution": {
+            "5": 423,
+            "4": 298,
+            "3": 89,
+            "2": 25,
+            "1": 12
+          }
+        },
+        "notes": "Returns aggregated review statistics for the AddReviewCard component. Used to display review summary and ratings distribution."
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "Playlist View module provides comprehensive content detail page with multiple sections: content info, trial stats, actions (play/download), narrator selection, chapters list, download options, and reviews. Key features include narrator switching (chapters filter by selected narrator), selective chapter downloads, progress tracking, bookmark functionality, and review integration. Authors and narrators are pre-loaded in memory at app start and accessed using authorId and narratorId[] arrays from the content object. All main endpoints need to be created - currently using mock data."
+  },
+
+  "Subscription Module": {
+    "screen_file": "@lib/screens/subscription_screen.dart, @lib/screens/upgrade_plan_screen.dart",
+    "brief_description": "View all subscription plans with current/popular indicators and upgrade functionality with coupon support",
+    "note": "Subscription data is fetched on app launch and stored in memory, similar to authors and narrators",
+    "endpoints": {
+      "get-subscription-plans": {
+        "description": "Get all available subscription plans (loaded from memory)",
+        "parameters": [],
+        "endpoint_exists": true,
+        "endpoint_path": "GET /subscription/plans",
+        "sample_response": {
+          "plans": [
+            {
+              "id": "plan_1",
+              "name": "Scroll Glimpse",
+              "slug": "scroll-glimpse",
+              "type": "Free Plan",
+              "price": "0 SAR",
+              "timePeriod": "Lifetime",
+              "pros": [
+                "Experience a truly distraction-free listening environment",
+                "Access a curated selection of introductory content",
+                "Discover the app's quality and ease of use",
+                "Basic search functionality",
+                "Try premium content: 15 minutes per month of premium audiobooks"
+              ],
+              "cons": [
+                "Your content options are limited.",
+                "Not all scholars or series will be available.",
+                "No offline premium content."
+              ],
+              "accentColor": "#9E9E9E",
+              "isPopular": false,
+              "isCurrent": false,
+              "description": "Basic access to introductory Islamic content",
+              "features": [
+                {
+                  "name": "Basic Content Access",
+                  "description": "Curated introductory content",
+                  "included": true
+                },
+                {
+                  "name": "Premium Preview",
+                  "description": "15 minutes monthly of premium content",
+                  "included": true
+                }
+              ],
+              "trialDays": 14,
+              "planIcon": "visibility_rounded"
+            },
+            {
+              "id": "plan_2",
+              "name": "Scroll Premium",
+              "slug": "scroll-premium",
+              "type": "Paid Plan",
+              "price": "29.99 SAR",
+              "timePeriod": "Monthly",
+              "pros": [
+                "Unlock the entire, vast content library",
+                "Access all exclusive audiobooks and lecture series",
+                "Enjoy immediate access to all new releases",
+                "Experience seamless listening across all your devices",
+                "Benefit from the flexibility to cancel anytime",
+                "Enjoy offline playback for all content",
+                "Download as much content as you want",
+                "Option to volunteer your own narration. Each book narration gets you 1 more month of Premium plan"
+              ],
+              "cons": [],
+              "accentColor": "#4CAF50",
+              "isPopular": true,
+              "isCurrent": false,
+              "description": "Full access to premium Islamic content with unlimited downloads and offline playback",
+              "features": [
+                {
+                  "name": "Unlimited Access",
+                  "description": "Full access to entire content library",
+                  "included": true
+                },
+                {
+                  "name": "Offline Downloads",
+                  "description": "Download content for offline listening",
+                  "included": true
+                },
+                {
+                  "name": "Multi-device Sync",
+                  "description": "Seamless experience across all devices",
+                  "included": true
+                }
+              ],
+              "trialDays": 14,
+              "planIcon": "stars_rounded"
+            },
+            {
+              "id": "plan_3",
+              "name": "Scroll Scholar's Circle",
+              "slug": "scroll-scholars-circle",
+              "type": "Paid Plan",
+              "price": "299.99 SAR",
+              "timePeriod": "Annual",
+              "pros": [
+                "Save 59.89 SAR compared to monthly payments",
+                "Enjoy uninterrupted, comprehensive learning for a full year",
+                "Secure your access at a lower annual rate",
+                "Make one convenient payment for 12 months of premium content"
+              ],
+              "cons": [],
+              "accentColor": "#9C27B0",
+              "isPopular": false,
+              "isCurrent": false,
+              "description": "Annual subscription with significant savings for dedicated learners",
+              "features": [
+                {
+                  "name": "Annual Savings",
+                  "description": "Save compared to monthly billing",
+                  "included": true
+                },
+                {
+                  "name": "Full Premium Access",
+                  "description": "All premium features included",
+                  "included": true
+                }
+              ],
+              "trialDays": 14,
+              "savings": "59.89 SAR",
+              "originalPrice": "359.88 SAR",
+              "planIcon": "school_rounded"
+            }
+          ]
+        },
+        "notes": "Plans are loaded at app startup and stored in memory for fast access. Current plan indicator comes from user subscription status."
+      },
+      "get-user-subscription": {
+        "description": "Get current user subscription status and billing information",
+        "parameters": ["userId"],
+        "endpoint_exists": true,
+        "endpoint_path": "GET /user/subscription",
+        "sample_response": {
+          "id": "sub_1",
+          "userId": "user_1",
+          "planId": "plan_1",
+          "status": "ACTIVE",
+          "currentPeriodStart": "2025-01-01T00:00:00Z",
+          "currentPeriodEnd": "2025-12-31T23:59:59Z",
+          "cancelAtPeriodEnd": false,
+          "stripeCustomerId": "cus_1234567890",
+          "stripeSubscriptionId": "sub_1234567890",
+          "createdAt": "2025-01-01T00:00:00Z",
+          "updatedAt": "2025-01-01T00:00:00Z",
+          "canceledAt": null,
+          "plan": {
+            "id": "plan_1",
+            "name": "Scroll Glimpse",
+            "type": "Free Plan",
+            "price": "0 SAR",
+            "timePeriod": "Lifetime"
+          },
+          "daysRemaining": 335,
+          "progressPercentage": 0.08,
+          "isTrialPeriod": false,
+          "nextBillingDate": "2025-02-01T00:00:00Z",
+          "autoRenew": true
+        },
+        "notes": "Returns user's current subscription with plan details. Used to determine which plan shows 'Current' indicator."
+      },
+      "apply-coupon": {
+        "description": "Validate and apply coupon code for subscription upgrade",
+        "parameters": ["couponCode", "planId"],
+        "endpoint_exists": true,
+        "endpoint_path": "POST /subscription/apply-coupon",
+        "sample_response": {
+          "valid": true,
+          "couponCode": "SAVE20",
+          "discountType": "percentage",
+          "discountValue": 20,
+          "originalPrice": "29.99 SAR",
+          "discountedPrice": "23.99 SAR",
+          "savings": "6.00 SAR",
+          "message": "Coupon applied! 20% discount"
+        },
+        "notes": "Validates coupon codes like SAVE20 (20% off) and FIRST10 (10% off). Returns discount calculation for price display."
+      },
+      "upgrade-subscription": {
+        "description": "Process subscription upgrade with optional coupon",
+        "parameters": ["userId", "planId", "couponCode?", "paymentMethodId"],
+        "endpoint_exists": true,
+        "endpoint_path": "POST /subscription/upgrade",
+        "sample_response": {
+          "success": true,
+          "subscriptionId": "sub_1234567890",
+          "planId": "plan_2",
+          "status": "ACTIVE",
+          "currentPeriodStart": "2025-01-15T00:00:00Z",
+          "currentPeriodEnd": "2025-02-15T00:00:00Z",
+          "amountPaid": "23.99 SAR",
+          "nextBillingDate": "2025-02-15T00:00:00Z",
+          "message": "Successfully upgraded to Scroll Premium!"
+        },
+        "notes": "Processes payment through Stripe and updates user subscription. Includes coupon application if provided."
+      }
+    },
+    "status": "partially_ready",
+    "additional_notes": "Subscription module displays all available subscription plans with current and popular plan indicators. Features include plan comparison with pros/cons, coupon code application with discount calculation, subscription upgrade flow with payment processing, and subscription status tracking. Plans data is loaded at app startup and cached in memory for performance, similar to authors and narrators. User subscription status determines which plan shows as 'Current'. Upgrade screen handles payment confirmation with plan duration display and terms acceptance."
+  }
+}

@@ -88,6 +88,7 @@ class ScrollApi {
     // Automatically set session token for future requests
     if (response['sessionToken'] != null) {
       await _client.setSessionToken(response['sessionToken']);
+      print('🔍 Session Token: ${response['sessionToken']}');
     }
     
     return response;

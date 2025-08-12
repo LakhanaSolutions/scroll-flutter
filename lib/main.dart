@@ -5,12 +5,17 @@ import 'providers/theme_provider.dart' as providers;
 import 'providers/locale_provider.dart';
 import 'providers/auth_provider.dart';
 import 'services/preferences_service.dart';
+import 'api/api_client.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_extensions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferencesService.init();
+  
+  // Initialize API client
+  ApiClient().initialize();
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 

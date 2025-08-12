@@ -15,8 +15,16 @@ class ApiClient {
   String? _sessionToken;
   String _language = 'en';
   late final String _deviceType;
+  bool _isInitialized = false;
 
   void initialize({String? baseUrl, String? language}) {
+    if (_isInitialized) {
+      if (kDebugMode) {
+        print('⚠️  ApiClient already initialized, skipping re-initialization');
+      }
+      return;
+    }
+    
     _language = language ?? 'en';
     _deviceType = _getDeviceType();
     
@@ -30,6 +38,7 @@ class ApiClient {
       print('⏱️  Timeouts: 30s (connect/receive/send)');
       print('=' * 60);
     }
+    
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl ?? ApiConstants.baseUrl,
       connectTimeout: const Duration(seconds: 30),
@@ -58,6 +67,8 @@ class ApiClient {
     if (kDebugMode) {
       print('✅ ApiClient initialized successfully\n');
     }
+    
+    _isInitialized = true;
   }
 
   Future<void> _onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -88,19 +99,19 @@ class ApiClient {
         });
       }
       
-      print('📨 Headers:');
-      options.headers.forEach((key, value) {
-        // Hide sensitive headers in logs
-        if (key.toLowerCase().contains('authorization')) {
-          final token = value.toString();
-          final maskedToken = token.length > 20 
-              ? '${token.substring(0, 10)}...${token.substring(token.length - 10)}'
-              : '***masked***';
-          print('   $key: $maskedToken');
-        } else {
-          print('   $key: $value');
-        }
-      });
+      // print('📨 Headers:');
+      // options.headers.forEach((key, value) {
+      //   // Hide sensitive headers in logs
+      //   if (key.toLowerCase().contains('authorization')) {
+      //     final token = value.toString();
+      //     final maskedToken = token.length > 20 
+      //         ? '${token.substring(0, 10)}...${token.substring(token.length - 10)}'
+      //         : '***masked***';
+      //     print('   $key: $maskedToken');
+      //   } else {
+      //     print('   $key: $value');
+      //   }
+      // });
       
       if (options.data != null) {
         print('📦 Request Body:');
@@ -137,12 +148,12 @@ class ApiClient {
         print('⏱️  Duration: ${duration}ms');
       }
       
-      if (response.headers.map.isNotEmpty) {
-        print('📨 Response Headers:');
-        response.headers.map.forEach((key, values) {
-          print('   $key: ${values.join(', ')}');
-        });
-      }
+      // if (response.headers.map.isNotEmpty) {
+      //   print('📨 Response Headers:');
+      //   response.headers.map.forEach((key, values) {
+      //     print('   $key: ${values.join(', ')}');
+      //   });
+      // }
       
       if (response.data != null) {
         print('📦 Response Body:');
@@ -216,6 +227,7 @@ class ApiClient {
     try {
       final prefs = await SharedPreferences.getInstance();
       _sessionToken = prefs.getString('session_token');
+      print('🔍 Session Token: $_sessionToken');
     } catch (e) {
       print('Failed to load session token: $e');
     }
@@ -258,6 +270,23 @@ class ApiClient {
   bool get isAuthenticated => _sessionToken != null && _sessionToken!.isNotEmpty;
   String get language => _language;
   String get deviceType => _deviceType;
+
+  /// Validate current session by calling the getSession API
+  /// Returns true if session is valid, false otherwise
+  Future<bool> validateSession() async {
+    if (!isAuthenticated) return false;
+    try {
+      final response = await get<Map<String, dynamic>>(ApiConstants.getSession);
+      final user = response['user'];
+      final isValid = user != null;
+      if (!isValid) await _clearSessionToken();
+      return isValid;
+    } catch (e) {
+      await _clearSessionToken();
+      return false;
+    }
+  }
+
 
   /// Format JSON data for pretty printing in logs
   String _formatJson(dynamic data) {

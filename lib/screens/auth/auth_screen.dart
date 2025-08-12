@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glowy_borders/glowy_borders.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
@@ -10,14 +9,13 @@ import 'package:scroll/screens/auth/welcome_content_widget.dart';
 import 'package:scroll/screens/auth/login_content_widget.dart';
 import 'package:scroll/screens/auth/request_otp_content_widget.dart';
 import 'package:scroll/screens/auth/enter_otp_content_widget.dart';
-import '../../widgets/bottom_sheets/settings_modals.dart';
-import '../../models/auth_state_model.dart';
-import '../../providers/auth_provider.dart';
+import '../../api/scroll_api.dart';
 import '../../api/api_client.dart';
+import '../../api/api_exceptions.dart';
 
 enum AuthMode { welcome, email, requestOtp, enterOtp }
 
-class AuthScreen extends ConsumerStatefulWidget {
+class AuthScreen extends StatefulWidget {
   final String? backgroundImage;
 
   const AuthScreen({
@@ -26,21 +24,26 @@ class AuthScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AuthScreen> createState() => _AuthScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends ConsumerState<AuthScreen>
+class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _blurAnimation;
   AuthMode _currentMode = AuthMode.welcome;
   bool _animateLottie = false;
+  bool _isLoading = false;
+  String? _errorMessage;
+  String? _userName;
   
   // Controllers for form inputs
   final TextEditingController _emailController = TextEditingController();
   final List<TextEditingController> _otpControllers = List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
   String _userEmail = '';
+
+  final ScrollApi _api = ScrollApi();
 
   @override
   void initState() {
@@ -57,12 +60,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       curve: Curves.easeInOut,
     ));
     
-    // Initialize API client and auth provider
+    // Initialize API client
     ApiClient().initialize();
-    
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authProvider.notifier).initialize();
-    });
   }
 
   @override
@@ -78,6 +77,119 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     super.dispose();
   }
 
+  void _setLoading(bool loading) {
+    setState(() {
+      _isLoading = loading;
+      if (loading) {
+        _errorMessage = null; // Clear errors when starting new operation
+      }
+    });
+  }
+
+  void _setError(String error) {
+    setState(() {
+      _isLoading = false;
+      _errorMessage = error;
+    });
+  }
+
+  void _clearError() {
+    setState(() {
+      _errorMessage = null;
+    });
+  }
+
+  Future<void> _handleEmailSubmit() async {
+    final email = _emailController.text.trim();
+    
+    if (email.isEmpty) {
+      _setError('Email is required');
+      return;
+    }
+
+    if (!_isValidEmail(email)) {
+      _setError('Please enter a valid email address');
+      return;
+    }
+
+    _setLoading(true);
+    
+    try {
+      final response = await _api.checkEmail(email: email);
+      final name = response['name'] as String?;
+
+      setState(() {
+        _userEmail = email;
+        _userName = (name == null || name == 'New User') ? null : name;
+        _currentMode = AuthMode.requestOtp;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (e is ApiException) {
+        _setError(e.message);
+      } else {
+        _setError('Failed to verify email. Please try again.');
+      }
+    }
+  }
+
+  Future<void> _handleSendOtp() async {
+    if (_userEmail.isEmpty) {
+      _setError('Email is required');
+      return;
+    }
+
+    _setLoading(true);
+    
+    try {
+      await _api.requestOtp(email: _userEmail);
+      setState(() {
+        _currentMode = AuthMode.enterOtp;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (e is ApiException) {
+        _setError(e.message);
+      } else {
+        _setError('Failed to send verification code. Please try again.');
+      }
+    }
+  }
+
+  Future<void> _handleVerifyOtp() async {
+    final otp = _otpControllers.map((controller) => controller.text).join();
+    
+    if (otp.length != 6) {
+      _setError('Please enter the complete 6-digit code');
+      return;
+    }
+
+    _setLoading(true);
+    
+    try {
+      final response = await _api.verifyOtp(email: _userEmail, otp: otp);
+      
+      // Handle successful authentication
+      final user = response['user'] as Map<String, dynamic>?;
+      final isNewUser = user?['name'] == null;
+      
+      // Navigate based on user status
+      if (isNewUser) {
+        context.push('/finish-profile');
+      } else {
+        context.push('/home');
+      }
+    } catch (e) {
+      if (e is ValidationException) {
+        _setError('Invalid verification code. Please try again.');
+      } else if (e is ApiException) {
+        _setError(e.message);
+      } else {
+        _setError('Failed to verify code. Please try again.');
+      }
+    }
+  }
+
   void _handlePrimaryButton(BuildContext context) {
     switch (_currentMode) {
       case AuthMode.welcome:
@@ -88,21 +200,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         _animationController.forward();
         break;
       case AuthMode.email:
-        if (_emailController.text.trim().isEmpty) {
-          // Handle email validation error - this will be shown via the auth provider
-          return;
-        }
-        _userEmail = _emailController.text.trim();
-        ref.read(authProvider.notifier).submitEmail(_userEmail);
+        _handleEmailSubmit();
         break;
       case AuthMode.requestOtp:
-        ref.read(authProvider.notifier).sendOTP();
+        _handleSendOtp();
         break;
       case AuthMode.enterOtp:
-        String otp = _otpControllers.map((controller) => controller.text).join();
-        if (otp.length == 6) {
-          ref.read(authProvider.notifier).verifyOTP(otp);
-        }
+        _handleVerifyOtp();
         break;
     }
   }
@@ -117,49 +221,38 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           _currentMode = AuthMode.welcome;
           _animateLottie = false;
           _emailController.clear();
+          _clearError();
         });
         _animationController.reverse();
         break;
       case AuthMode.requestOtp:
       case AuthMode.enterOtp:
-        ref.read(authProvider.notifier).logout();
         setState(() {
           _currentMode = AuthMode.welcome;
           _animateLottie = false;
           _userEmail = '';
+          _userName = null;
           _emailController.clear();
           for (var controller in _otpControllers) {
             controller.clear();
           }
+          _clearError();
         });
         _animationController.reverse();
         break;
     }
   }
   
-  String _getPrimaryButtonText(AuthState authState) {
+  String _getPrimaryButtonText() {
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContent.defaultContent.buttonText;
       case AuthMode.email:
-        if (authState.status == AuthStatus.loading) {
-          return 'Checking...';
-        }
-        return 'Continue';
+        return _isLoading ? 'Checking...' : 'Continue';
       case AuthMode.requestOtp:
-        if (authState.status == AuthStatus.loading) {
-          return 'Sending...';
-        }
-        if (authState.user?.isNew == true) {
-          return 'Send Verification Code';
-        } else {
-          return 'Send Verification Code';
-        }
+        return _isLoading ? 'Sending...' : 'Send Verification Code';
       case AuthMode.enterOtp:
-        if (authState.status == AuthStatus.otpVerifying) {
-          return 'Verifying...';
-        }
-        return 'Verify Code';
+        return _isLoading ? 'Verifying...' : 'Verify Code';
     }
   }
   
@@ -171,22 +264,19 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         return 'Go back';
       case AuthMode.requestOtp:
       case AuthMode.enterOtp:
-        return 'Logout';
+        return 'Start Over';
     }
   }
 
   String _getTitle() {
-    final authState = ref.watch(authProvider);
-    
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContent.defaultContent.title;
       case AuthMode.email:
         return 'Welcome to Scroll';
       case AuthMode.requestOtp:
-        final userName = authState.user?.name;
-        if (userName != null && userName.isNotEmpty) {
-          return 'Welcome $userName';
+        if (_userName != null && _userName!.isNotEmpty) {
+          return 'Welcome $_userName';
         }
         return 'Verify Your Email';
       case AuthMode.enterOtp:
@@ -205,6 +295,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       case AuthMode.enterOtp:
         return 'Enter the 6-digit code sent to\n$_userEmail';
     }
+  }
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
   Widget _buildHeaderContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme) {
@@ -258,7 +352,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     );
   }
   
-  Widget _buildCurrentContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme, AuthState authState) {
+  Widget _buildCurrentContent(bool isTablet, bool isDesktop, Size screenSize, ThemeData theme) {
     switch (_currentMode) {
       case AuthMode.welcome:
         return WelcomeContentWidget(
@@ -277,11 +371,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           theme: theme,
           emailController: _emailController,
           onEmailSubmit: () => _handlePrimaryButton(context),
-          errorMessage: authState.hasError ? authState.errorMessage : null,
+          errorMessage: _errorMessage,
           onEmailChanged: (email) {
-            // Clear errors when user starts typing
-            if (authState.hasError) {
-              ref.read(authProvider.notifier).clearError();
+            if (_errorMessage != null) {
+              _clearError();
             }
           },
         );
@@ -303,11 +396,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           otpControllers: _otpControllers,
           otpFocusNodes: _otpFocusNodes,
           onOtpComplete: () => _handlePrimaryButton(context),
-          errorMessage: authState.hasError ? authState.errorMessage : null,
+          errorMessage: _errorMessage,
           onOtpChanged: (otp) {
-            // Clear errors when user starts typing
-            if (authState.hasError) {
-              ref.read(authProvider.notifier).clearError();
+            if (_errorMessage != null) {
+              _clearError();
             }
           },
         );
@@ -320,33 +412,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width > 600;
     final isDesktop = screenSize.width > 1200;
-    
-    final authState = ref.watch(authProvider);
-    final isLoading = ref.watch(isLoadingProvider);
-
-    // Listen for authentication state changes
-    ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next.status == AuthStatus.authenticated) {
-        // Navigate based on user status
-        if (next.user?.isNew == true) {
-          context.push('/finish-profile');
-        } else {
-          context.push('/home');
-        }
-      } else if (next.status == AuthStatus.userDetected) {
-        // Move to requestOtp mode
-        setState(() {
-          _currentMode = AuthMode.requestOtp;
-          _userEmail = next.email ?? '';
-          _emailController.text = _userEmail;
-        });
-      } else if (next.status == AuthStatus.otpSent) {
-        // Move to enterOtp mode
-        setState(() {
-          _currentMode = AuthMode.enterOtp;
-        });
-      }
-    });
     
     return Scaffold(
       body: Container(
@@ -400,7 +465,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         child: Column(
                           children: [
                             _buildHeaderContent(isTablet, isDesktop, screenSize, theme),
-                            _buildCurrentContent(isTablet, isDesktop, screenSize, theme, authState),
+                            _buildCurrentContent(isTablet, isDesktop, screenSize, theme),
                                   Spacer(),
 
         // Get Started Button with Glowy Border
@@ -426,8 +491,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   borderRadius: BorderRadius.circular(28),
                 ),
               ),
-              onPressed: isLoading ? null : () => _handlePrimaryButton(context),
-              child: isLoading
+              onPressed: _isLoading ? null : () => _handlePrimaryButton(context),
+              child: _isLoading
                   ? SizedBox(
                       width: 20,
                       height: 20,
@@ -437,7 +502,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       ),
                     )
                   : Text(
-                      _getPrimaryButtonText(authState),
+                      _getPrimaryButtonText(),
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontSize: isTablet ? 18 : 16,
                         height: 1.4,
@@ -473,7 +538,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 top: 16,
                 right: 16,
                 child: IconButton(
-                  onPressed: () => showThemeModeBottomSheet(context, ref),
+                  onPressed: () {
+                    // TODO: Implement theme toggle without riverpod
+                    // For now, just show a placeholder
+                  },
                   icon: Icon(
                     CupertinoIcons.paintbrush,
                     color: Colors.white.withValues(alpha: 0.9),

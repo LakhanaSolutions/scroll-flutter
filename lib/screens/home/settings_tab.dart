@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:scroll/theme/app_gradients.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../api/api_client.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_icons.dart';
 import '../../widgets/text/app_text.dart';
@@ -235,7 +236,14 @@ class SettingsTab extends ConsumerWidget {
               width: double.infinity,
               child: AppSecondaryButton(
                 onPressed: () async {
+                  // Clear session token from ApiClient
+                  final apiClient = ApiClient();
+                  await apiClient.signOut();
+                  
+                  // Clear provider state
                   await ref.read(authProvider.notifier).logout();
+                  
+                  // Navigate to welcome page
                   if (context.mounted) {
                     context.go('/welcome');
                   }

@@ -3,8 +3,6 @@ import 'package:scroll/screens/auth/auth_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/theme_demo_screen.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/otp_verification_screen.dart';
 import '../screens/subscription_screen.dart';
 import '../screens/manage_devices_screen.dart';
 import '../screens/notifications_screen.dart';
@@ -31,12 +29,13 @@ import '../screens/downloads_screen.dart';
 import '../screens/following_screen.dart';
 import '../data/mock_data.dart';
 import '../services/token_service.dart';
+import '../api/api_client.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   redirect: (context, state) async {
-    // Check if user has a valid token
-    final hasToken = await TokenService.hasToken();
+    // Initialize API client if not already initialized
+    final apiClient = ApiClient();
     
     final isOnAuthRoute = state.matchedLocation.startsWith('/welcome') ||
                          state.matchedLocation.startsWith('/login') ||
@@ -45,13 +44,16 @@ final appRouter = GoRouter(
     
     final isOnPublicRoute = state.matchedLocation == '/about';
     
-    // If user has token and is on auth route, redirect to home
-    if (hasToken && isOnAuthRoute) {
+    // Check if user has a valid session by calling the API
+    final hasValidSession = await apiClient.validateSession();
+    
+    // If user has valid session and is on auth route, redirect to home
+    if (hasValidSession && isOnAuthRoute) {
       return '/home';
     }
     
-    // If user has no token and is not on auth route or public route, redirect to welcome
-    if (!hasToken && !isOnAuthRoute && !isOnPublicRoute) {
+    // If user has no valid session and is not on auth route or public route, redirect to welcome
+    if (!hasValidSession && !isOnAuthRoute && !isOnPublicRoute) {
       return '/welcome';
     }
     
@@ -63,14 +65,6 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/welcome',
       builder: (context, state) => const AuthScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/verify-otp',
-      builder: (context, state) => const OTPVerificationScreen(),
     ),
     GoRoute(
       path: '/finish-profile',

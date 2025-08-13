@@ -614,6 +614,7 @@ model Note {
   title       String?
   noteContent String
   type        NoteType @default(PERSONAL)
+  color       String?  // Color category from UI: blue, green, yellow, orange, red, purple, teal, pink
   
   // Position in content
   timestamp   Int?     // Position in seconds where note was taken

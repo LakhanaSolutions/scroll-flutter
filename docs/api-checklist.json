@@ -1,4 +1,41 @@
 {
+  "_format_standardization": {
+    "description": "Comprehensive standardization of time and date formats throughout this API checklist to maintain consistency with database schema",
+    "time_fields": {
+      "fields_affected": ["duration", "timestamp", "time", "pausedAt", "listeningTime", "totalListeningTime", "playedMinutes"],
+      "format": "seconds (integer)",
+      "database_reference": "Database schema (schema.prisma) stores all duration fields as 'Int // in seconds' (lines 127, 178, 485, 486, 756)",
+      "conversion_examples": {
+        "45h 30m": 163800,
+        "8h 30m": 30600,
+        "45m": 2700,
+        "15:30": 930,
+        "32:15": 1935
+      },
+      "notes": "Frontend should handle conversion to human-readable formats (e.g., '8h 30m', '15:30') for display purposes while APIs consistently use seconds for all time values"
+    },
+    "date_fields": {
+      "fields_affected": ["createdAt", "updatedAt", "lastLoginAt", "publishedAt", "playedWhen", "nextBillingDate", "currentPeriodStart", "currentPeriodEnd", "releaseDate", "scheduledFor", "readAt", "archivedAt", "resolvedAt", "startedAt", "completedAt", "endedAt", "lastPlayedAt", "sessionDate", "lastResetAt", "periodStart", "periodEnd"],
+      "format": "ISO 8601 (YYYY-MM-DDTHH:mm:ssZ)",
+      "database_reference": "Database schema (schema.prisma) uses DateTime type which maps to ISO 8601 format",
+      "conversion_examples": {
+        "2 days ago": "2025-01-11T14:30:00Z",
+        "1 day ago": "2025-01-12T10:00:00Z",
+        "2 hours ago": "2025-01-13T06:30:00Z"
+      },
+      "notes": "All DateTime fields use UTC timezone (Z suffix). Frontend should handle timezone conversion and localization for display"
+    },
+    "field_renaming": {
+      "listeningHours_to_listeningTime": {
+        "old_field": "listeningHours",
+        "new_field": "listeningTime", 
+        "reason": "More accurate naming since the value represents time duration in seconds, not hours",
+        "database_schema_update_needed": "Update Content and Category tables: rename 'listeningHours Int @default(0)' to 'listeningTime Int @default(0)' in schema.prisma lines 132 and 325"
+      }
+    },
+    "standardization_date": "2025-01-13",
+    "implementation_notes": "All API responses must use these standardized formats. Frontend components should implement consistent parsing and formatting utilities for time and date display."
+  },
   "Auth Module": {
     "screen_file": "Auth Module (check-email, request-otp, verify-otp)",
     "brief_description": "User authentication flow with email validation, OTP request and verification",
@@ -83,7 +120,7 @@
           "author": "Imam Ahmed Raza Khan Barelvi",
           "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
           "rating": 4.9,
-          "duration": "45h 30m",
+          "duration": 163800,
           "categories": ["Quran", "Translation", "Barelvi"],
           "description": "A comprehensive translation and commentary of the Holy Quran by the renowned Islamic scholar Imam Ahmed Raza Khan Barelvi.",
           "isPremium": true
@@ -108,10 +145,10 @@
             "author": "Salih al-Munajjid",
             "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
             "rating": 4.6,
-            "duration": "8h 30m",
+            "duration": 30600,
             "categories": ["Fiqh", "Islamic Law", "Beginner"],
             "progress": 0.65,
-            "playedWhen": "2 hours ago",
+            "playedWhen": "2025-01-12T08:30:00Z",
             "playedMinutes": 45,
             "isFinished": false
           },
@@ -122,10 +159,10 @@
             "author": "Ibn Hajar al-Asqalani",
             "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Bukhari",
             "rating": 4.8,
-            "duration": "25h 15m",
+            "duration": 90900,
             "categories": ["Hadith", "Commentary", "Advanced"],
             "progress": 0.23,
-            "playedWhen": "1 day ago",
+            "playedWhen": "2025-01-11T10:00:00Z",
             "playedMinutes": 320,
             "isFinished": false
           }
@@ -150,7 +187,7 @@
             "author": "Ibn Kathir",
             "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=Ibn+Kathir",
             "rating": 4.9,
-            "duration": "120h 45m",
+            "duration": 434700,
             "categories": ["Tafsir", "Quran", "Classical"]
           },
           {
@@ -160,7 +197,7 @@
             "author": "Safiur Rahman Mubarakpuri",
             "coverUrl": "https://via.placeholder.com/150x200/9C27B0/white?text=Seerah",
             "rating": 4.7,
-            "duration": "18h 30m",
+            "duration": 66600,
             "categories": ["Seerah", "Biography", "History"]
           },
           {
@@ -170,7 +207,7 @@
             "author": "Muhammad ibn Abdul Wahhab",
             "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Tawheed",
             "rating": 4.8,
-            "duration": "12h 15m",
+            "duration": 44100,
             "categories": ["Aqeedah", "Tawheed", "Fundamental"]
           }
         ],
@@ -204,7 +241,7 @@
                 "author": "Imam Ahmed Raza Khan Barelvi",
                 "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Kanz+ul+Iman",
                 "rating": 4.9,
-                "duration": "45h 30m",
+                "duration": 163800,
                 "categories": ["Quran", "Translation", "Barelvi"]
               }
             ]
@@ -226,7 +263,7 @@
                 "author": "Ibn Sina",
                 "coverUrl": "https://via.placeholder.com/150x200/2196F3/white?text=Peace",
                 "rating": 4.7,
-                "duration": "12h 15m",
+                "duration": 44100,
                 "categories": ["Spirituality", "Meditation", "Peace"]
               }
             ]
@@ -248,7 +285,7 @@
                 "author": "Dr. Muhammad Hamidullah",
                 "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=History",
                 "rating": 4.8,
-                "duration": "22h 30m",
+                "duration": 81000,
                 "categories": ["History", "Education", "Learning"]
               }
             ]
@@ -274,7 +311,7 @@
         "model": "Category[]",
         "service_method": "CategoryService.getCategories",
         "schema_compliance": true,
-        "required_fields": ["id", "name", "slug", "iconPath", "imageUrl", "itemCount", "listeningHours", "description"],
+        "required_fields": ["id", "name", "slug", "iconPath", "imageUrl", "itemCount", "listeningTime", "description"],
         "sample_response": [
           {
             "id": "1",
@@ -283,7 +320,7 @@
             "iconPath": "assets/icons/icons8-allah-100.png",
             "imageUrl": null,
             "itemCount": 48,
-            "listeningHours": "156h",
+            "listeningTime": 561600,
             "description": "Islamic jurisprudence and legal rulings"
           },
           {
@@ -293,7 +330,7 @@
             "iconPath": "assets/icons/icons8-book-100.png",
             "imageUrl": null,
             "itemCount": 32,
-            "listeningHours": "89h",
+            "listeningTime": 320400,
             "description": "Prophetic traditions and sayings"
           }
         ],
@@ -683,7 +720,7 @@
               "author": "Salih al-Munajjid",
               "coverUrl": "https://via.placeholder.com/150x200/4CAF50/white?text=Fiqh+Easy",
               "rating": 4.6,
-              "duration": "8h 30m",
+              "duration": 30600,
               "categories": ["Fiqh", "Islamic Law", "Beginner"]
             }
           }
@@ -740,7 +777,7 @@
                 "chapterId": "ch_1_1",
                 "chapterNumber": 1,
                 "title": "Introduction to Quran Translation",
-                "duration": "45m",
+                "duration": 2700,
                 "downloadSize": "420 MB",
                 "downloadProgress": 1.0,
                 "isDownloaded": true
@@ -749,7 +786,7 @@
                 "chapterId": "ch_1_5",
                 "chapterNumber": 5,
                 "title": "Surah Al-Fatiha Commentary",
-                "duration": "32m",
+                "duration": 1920,
                 "downloadSize": "380 MB",
                 "downloadProgress": 1.0,
                 "isDownloaded": true
@@ -758,7 +795,7 @@
                 "chapterId": "ch_1_10",
                 "chapterNumber": 10,
                 "title": "Surah Al-Baqarah - Part 1",
-                "duration": "55m",
+                "duration": 3300,
                 "downloadSize": "520 MB",
                 "downloadProgress": 0.75,
                 "isDownloaded": false
@@ -864,7 +901,7 @@
             "createdAt": "2025-01-15T10:30:00Z",
             "modifiedAt": "2025-01-15T10:30:00Z",
             "type": "personal",
-            "timestamp": "15:30"
+            "timestamp": 930
           },
           {
             "id": "note_2",
@@ -876,7 +913,7 @@
             "createdAt": "2025-01-14T08:15:00Z",
             "modifiedAt": "2025-01-14T12:20:00Z",
             "type": "thought",
-            "timestamp": "15:30"
+            "timestamp": 930
           },
           {
             "id": "note_3",
@@ -888,7 +925,7 @@
             "createdAt": "2025-01-13T19:45:00Z",
             "modifiedAt": null,
             "type": "highlight",
-            "timestamp": "42:18"
+            "timestamp": 2538
           }
         ],
         "notes": "Returns user's notes with filtering by type (personal, highlight, thought) and content. Supports pagination and search."
@@ -908,7 +945,7 @@
           "title": "Important Point",
           "content": "This is a key learning from today's session about the importance of purification in Islam.",
           "type": "personal",
-          "timestamp": "15:30"
+          "timestamp": 930
         },
         "sample_response": {
           "id": "note_4",
@@ -920,7 +957,7 @@
           "createdAt": "2025-01-16T14:25:00Z",
           "modifiedAt": null,
           "type": "personal",
-          "timestamp": "15:30"
+          "timestamp": 930
         },
         "notes": "Creates a new note for user. Note types: personal, highlight, thought"
       },
@@ -947,7 +984,7 @@
           "createdAt": "2025-01-15T10:30:00Z",
           "modifiedAt": "2025-01-16T09:15:00Z",
           "type": "personal",
-          "timestamp": "15:30"
+          "timestamp": 930
         },
         "notes": "Updates existing user note. Only allows updating title and content."
       },
@@ -1099,7 +1136,7 @@
               "author": "Dr. Muhammad Hamidullah",
               "coverUrl": "https://via.placeholder.com/150x200/FF9800/white?text=History",
               "rating": 4.8,
-              "duration": "12h 30m",
+              "duration": 45000,
               "categories": ["Islamic History", "Early Islam", "Military History"],
               "description": "Comprehensive study of the rapid expansion of Islam in the 7th century",
               "isPremium": true
@@ -1111,7 +1148,7 @@
                 "id": "ch_history_1_3",
                 "title": "The Battle of Yarmuk",
                 "description": "Decisive battle that opened the Levant to Islamic rule",
-                "duration": "45m",
+                "duration": 2700,
                 "chapterNumber": 3,
                 "status": "published"
               },
@@ -1200,7 +1237,7 @@
               "type": "book",
               "availability": "glimpse",
               "rating": 4.6,
-              "duration": "8h 30m",
+              "duration": 30600,
               "chapterCount": 12,
               "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
               "narrators": [
@@ -1230,7 +1267,7 @@
               "type": "podcast",
               "availability": "premium",
               "rating": 4.8,
-              "duration": "15h 45m",
+              "duration": 56700,
               "chapterCount": 20,
               "description": "Deep dive into complex jurisprudential issues for advanced students of Islamic law.",
               "narrators": [
@@ -1275,7 +1312,7 @@
         "model": "Category",
         "service_method": "CategoryService.getCategoryBySlug",
         "schema_compliance": true,
-        "required_fields": ["id", "name", "slug", "description", "icon", "imageUrl", "itemCount", "listeningHours"],
+        "required_fields": ["id", "name", "slug", "description", "icon", "imageUrl", "itemCount", "listeningTime"],
         "sample_response": {
           "id": "1",
           "name": "Fiqh",
@@ -1285,7 +1322,7 @@
           "iconPath": "assets/icons/icons8-allah-100.png",
           "imageUrl": null,
           "itemCount": 48,
-          "listeningHours": "156h",
+          "listeningTime": 561600,
           "color": "#4CAF50"
         },
         "notes": "Returns category details including description shown in the header card. This endpoint already exists."
@@ -1299,12 +1336,12 @@
         "model": "CategoryStats",
         "service_method": "CategoryService.getCategoryStats (NEEDED)",
         "schema_compliance": true,
-        "required_fields": ["totalContent", "totalBooks", "totalPodcasts", "totalListeningHours", "averageRating"],
+        "required_fields": ["totalContent", "totalBooks", "totalPodcasts", "totalListeningTime", "averageRating"],
         "sample_response": {
           "totalContent": 48,
           "totalBooks": 32,
           "totalPodcasts": 16,
-          "totalListeningHours": "156h",
+          "totalListeningTime": 561600,
           "averageRating": 4.6,
           "languageDistribution": {
             "Arabic": 25,
@@ -1349,7 +1386,7 @@
           "type": "book",
           "availability": "glimpse",
           "rating": 4.6,
-          "duration": "8h 30m",
+          "duration": 30600,
           "chapterCount": 12,
           "description": "A comprehensive guide to Islamic jurisprudence, covering the fundamental principles and practical applications of Fiqh in daily life.",
           "narrators": ["narrator_1", "narrator_2"],
@@ -1358,7 +1395,7 @@
           "isPremium": false,
           "categories": ["Fiqh", "Islamic Law", "Beginner"],
           "progress": 0.65,
-          "playedWhen": "2 hours ago",
+          "playedWhen": "2025-01-12T08:30:00Z",
           "playedMinutes": 45,
           "isFinished": false,
           "downloadSize": "4.2 GB",
@@ -1372,7 +1409,7 @@
               "userAvatar": "",
               "rating": 5.0,
               "reviewText": "Absolutely amazing content! The narrator's voice is clear and engaging. I learned so much from this audiobook. Highly recommend it to anyone seeking Islamic knowledge.",
-              "createdAt": "2 days ago",
+              "createdAt": "2025-01-11T14:30:00Z",
               "upvotes": 15,
               "downvotes": 1,
               "isUserUpvoted": false,
@@ -1392,49 +1429,58 @@
         "model": "Chapter[]",
         "service_method": "ContentService.getContentChapters (NEEDED)",
         "schema_compliance": true,
-        "required_fields": ["id", "title", "slug", "description", "duration", "chapterNumber", "status", "narratorId", "progress", "pausedAt", "sizeInMB"],
+        "required_fields": ["id", "title", "slug", "description", "duration", "chapterNumber", "status", "narratorId", "progress", "pausedAt", "sizeInMB", "audioUrl", "timestamps", "notes"],
         "sample_response": [
           {
             "id": "ch_1_1",
             "title": "Introduction to Fiqh",
             "slug": "introduction-to-fiqh",
             "description": "An overview of Islamic jurisprudence and its importance in Muslim life.",
-            "duration": "45m",
+            "duration": 2700,
             "chapterNumber": 1,
             "status": "completed",
             "narratorId": "narrator_1",
             "progress": 1.0,
             "pausedAt": null,
-            "sizeInMB": 42.5
+            "sizeInMB": 42.5,
+            "audioUrl": "https://cdn.example.com/audio/ch_1_1_introduction_to_fiqh.mp3",
+            "timestamps": [],
+            "notes": []
           },
           {
             "id": "ch_1_2",
             "title": "Sources of Islamic Law",
             "slug": "sources-of-islamic-law",
             "description": "Primary and secondary sources used in Islamic jurisprudence including Quran, Sunnah, and scholarly consensus.",
-            "duration": "52m",
+            "duration": 3120,
             "chapterNumber": 2,
             "status": "paused",
             "narratorId": "narrator_1",
             "progress": 0.65,
-            "pausedAt": "32:15",
-            "sizeInMB": 48.2
+            "pausedAt": 1935,
+            "sizeInMB": 48.2,
+            "audioUrl": "https://cdn.example.com/audio/ch_1_2_sources_of_islamic_law.mp3",
+            "timestamps": [],
+            "notes": []
           },
           {
             "id": "ch_1_3",
             "title": "Principles of Purification",
             "slug": "principles-of-purification",
             "description": "Detailed explanation of Wudu, Ghusl, and Tayammum according to Islamic jurisprudence.",
-            "duration": "38m",
+            "duration": 2280,
             "chapterNumber": 3,
             "status": "notPlayed",
             "narratorId": "narrator_1",
             "progress": 0.0,
             "pausedAt": null,
-            "sizeInMB": 35.8
+            "sizeInMB": 35.8,
+            "audioUrl": "https://cdn.example.com/audio/ch_1_3_principles_of_purification.mp3",
+            "timestamps": [],
+            "notes": []
           }
         ],
-        "notes": "Returns chapters for specific content filtered by narrator. Used when user selects different narrator to show relevant chapters. Includes progress tracking and download size information."
+        "notes": "Returns chapters for specific content filtered by narrator with empty arrays for timestamps and notes to show all available keys. Used when user selects different narrator to show relevant chapters. Includes progress tracking and download size information. Optimized to eliminate redundant data fetching - detailed timestamps and notes are fetched separately via get-chapter-details endpoint."
       },
       "get-review-summary": {
         "parameters": ["contentId"],
@@ -1462,6 +1508,80 @@
     },
     "status": "not_done_api_side",
     "additional_notes": "Playlist View module provides comprehensive content detail page with multiple sections: content info, trial stats, actions (play/download), narrator selection, chapters list, download options, and reviews. Key features include narrator switching (chapters filter by selected narrator), selective chapter downloads, progress tracking, bookmark functionality, and review integration. Authors and narrators are pre-loaded in memory at app start and accessed using authorId and narratorId[] arrays from the content object. All main endpoints need to be created - currently using mock data."
+  },
+
+  "Chapter Player": {
+    "screen_file": "lib/screens/chapter_screen.dart",
+    "brief_description": "Audio player screen for individual chapters with media controls, timestamps, and note-taking functionality. Shows waveform visualization and provides jump-to-timestamp features.",
+    "endpoints": {
+      "get-chapter-details": {
+        "parameters": ["chapterId"],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /chapters/{chapterId} (NEEDED)",
+        "model": "Chapter",
+        "service_method": "ChapterService.getChapterById (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["timestamps", "notes"],
+        "sample_response": {
+          "timestamps": [
+            {"index": "1", "title": "Introduction", "time": 0, "duration": 330},
+            {"index": "2", "title": "Key Concepts", "time": 330, "duration": 435},
+            {"index": "3", "title": "Practical Examples", "time": 765, "duration": 385},
+            {"index": "4", "title": "Common Mistakes", "time": 1150, "duration": 350},
+            {"index": "5", "title": "Summary", "time": 1500, "duration": 290}
+          ],
+          "notes": [
+            {
+              "id": "note_1",
+              "title": "Key Point on Wudu",
+              "content": "Remember that the intention (niyyah) is crucial for the validity of wudu.",
+              "timestamp": 930,
+              "type": "personal",
+              "createdAt": "2025-01-15T10:30:00Z"
+            }
+          ]
+        },
+        "notes": "Returns only the missing chapter information (timestamps and notes) that is not already available from get-content-chapters. Optimized to eliminate redundant data fetching - basic chapter details are fetched via get-content-chapters endpoint.",
+        "schema_notes": "DATABASE SCHEMA OK: Chapter table already has 'audioUrl' field (line 179 in schema.prisma) which matches the API response field. Field is currently optional but should be populated for all published chapters. TIME FORMAT STANDARDIZATION: All time-related fields (duration, timestamp, time, pausedAt) now use seconds (integer) format to match database schema. Database stores all durations as 'Int // in seconds' (see schema.prisma lines 127, 178, 485, 486, 756)."
+      },
+      "create-note": {
+        "parameters": ["chapterId", "noteId?"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "POST /notes (NEEDED)",
+        "model": "Note",
+        "service_method": "NoteService.createOrUpdateNote (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["title", "noteContent", "color", "timestamp", "chapterId", "contentId"],
+        "request_body": {
+          "title": "Key Point on Wudu",
+          "noteContent": "Remember that the intention (niyyah) is crucial for the validity of wudu. The Prophet (PBUH) said actions are judged by intentions.",
+          "color": "yellow",
+          "timestamp": 930,
+          "chapterId": "ch_1_1",
+          "contentId": "fiqh_1",
+          "noteId": null
+        },
+        "sample_response": {
+          "id": "note_123",
+          "title": "Key Point on Wudu",
+          "noteContent": "Remember that the intention (niyyah) is crucial for the validity of wudu. The Prophet (PBUH) said actions are judged by intentions.",
+          "color": "yellow",
+          "timestamp": 930,
+          "type": "HIGHLIGHT",
+          "isPrivate": false,
+          "createdAt": "2025-08-13T14:30:00Z",
+          "updatedAt": "2025-08-13T14:30:00Z"
+        },
+        "notes": "Creates or updates a timestamped note for a specific chapter. If noteId is provided, updates existing note. Color field maps to UI categories (blue, green, yellow, orange, red, purple, teal, pink). Timestamp is the audio position in seconds where the note was created.",
+        "schema_notes": "DATABASE SCHEMA UPDATED: Added 'color' field to Note model (line 617 in schema.prisma) to support UI color categories. All existing fields (title, noteContent, timestamp, chapterId, contentId, userId) are available in schema. The 'type' field is automatically mapped from color category for backward compatibility."
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "Chapter Player screen provides comprehensive audio playback with waveform visualization, timestamp-based navigation, and note-taking capabilities. The screen uses timestamps for jumping to specific parts of the audio clip through the bottom sheet. Currently uses mock data for timestamps. Requires chapter details endpoint to fetch audio file URLs and navigation timestamps."
   },
 
   "Subscription Module": {

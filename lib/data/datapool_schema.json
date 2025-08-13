@@ -208,7 +208,8 @@
     "narratorId": "narrator_1",
     "progress": 1.0,
     "pausedAt": null,
-    "sizeInMB": 42.5
+    "sizeInMB": 42.5,
+    "audioUrl": "https://cdn.example.com/audio/ch_1_1_introduction_to_fiqh.mp3"
   },
   
   "searchItem": {

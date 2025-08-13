@@ -1584,6 +1584,89 @@
     "additional_notes": "Chapter Player screen provides comprehensive audio playback with waveform visualization, timestamp-based navigation, and note-taking capabilities. The screen uses timestamps for jumping to specific parts of the audio clip through the bottom sheet. Currently uses mock data for timestamps. Requires chapter details endpoint to fetch audio file URLs and navigation timestamps."
   },
 
+  "Notifications List": {
+    "screen_file": "lib/screens/notifications_list_screen.dart",
+    "brief_description": "Display all user notifications with dismiss and action functionality. Shows different notification types (warning, info, success, error) with appropriate icons and colors.",
+    "endpoints": {
+      "get-user-notifications": {
+        "parameters": [],
+        "data_fetching": true,
+        "data_updates": false,
+        "endpoint_exists": false,
+        "endpoint_path": "GET /notifications (NEEDED)",
+        "model": "Notification[]",
+        "service_method": "NotificationService.getUserNotifications (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": ["id", "title", "message", "type", "isDismissible", "actionText", "actionUrl", "isRead", "createdAt"],
+        "sample_response": [
+          {
+            "id": "1",
+            "title": "Trial Ending Soon",
+            "message": "Your trial expires in 3 days. Upgrade to Premium!",
+            "type": "warning",
+            "isDismissible": true,
+            "actionText": "Upgrade Now",
+            "actionUrl": "/subscription",
+            "isRead": false,
+            "isArchived": false,
+            "createdAt": "2025-08-13T14:30:00Z"
+          },
+          {
+            "id": "2",
+            "title": "Special Offer",
+            "message": "Get 50% off Premium subscription this week only!",
+            "type": "info",
+            "isDismissible": true,
+            "actionText": "Learn More",
+            "actionUrl": "/subscription",
+            "isRead": false,
+            "isArchived": false,
+            "createdAt": "2025-08-13T13:15:00Z"
+          }
+        ],
+        "notes": "Returns all active notifications for the authenticated user, ordered by creation date (newest first). Supports different notification types with appropriate action URLs for routing.",
+        "schema_notes": "DATABASE SCHEMA OK: Notification model already exists (lines 786-818 in schema.prisma) with all required fields including title, message, type, isDismissible, actionText, actionUrl, isRead, isArchived, createdAt."
+      },
+      "dismiss-notification": {
+        "parameters": ["notificationId"],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "DELETE /notifications/{notificationId} (NEEDED)",
+        "model": "void",
+        "service_method": "NotificationService.dismissNotification (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": [],
+        "sample_response": {
+          "success": true,
+          "message": "Notification dismissed successfully"
+        },
+        "notes": "Removes a specific notification from the user's list. Used when user dismisses individual notifications via swipe or close button.",
+        "schema_notes": "DATABASE SCHEMA OK: Notification model supports soft delete via isArchived field or hard delete by removing the record."
+      },
+      "clear-all-notifications": {
+        "parameters": [],
+        "data_fetching": false,
+        "data_updates": true,
+        "endpoint_exists": false,
+        "endpoint_path": "DELETE /notifications/clear (NEEDED)",
+        "model": "void",
+        "service_method": "NotificationService.clearAllNotifications (NEEDED)",
+        "schema_compliance": true,
+        "required_fields": [],
+        "sample_response": {
+          "success": true,
+          "message": "All notifications cleared successfully",
+          "cleared_count": 5
+        },
+        "notes": "Removes all notifications for the authenticated user. Used when user taps 'Clear All' button in the app bar.",
+        "schema_notes": "DATABASE SCHEMA OK: Can archive all user notifications by setting isArchived = true or delete all user notification records."
+      }
+    },
+    "status": "not_done_api_side",
+    "additional_notes": "Notifications screen provides comprehensive notification management with swipe-to-dismiss, action buttons, and clear all functionality. Different notification types are displayed with appropriate icons and colors. The screen shows an empty state when no notifications are available."
+  },
+
   "Subscription Module": {
     "screen_file": "@lib/screens/subscription_screen.dart, @lib/screens/upgrade_plan_screen.dart",
     "brief_description": "View all subscription plans with current/popular indicators and upgrade functionality with coupon support",
